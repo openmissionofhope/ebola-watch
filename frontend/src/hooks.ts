@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, getJSON } from "./api";
+import { t } from "./i18n";
 
 export interface Loadable<T> {
   data: T | null;
@@ -42,7 +43,7 @@ export function useApi<T>(path: string | null, apiKey?: string): Loadable<T> {
       })
       .catch((e: unknown) => {
         if (ctrl.signal.aborted) return;
-        const msg = e instanceof ApiError ? e.message : "Could not reach the Ebola Watch API.";
+        const msg = e instanceof ApiError ? e.message : t("Could not reach Ebola Watch. Check your connection and try again.");
         setState({ data: null, error: msg, loading: false });
       });
     return () => ctrl.abort();

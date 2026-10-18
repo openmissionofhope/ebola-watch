@@ -4,6 +4,8 @@
 // responses from files written by `ebolawatch export-static`:
 // GET /api/v1/<path> -> <base>data/<path>.json
 
+import { t, tx } from "./i18n";
+
 export const STATIC = import.meta.env.VITE_STATIC === "1";
 export const BASE = import.meta.env.BASE_URL;
 export const ERROR_REPORT_URL =
@@ -32,13 +34,13 @@ export class ApiError extends Error {
 }
 
 function messageFor(status: number, detail: string | undefined): string {
-  if (STATIC && status === 404) return "This information is not part of the published snapshot.";
-  if (status === 429) return "The service is limiting requests right now. Please wait a moment and try again.";
-  if (status === 401) return "A valid API key is required.";
-  if (status === 403) return "Your API key does not have permission for this action.";
-  if (status === 404) return detail || "Not found at a publishable resolution.";
-  if (status >= 500) return "The server could not complete the request. Please try again later.";
-  return detail || `Request failed (HTTP ${status}).`;
+  if (STATIC && status === 404) return t("This information is not part of the published snapshot.");
+  if (status === 429) return t("The service is limiting requests right now. Please wait a moment and try again.");
+  if (status === 401) return t("A valid API key is required.");
+  if (status === 403) return t("Your API key does not have permission for this action.");
+  if (status === 404) return detail ? tx(detail) : t("Not found at a publishable resolution.");
+  if (status >= 500) return t("The server could not complete the request. Please try again later.");
+  return detail ? tx(detail) : t("Request failed (HTTP {status}).", { status });
 }
 
 async function parse<T>(res: Response): Promise<T> {
@@ -63,7 +65,7 @@ export async function getJSON<T>(path: string, apiKey?: string, signal?: AbortSi
 }
 
 export async function postJSON<T>(path: string, body: unknown, apiKey?: string): Promise<T> {
-  if (STATIC) throw new ApiError(405, "This is a published snapshot: it does not accept submissions.");
+  if (STATIC) throw new ApiError(405, t("This is a published snapshot: it does not accept submissions."));
   const headers: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json" };
   if (apiKey) headers["X-API-Key"] = apiKey;
   const res = await fetch(`/api/v1${path}`, { method: "POST", headers, body: JSON.stringify(body), credentials: "omit" });

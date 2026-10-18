@@ -6,23 +6,38 @@ import { geoArea, geoMercator, geoPath, type GeoPermissibleObjects } from "d3-ge
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { GeoCollection, GeoFeature, MapLayers, MapUnit } from "../api";
+import { levelName } from "../components/Badges";
 import { DataTable, TableToggle } from "../components/DataTable";
 import { ErrorBox } from "../components/Status";
 import { fmtDate, fmtInt, humanize } from "../format";
 import { useApi, useWidth } from "../hooks";
+import { placeName, t, tx } from "../i18n";
 
 export type LayerKey = "official" | "estimated" | "forecast_risk" | "surveillance" | "transport";
-export const LAYER_LABELS: Record<LayerKey, string> = {
-  official: "Official burden",
-  estimated: "Estimated burden",
-  forecast_risk: "Forecast risk",
-  surveillance: "Surveillance uncertainty",
-  transport: "Transport connectivity",
-};
+
+export function layerLabel(layer: LayerKey): string {
+  const labels: Record<LayerKey, string> = {
+    official: t("Official burden"),
+    estimated: t("Estimated burden"),
+    forecast_risk: t("Forecast risk"),
+    surveillance: t("Surveillance uncertainty"),
+    transport: t("Transport connectivity"),
+  };
+  return labels[layer];
+}
 
 const BURDEN_BREAKS = [1, 10, 100, 1000, 10000];
 const BURDEN_FILLS = ["var(--seq-150)", "var(--seq-250)", "var(--seq-350)", "var(--seq-550)", "var(--seq-650)"];
-const BURDEN_LABELS = ["1–9", "10–99", "100–999", "1,000–9,999", "10,000 or more"];
+
+function burdenLabels(): string[] {
+  const range = (a: number, b: number) => `${fmtInt(a)}–${fmtInt(b)}`;
+  return [range(1, 9), range(10, 99), range(100, 999), range(1000, 9999), t("{count} or more", { count: fmtInt(10000) })];
+}
+
+/** Name of a map unit: countries in the reader's language, sub-national units as published. */
+function unitName(code: string, name: string, level: number): string {
+  return placeName({ code, name, level });
+}
 
 function burdenFill(v: number | null | undefined): string | null {
   if (v === null || v === undefined || v <= 0) return null;
@@ -48,34 +63,58 @@ function rewind(f: GeoFeature): GeoFeature {
 
 interface FillSpec { fill: string | null; hatch?: boolean; text: string }
 
-function fillFor(layer: LayerKey, u: MapUnit | undefined): FillSpec {
-  if (!u) return { fill: null, text: "No data" };
+const lower = (value: string | null | undefined) => humanize(value).toLocaleLowerCase();
+
+function fillFor(layer: LayerKey, u: MapUnit | undefined, code: string): FillSpec {
+  if (!u) return { fill: null, text: t("No data") };
   switch (layer) {
     case "official":
-      if (u.official_display) return { fill: BURDEN_FILLS[0], text: `Confirmed (official): ${u.official_display} (suppressed small value)` };
+      if (u.official_display) return { fill: BURDEN_FILLS[0], text: t("Confirmed (official): {value} (suppressed small value)", { value: u.official_display }) };
       return u.official_confirmed
-        ? { fill: burdenFill(u.official_confirmed), text: `Confirmed (official): ${fmtInt(u.official_confirmed)} as of ${fmtDate(u.official_as_of)}` }
-        : { fill: null, text: "No officially reported confirmed cases in the current outbreak (not evidence of zero cases)" };
+        ? {
+            fill: burdenFill(u.official_confirmed),
+            text: t("Confirmed (official): {value} as of {date}", { value: fmtInt(u.official_confirmed), date: fmtDate(u.official_as_of) }),
+          }
+        : { fill: null, text: t("No officially reported confirmed cases in the current outbreak (not evidence of zero cases)") };
     case "estimated":
       return u.estimated_total
-        ? { fill: burdenFill(u.estimated_total.median), text: `Estimated infections (model): ${fmtInt(u.estimated_total.lower_90)}–${fmtInt(u.estimated_total.upper_90)} (median ${fmtInt(u.estimated_total.median)}; confidence ${u.estimated_total.confidence})` }
-        : { fill: null, text: "No model estimate (insufficient evidence or no current outbreak data)" };
+        ? {
+            fill: burdenFill(u.estimated_total.median),
+            text: t("Estimated infections (model): {low}–{high} (median {median}; confidence {confidence})", {
+              low: fmtInt(u.estimated_total.lower_90),
+              high: fmtInt(u.estimated_total.upper_90),
+              median: fmtInt(u.estimated_total.median),
+              confidence: lower(u.estimated_total.confidence),
+            }),
+          }
+        : { fill: null, text: t("No model estimate (insufficient evidence or no current outbreak data)") };
     case "forecast_risk": {
-      if (u.severity_status === "insufficient_information") return { fill: null, hatch: true, text: "Severity: insufficient information" };
+      if (u.severity_status === "insufficient_information") return { fill: null, hatch: true, text: t("Severity: insufficient information") };
       const lvl = u.severity_level;
-      const tier = u.connectivity_tier ? `; connectivity to active areas: ${u.connectivity_tier.tier}${u.connectivity_tier.robust ? "" : " (sensitive to assumptions)"}` : "";
-      if (lvl === null || lvl === undefined) return { fill: null, text: `Not assessed${tier}` };
-      return { fill: `var(--sev-${lvl})`, text: `Severity level ${lvl}${tier}` };
+      const ct = u.connectivity_tier;
+      const tier = ct
+        ? `; ${
+            ct.robust
+              ? t("connectivity to active areas: {tier}", { tier: lower(ct.tier) })
+              : t("connectivity to active areas: {tier} (sensitive to assumptions)", { tier: lower(ct.tier) })
+          }`
+        : "";
+      if (lvl === null || lvl === undefined) return { fill: null, text: `${t("Not assessed")}${tier}` };
+      return { fill: `var(--sev-${lvl})`, text: `${t("Severity level {level}", { level: lvl })}${tier}` };
     }
     case "surveillance":
-      if (u.severity_status === "insufficient_information") return { fill: null, hatch: true, text: "Insufficient information" };
-      if (!u.confidence) return { fill: null, text: "Not assessed" };
+      if (u.severity_status === "insufficient_information") return { fill: null, hatch: true, text: t("Insufficient information") };
+      if (!u.confidence) return { fill: null, text: t("Not assessed") };
       return {
         fill: CONF_FILL[u.confidence] ?? null,
-        text: `Assessment confidence: ${u.confidence}; surveillance evidence: ${humanize(u.surveillance_overall)}${u.underestimation_risk ? "; risk that severity is underestimated" : ""}`,
+        text:
+          t("Assessment confidence: {confidence}; surveillance evidence: {evidence}", {
+            confidence: lower(u.confidence),
+            evidence: humanize(u.surveillance_overall),
+          }) + (u.underestimation_risk ? `; ${t("risk that severity is underestimated")}` : ""),
       };
     case "transport":
-      return { fill: "var(--surface-2)", text: u.name };
+      return { fill: "var(--surface-2)", text: unitName(code, u.name, u.level) };
   }
 }
 
@@ -120,7 +159,7 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
     const m = new Map<string, string>();
     for (const f of [...c0, ...c1]) {
       const [lon, lat] = f.properties.label;
-      if (lon !== null && lat !== null) m.set(`${lon},${lat}`, f.properties.name);
+      if (lon !== null && lat !== null) m.set(`${lon},${lat}`, unitName(f.properties.code, f.properties.name, f.properties.level));
     }
     return m;
   }, [c0, c1]);
@@ -129,10 +168,11 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
   const shape = (f: GeoFeature, cls: string) => {
     const code = f.properties.code;
     const u = units[code];
-    const spec = fillFor(layer, u);
+    const spec = fillFor(layer, u, code);
     const hasData = !!u && (layer === "transport" ? false : spec.fill !== null || spec.hatch);
     const d = path(f as unknown as GeoPermissibleObjects) ?? "";
-    const label = `${f.properties.name}: ${spec.text}`;
+    const name = unitName(code, f.properties.name, f.properties.level);
+    const label = spec.text && spec.text !== name ? `${name}: ${spec.text}` : name;
     const show = (evt: { clientX: number; clientY: number } | null) => {
       const el = ref.current;
       if (!el) return;
@@ -149,7 +189,7 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
           y = (p[1] / height) * box.height;
         }
       }
-      setHover({ code, name: f.properties.name, text: spec.text, x, y });
+      setHover({ code, name, text: spec.text, x, y });
     };
     return (
       <path
@@ -187,7 +227,7 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
 
   return (
     <div className="map-wrap" ref={ref}>
-      <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label={`Map: ${LAYER_LABELS[layer]}`}>
+      <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label={t("Map: {layer}", { layer: layerLabel(layer) })} direction="ltr">
         <defs>
           <pattern id="map-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <rect width="6" height="6" style={{ fill: "var(--not-assessed)" }} />
@@ -215,7 +255,14 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
             const svc = off ? "svc-off" : e.service_status === "unknown" ? "svc-unknown" : "svc-on";
             return (
               <line key={e.key} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} className={`map-edge mode-${e.mode} ${svc}`}>
-                <title>{`${e.corridor ?? e.key} — ${e.mode}; service ${humanize(e.service_status)}; verification ${humanize(e.verification)}`}</title>
+                <title>
+                  {t("{corridor} — {mode}; service {service}; verification {verification}", {
+                    corridor: e.corridor ?? e.key,
+                    mode: lower(e.mode),
+                    service: humanize(e.service_status),
+                    verification: humanize(e.verification),
+                  })}
+                </title>
               </line>
             );
           })}
@@ -237,10 +284,10 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
           const p = projection([f.properties.label[0] as number, f.properties.label[1] as number]);
           if (!p) return null;
           if (layer === "forecast_risk") {
-            const t = u.connectivity_tier!;
+            const tier = u.connectivity_tier!;
             return (
               <g key={`m-${f.properties.code}`} aria-hidden="true">
-                <circle cx={p[0]} cy={p[1]} r={6} style={{ fill: TIER_FILL[t.tier], stroke: "var(--surface-1)", strokeWidth: 2 }} />
+                <circle cx={p[0]} cy={p[1]} r={6} style={{ fill: TIER_FILL[tier.tier], stroke: "var(--surface-1)", strokeWidth: 2 }} />
               </g>
             );
           }
@@ -259,7 +306,7 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
         </div>
       )}
       {!compact && <MapLegend layer={layer} layers={layers} />}
-      {compact && <p className="small muted" style={{ margin: "6px 10px" }}>{LAYER_LABELS[layer]}: {layers.layers[layer]}</p>}
+      {compact && <p className="small muted" style={{ margin: "6px 10px" }}>{layerLabel(layer)}: {tx(layers.layers[layer])}</p>}
     </div>
   );
 }
@@ -275,57 +322,66 @@ function Chip({ fill, hatch }: { fill?: string; hatch?: boolean }) {
 }
 
 export function MapLegend({ layer, layers }: { layer: LayerKey; layers: MapLayers }) {
+  const tierLabels: Record<"higher" | "moderate" | "lower", string> = {
+    higher: t("Higher connectivity to active areas"),
+    moderate: t("Moderate connectivity to active areas"),
+    lower: t("Lower connectivity to active areas"),
+  };
   return (
     <div className="map-legend">
-      <strong>{LAYER_LABELS[layer]}</strong> — {layers.layers[layer]}
+      <strong>{layerLabel(layer)}</strong> — {tx(layers.layers[layer])}
       {(layer === "official" || layer === "estimated") && (
         <ul className="scale">
-          {BURDEN_LABELS.map((l, i) => (
-            <li key={l}><Chip fill={BURDEN_FILLS[i]} /> {l}</li>
+          {burdenLabels().map((l, i) => (
+            <li key={l}><Chip fill={BURDEN_FILLS[i]} /> <span translate="no">{l}</span></li>
           ))}
-          <li><Chip fill="var(--not-assessed)" /> {layer === "official" ? "None reported (not evidence of zero)" : "No estimate"}</li>
+          <li><Chip fill="var(--not-assessed)" /> {layer === "official" ? t("None reported (not evidence of zero)") : t("No estimate")}</li>
         </ul>
       )}
-      {layer === "estimated" && <p className="small" style={{ margin: "6px 0 0" }}>Model estimates of symptomatic infections, reported or not. They are not confirmed cases.</p>}
+      {layer === "estimated" && (
+        <p className="small" style={{ margin: "6px 0 0" }}>{t("Model estimates of symptomatic infections, reported or not. They are not confirmed cases.")}</p>
+      )}
       {layer === "forecast_risk" && (
         <>
           <ul className="scale">
             {[0, 1, 2, 3, 4].map((l) => (
-              <li key={l}><Chip fill={`var(--sev-${l})`} /> Level {l} · {["No current evidence", "Watch", "Elevated", "High", "Critical"][l]}</li>
+              <li key={l}><Chip fill={`var(--sev-${l})`} /> {t("Level {n}", { n: l })} · {levelName(l)}</li>
             ))}
-            <li><Chip hatch /> Insufficient information</li>
-            <li><Chip fill="var(--not-assessed)" /> Not assessed</li>
+            <li><Chip hatch /> {t("Insufficient information")}</li>
+            <li><Chip fill="var(--not-assessed)" /> {t("Not assessed")}</li>
           </ul>
           <ul className="scale">
-            {(["higher", "moderate", "lower"] as const).map((t) => (
-              <li key={t}><span className="chip" style={{ background: TIER_FILL[t], borderRadius: "50%" }} aria-hidden="true" /> {humanize(t)} connectivity to active areas</li>
+            {(["higher", "moderate", "lower"] as const).map((tier) => (
+              <li key={tier}><span className="chip" style={{ background: TIER_FILL[tier], borderRadius: "50%" }} aria-hidden="true" /> {tierLabels[tier]}</li>
             ))}
           </ul>
-          <p className="small" style={{ margin: "6px 0 0" }}>Connectivity tiers compare areas under scenarios for unverified transport services; they are relative, not probabilities, and are not evidence of transmission.</p>
+          <p className="small" style={{ margin: "6px 0 0" }}>
+            {t("Connectivity tiers compare areas under scenarios for unverified transport services; they are relative, not probabilities, and are not evidence of transmission.")}
+          </p>
         </>
       )}
       {layer === "surveillance" && (
         <ul className="scale">
-          <li><Chip fill={CONF_FILL.low} /> Low confidence</li>
-          <li><Chip fill={CONF_FILL.moderate} /> Moderate confidence</li>
-          <li><Chip fill={CONF_FILL.high} /> High confidence</li>
-          <li><Chip hatch /> Insufficient information</li>
-          <li><span className="chip" style={{ borderRadius: "50%", textAlign: "center", fontSize: 9, lineHeight: "11px", fontWeight: 700 }} aria-hidden="true">!</span> Risk that severity is underestimated</li>
+          <li><Chip fill={CONF_FILL.low} /> {t("Low confidence")}</li>
+          <li><Chip fill={CONF_FILL.moderate} /> {t("Moderate confidence")}</li>
+          <li><Chip fill={CONF_FILL.high} /> {t("High confidence")}</li>
+          <li><Chip hatch /> {t("Insufficient information")}</li>
+          <li><span className="chip" style={{ borderRadius: "50%", textAlign: "center", fontSize: 9, lineHeight: "11px", fontWeight: 700 }} aria-hidden="true">!</span> {t("Risk that severity is underestimated")}</li>
         </ul>
       )}
       {layer === "transport" && (
         <>
           <ul className="scale">
-            <li><span className="lkey" style={{ borderTopColor: "var(--series-1)" }} /> Road</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--series-1)", borderTopStyle: "dotted", borderTopWidth: 3 }} /> Rail</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--series-3)" }} /> River or lake</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--series-2)" }} /> Air</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--axis-muted)" }} /> Informal (regional level only)</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--text-secondary)", borderTopStyle: "dashed" }} /> Dashed: passenger service unverified</li>
-            <li><span className="lkey" style={{ borderTopColor: "var(--axis-muted)", borderTopStyle: "dotted", opacity: 0.7 }} /> Faint dotted: suspended or not operating</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--series-1)" }} /> {t("Road")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--series-1)", borderTopStyle: "dotted", borderTopWidth: 3 }} /> {t("Rail")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--series-3)" }} /> {t("River or lake")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--series-2)" }} /> {t("Air")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--axis-muted)" }} /> {t("Informal (regional level only)")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--text-secondary)", borderTopStyle: "dashed" }} /> {t("Dashed: passenger service unverified")}</li>
+            <li><span className="lkey" style={{ borderTopColor: "var(--axis-muted)", borderTopStyle: "dotted", opacity: 0.7 }} /> {t("Faint dotted: suspended or not operating")}</li>
           </ul>
           {layers.transport_caveats.map((c) => (
-            <p key={c} className="small" style={{ margin: "4px 0 0" }}>{c}</p>
+            <p key={c} className="small" style={{ margin: "4px 0 0" }}>{tx(c)}</p>
           ))}
         </>
       )}
@@ -337,33 +393,33 @@ export function MapTable({ layer }: { layer: LayerKey }) {
   const layers = useApi<MapLayers>("/map/layers");
   if (!layers.data) return null;
   const rows = Object.entries(layers.data.units)
-    .map(([code, u]) => ({ code, u, spec: fillFor(layer, u) }))
+    .map(([code, u]) => ({ code, u, spec: fillFor(layer, u, code) }))
     .filter((r) => layer === "transport" ? false : r.spec.fill !== null || r.spec.hatch || r.u.severity_level)
     .sort((a, b) => a.u.level - b.u.level || a.u.name.localeCompare(b.u.name));
   if (layer === "transport") {
     return (
-      <TableToggle label="Show corridors as a table">
+      <TableToggle label={t("Show corridors as a table")}>
         <DataTable
           rows={layers.data.transport_edges}
           columns={[
-            { key: "c", header: "Corridor", render: (e) => e.corridor ?? e.key },
-            { key: "m", header: "Mode", render: (e) => humanize(e.mode) },
-            { key: "s", header: "Service status", render: (e) => humanize(e.service_status) },
-            { key: "v", header: "Verification", render: (e) => humanize(e.verification) },
-            { key: "x", header: "Cross-border", render: (e) => (e.cross_border ? "Yes" : "No") },
+            { key: "c", header: t("Corridor"), render: (e) => e.corridor ?? e.key },
+            { key: "m", header: t("Mode"), render: (e) => humanize(e.mode) },
+            { key: "s", header: t("Service status"), render: (e) => humanize(e.service_status) },
+            { key: "v", header: t("Verification"), render: (e) => humanize(e.verification) },
+            { key: "x", header: t("Cross-border"), render: (e) => (e.cross_border ? t("Yes") : t("No")) },
           ]}
         />
       </TableToggle>
     );
   }
   return (
-    <TableToggle label="Show map data as a table">
+    <TableToggle label={t("Show map data as a table")}>
       <DataTable
         rows={rows}
         columns={[
-          { key: "n", header: "Area", render: (r) => r.u.name },
-          { key: "l", header: "Level", render: (r) => (r.u.level === 0 ? "Country" : "First-level unit") },
-          { key: "v", header: LAYER_LABELS[layer], render: (r) => r.spec.text },
+          { key: "n", header: t("Area"), render: (r) => unitName(r.code, r.u.name, r.u.level) },
+          { key: "l", header: t("Level"), render: (r) => (r.u.level === 0 ? t("Country") : t("First-level unit")) },
+          { key: "v", header: layerLabel(layer), render: (r) => r.spec.text },
         ]}
       />
     </TableToggle>

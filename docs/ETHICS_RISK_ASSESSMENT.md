@@ -71,6 +71,15 @@ error reports are GitHub issues and therefore public, so the form warns against
 including personal information. The public site has no input fields, which
 removes the query-reconstruction and question-answering attack surface.
 
+Translations can distort meaning. The dashboard's machine-assisted
+translations carry a notice and a one-click link to the authoritative English
+version until a native speaker has reviewed them; figures are never passed
+through translation (numbers are formatted, not translated, and are marked
+`translate="no"` for browser translators); severity levels, confidence and the
+distinction between official, estimated and unverified figures use fixed
+glossary terms; and anything without a reviewed template stays in English
+rather than being guessed (docs/TRANSLATION.md).
+
 ## 5. Licence and use restrictions
 
 The software is released under the Christian Open Source License (COSL) 1.0,

@@ -7,8 +7,9 @@ import { line as d3line, area as d3area } from "d3-shape";
 import { useMemo, useState } from "react";
 import type { Estimate, ForecastRow, SeriesPoint } from "../api";
 import { DataTable, TableToggle } from "../components/DataTable";
-import { fmtDate, fmtInt } from "../format";
+import { fmtDate, fmtInt, humanize } from "../format";
 import { useWidth } from "../hooks";
+import { t } from "../i18n";
 import { HatchDefs, M, Tooltip, XAxisDates, YGrid, addDays, niceMax, utc } from "./common";
 
 interface Props {
@@ -38,7 +39,9 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
     }))];
   }, [forecast, last]);
 
-  if (!pts.length) return <p className="muted">No official series available.</p>;
+  if (!pts.length) return <p className="muted">{t("No official series available.")}</p>;
+
+  const scenarioName = humanize(scenario);
 
   const estOk = estimate && !estimate.insufficient && estimate.upper_90 !== undefined;
   const ncOk = nowcast && !nowcast.insufficient && nowcast.upper_90 !== undefined;
@@ -70,34 +73,36 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
     const html =
       best.kind === "official" ? (
         <>
-          <strong>Official: {fmtInt(best.p.value)} confirmed (cumulative)</strong>
-          As of {fmtDate(best.p.p.as_of)} · {best.p.p.source}
+          <strong>{t("Official: {n} confirmed (cumulative)", { n: fmtInt(best.p.value) })}</strong>
+          {t("As of {date}", { date: fmtDate(best.p.p.as_of) })} · <span lang="en">{best.p.p.source}</span>
         </>
       ) : (
         <>
           <strong>
-            {best.f.scenario ? "Scenario" : "Forecast"} +{best.f.h} days ({scenario})
+            {best.f.scenario
+              ? t("Scenario +{days} days ({scenario})", { days: best.f.h, scenario: scenarioName })
+              : t("Forecast +{days} days ({scenario})", { days: best.f.h, scenario: scenarioName })}
           </strong>
-          Cumulative median {fmtInt(best.f.median)}
+          {t("Cumulative median {n}", { n: fmtInt(best.f.median) })}
           <br />
-          90% interval {fmtInt(best.f.l90)}–{fmtInt(best.f.u90)}
+          {t("90% interval {range}", { range: `${fmtInt(best.f.l90)}–${fmtInt(best.f.u90)}` })}
         </>
       );
     setHover({ x: x(best.date), y: e.clientY - box.top, html });
   };
 
   return (
-    <div className="chart" ref={ref}>
-      <ul className="legend" aria-label="Legend">
-        <li><span className="key dot" style={{ background: "var(--text-primary)" }} /> Official cumulative confirmed (reported)</li>
-        {fan.length > 0 && <li><span className="key dash" /> Forecast median ({scenario})</li>}
-        {fan.length > 0 && <li><span className="key band50" /> 50% interval</li>}
-        {fan.length > 0 && <li><span className="key band90" /> 90% interval</li>}
-        {scenarioPart.length > 0 && <li><span className="key scenario" /> Beyond 28 days: scenario, not a prediction</li>}
-        {estOk && <li><span className="key range" /> Estimated cumulative infections (model, 90%)</li>}
-        {ncOk && <li><span className="key range" style={{ borderTopStyle: "dotted" }} /> Nowcast of reported cases to date</li>}
+    <div className="chart" ref={ref} dir="ltr">
+      <ul className="legend" aria-label={t("Legend")}>
+        <li><span className="key dot" style={{ background: "var(--text-primary)" }} /> {t("Official cumulative confirmed (reported)")}</li>
+        {fan.length > 0 && <li><span className="key dash" /> {t("Forecast median ({scenario})", { scenario: scenarioName })}</li>}
+        {fan.length > 0 && <li><span className="key band50" /> {t("50% interval")}</li>}
+        {fan.length > 0 && <li><span className="key band90" /> {t("90% interval")}</li>}
+        {scenarioPart.length > 0 && <li><span className="key scenario" /> {t("Beyond 28 days: scenario, not a prediction")}</li>}
+        {estOk && <li><span className="key range" /> {t("Estimated cumulative infections (model, 90%)")}</li>}
+        {ncOk && <li><span className="key range" style={{ borderTopStyle: "dotted" }} /> {t("Nowcast of reported cases to date")}</li>}
       </ul>
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Cumulative reported confirmed cases with forecast intervals and model estimate">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={t("Cumulative reported confirmed cases with forecast intervals and model estimate")}>
         <HatchDefs id="hatch-scenario" />
         <YGrid ticks={yt} y={y} width={width} left={M.left} />
         <line className="axis-line" x1={M.left} x2={width - M.right} y1={y(0)} y2={y(0)} />
@@ -114,7 +119,7 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
             <path d={b90(scenarioPart)} fill="url(#hatch-scenario)" />
             <path className="series-line" d={medLine(scenarioPart)} strokeDasharray="2 4" />
             <text className="direct-label" x={x(scenarioPart[scenarioPart.length - 1].date) - 4} y={y(scenarioPart[scenarioPart.length - 1].l90) + 14} textAnchor="end">
-              scenario
+              {t("scenario")}
             </text>
           </>
         )}
@@ -130,11 +135,11 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
             <circle cx={x(last.date) + 8} cy={y(estimate!.median!)} r={4} fill="var(--surface-1)" stroke="var(--text-primary)" strokeWidth={2} />
             {width - M.right - (x(last.date) + 18) >= 230 ? (
               <text className="direct-label" x={x(last.date) + 18} y={y(estimate!.upper_90!)} dy="0.9em">
-                Estimated infections (model) {fmtInt(estimate!.lower_90)}–{fmtInt(estimate!.upper_90)}
+                {t("Estimated infections (model) {range}", { range: `${fmtInt(estimate!.lower_90)}–${fmtInt(estimate!.upper_90)}` })}
               </text>
             ) : (
               <text className="direct-label" x={x(last.date) + 2} y={y(estimate!.upper_90!) - 6} textAnchor="end">
-                Estimated infections (model)
+                {t("Estimated infections (model)")}
               </text>
             )}
           </g>
@@ -146,7 +151,7 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
           </g>
         )}
         <text className="direct-label" x={x(last.date)} y={y(last.value) - 10} textAnchor="end">
-          {fmtInt(last.value)} reported
+          {t("{n} reported", { n: fmtInt(last.value) })}
         </text>
         {hover && <line className="hover-line" x1={hover.x} x2={hover.x} y1={M.top} y2={y(0)} />}
         <rect className="hit" x={M.left} y={M.top} width={width - M.left - M.right} height={y(0) - M.top} onMouseMove={onMove} onMouseLeave={() => setHover(null)} />
@@ -154,27 +159,27 @@ export function CumulativeChart({ points, forecast, scenario, estimate, nowcast 
       {hover && <Tooltip x={(hover.x / width) * (ref.current?.clientWidth ?? width)} y={hover.y} width={ref.current?.clientWidth ?? width}>{hover.html}</Tooltip>}
       <TableToggle>
         <DataTable
-          caption="Official cumulative confirmed cases"
+          caption={t("Official cumulative confirmed cases")}
           rows={points}
           columns={[
-            { key: "d", header: "Observation date", render: (r) => fmtDate(r.as_of) },
-            { key: "v", header: "Cumulative confirmed", render: (r) => fmtInt(r.value), numeric: true },
-            { key: "s", header: "Source", render: (r) => r.source },
-            { key: "p", header: "Published", render: (r) => fmtDate(r.published_at) },
-            { key: "st", header: "Validation", render: (r) => r.validation_status.replace(/_/g, " ") },
+            { key: "d", header: t("Observation date"), render: (r) => fmtDate(r.as_of) },
+            { key: "v", header: t("Cumulative confirmed"), render: (r) => fmtInt(r.value), numeric: true },
+            { key: "s", header: t("Source"), render: (r) => <span lang="en">{r.source}</span> },
+            { key: "p", header: t("Published"), render: (r) => fmtDate(r.published_at) },
+            { key: "st", header: t("Validation"), render: (r) => humanize(r.validation_status) },
           ]}
         />
         {forecast && (
           <DataTable
-            caption={`Forecast of additional reported confirmed cases (${scenario})`}
+            caption={t("Forecast of additional reported confirmed cases ({scenario})", { scenario: scenarioName })}
             rows={forecast}
             columns={[
-              { key: "h", header: "Horizon (days)", render: (r) => r.horizon_days, numeric: true },
-              { key: "k", header: "Type", render: (r) => (r.is_scenario ? "Scenario" : "Forecast") },
-              { key: "m", header: "Median", render: (r) => fmtInt(r.median), numeric: true },
-              { key: "i50", header: "50% interval", render: (r) => `${fmtInt(r.lower_50)}–${fmtInt(r.upper_50)}`, numeric: true },
-              { key: "i90", header: "90% interval", render: (r) => `${fmtInt(r.lower_90)}–${fmtInt(r.upper_90)}`, numeric: true },
-              { key: "c", header: "Confidence", render: (r) => r.confidence },
+              { key: "h", header: t("Horizon (days)"), render: (r) => fmtInt(r.horizon_days), numeric: true },
+              { key: "k", header: t("Type"), render: (r) => (r.is_scenario ? t("Scenario") : t("Forecast")) },
+              { key: "m", header: t("Median"), render: (r) => fmtInt(r.median), numeric: true },
+              { key: "i50", header: t("50% interval"), render: (r) => `${fmtInt(r.lower_50)}–${fmtInt(r.upper_50)}`, numeric: true },
+              { key: "i90", header: t("90% interval"), render: (r) => `${fmtInt(r.lower_90)}–${fmtInt(r.upper_90)}`, numeric: true },
+              { key: "c", header: t("Confidence"), render: (r) => humanize(r.confidence) },
             ]}
           />
         )}

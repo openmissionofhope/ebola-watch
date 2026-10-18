@@ -4,6 +4,7 @@ import { Layout } from "./components/Layout";
 import { AskPage } from "./pages/Ask";
 import { EvaluationPage } from "./pages/Evaluation";
 import { EvidencePage } from "./pages/Evidence";
+import { LanguagesPage } from "./pages/Languages";
 import { MapPage } from "./pages/MapPage";
 import { MethodologyPage } from "./pages/Methodology";
 import { NotFound } from "./pages/NotFound";
@@ -34,6 +35,7 @@ export function App() {
           {!STATIC && <Route path="ask" element={<AskPage />} />}
           <Route path="methodology" element={<MethodologyPage />} />
           <Route path="report-error" element={<ReportErrorPage />} />
+          <Route path="languages" element={<LanguagesPage />} />
           {!STATIC && <Route path="review" element={<ReviewPage />} />}
           <Route path="*" element={<NotFound />} />
         </Route>

@@ -34,7 +34,7 @@ GLOBAL_ENDPOINTS = ("meta", "overview", "regions", "map/geometry/0", "map/geomet
                     "surveillance-quality", "transport", "signals", "alerts", "sources", "evaluation", "reports")
 REGION_ENDPOINTS = ("summary", "official-series", "estimates", "forecasts", "forecast-comparison", "evidence", "transport")
 CSV_DATASETS = ("summaries", "subnational")
-SPA_ROUTES = ("map", "regions", "evidence", "evaluation", "transport", "reports", "sources", "methodology", "report-error")
+SPA_ROUTES = ("map", "regions", "evidence", "evaluation", "transport", "reports", "sources", "methodology", "report-error", "languages")
 PAGES_SIZE_WARNING = 500 * 1024 * 1024
 
 

@@ -34,6 +34,7 @@ estimate."*
 | **Transport** | Multimodal corridor graph (road, rail, river, lake, air, informal) between administrative units with verified/unknown service status and scenario analysis — connectivity is not transmission |
 | **Severity** | Levels 0–4 plus *insufficient information*, with confidence as a separate dimension and an underestimation-risk flag; every level explains its triggers |
 | **Reports** | Daily, weekly, major-change, country and multi-country situation reports |
+| **Languages** | Dashboard, generated explanations, alerts and reports in English, French, Swahili, Lingala, Portuguese and Arabic (right-to-left); browser translation for other languages without breaking the page ([translation guide](docs/TRANSLATION.md)) |
 | **Ethics by architecture** | No patient or personal data model; PII redaction; pseudonymous authors; first-level resolution cap with small-area and complementary suppression; query-reconstruction guard; scope guard against clinical, identity, tracking and targeting requests; prompt-injection handling; retention limits; audit log |
 
 ## Current status (2026-10-18)
@@ -52,6 +53,7 @@ estimate."*
 | Hosting without a server (GitHub Pages) | **Operational** — scheduled pipeline in a private operations repository, static snapshot on GitHub Pages, review through issues ([DEPLOYMENT.md](docs/DEPLOYMENT.md#without-a-server-github-pages)) |
 | Optional reviewer translation (Claude) | Implemented; requires `EW_ENABLE_LLM_TRANSLATION` + credentials; not tested live |
 | Lexicons beyond en/fr/pt | Drafts awaiting native-speaker review (content routed to people) |
+| Interface translations (fr, sw, ln, pt, ar) | **Operational, machine-assisted** — awaiting native-speaker review; every page says so until a language is marked reviewed |
 
 See [docs/LIMITATIONS.md](docs/LIMITATIONS.md) for everything that does not yet work as well as it should.
 
@@ -84,6 +86,7 @@ server on GitHub Pages with `deploy/github/setup.sh` — see
 * [Operations: review, corrections, maintenance](docs/OPERATIONS.md)
 * [Deployment](docs/DEPLOYMENT.md)
 * [Known limitations](docs/LIMITATIONS.md)
+* [Translation guide](docs/TRANSLATION.md)
 
 ## Repository layout
 

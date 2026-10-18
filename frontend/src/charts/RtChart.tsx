@@ -5,7 +5,8 @@ import { useState } from "react";
 import { DataTable, TableToggle } from "../components/DataTable";
 import { fmtDate, fmtNum } from "../format";
 import { useWidth } from "../hooks";
-import { M, Tooltip, XAxisDates, YGrid, utc } from "./common";
+import { t } from "../i18n";
+import { M, NO_TRANSLATE, Tooltip, XAxisDates, YGrid, utc } from "./common";
 
 type Row = { week_end: string; median: number; lower_90: number; upper_90: number };
 
@@ -13,7 +14,7 @@ export function RtChart({ rows }: { rows: Row[] }) {
   const [ref, width] = useWidth<HTMLDivElement>(720);
   const height = 220;
   const [hover, setHover] = useState<Row | null>(null);
-  if (!rows.length) return <p className="muted">R_t history not available.</p>;
+  if (!rows.length) return <p className="muted">{t("R_t history not available.")}</p>;
   const pts = rows.map((r) => ({ ...r, d: utc(r.week_end) }));
   const x = scaleUtc().domain([pts[0].d, pts[pts.length - 1].d]).range([M.left, width - M.right]);
   const yMax = Math.max(2, Math.ceil(Math.max(...rows.map((r) => r.upper_90)) * 2) / 2);
@@ -22,21 +23,21 @@ export function RtChart({ rows }: { rows: Row[] }) {
   const med = line<(typeof pts)[number]>().x((d) => x(d.d)).y((d) => y(d.median))(pts) ?? "";
   const lastPt = pts[pts.length - 1];
   return (
-    <div className="chart" ref={ref}>
+    <div className="chart" ref={ref} dir="ltr">
       <ul className="legend">
-        <li><span className="key line" /> R_t median (reported cases)</li>
-        <li><span className="key band90" /> 90% credible interval</li>
-        <li><span className="key" style={{ height: 0, borderTop: "1px dashed var(--text-secondary)" }} /> R = 1 (growth threshold)</li>
+        <li><span className="key line" /> {t("R_t median (reported cases)")}</li>
+        <li><span className="key band90" /> {t("90% credible interval")}</li>
+        <li><span className="key" style={{ height: 0, borderTop: "1px dashed var(--text-secondary)" }} /> {t("R = 1 (growth threshold)")}</li>
       </ul>
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Reproduction number of reported cases over time">
-        <YGrid ticks={y.ticks(4)} y={y} width={width} left={M.left} format={(v) => v.toFixed(1)} />
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={t("Reproduction number of reported cases over time")}>
+        <YGrid ticks={y.ticks(4)} y={y} width={width} left={M.left} format={(v) => fmtNum(v, 1)} />
         <line className="axis-line" x1={M.left} x2={width - M.right} y1={y(0)} y2={y(0)} />
         <XAxisDates ticks={x.ticks(width < 520 ? 4 : 6)} x={x} y0={y(0)} />
         <path className="band-90" d={band} />
         <line className="ref-line" x1={M.left} x2={width - M.right} y1={y(1)} y2={y(1)} />
         <path className="series-line" d={med} />
         <circle className="series-dot" cx={x(lastPt.d)} cy={y(lastPt.median)} r={4} />
-        <text className="direct-label" x={x(lastPt.d) - 6} y={y(lastPt.upper_90) - 6} textAnchor="end">
+        <text className="direct-label" x={x(lastPt.d) - 6} y={y(lastPt.upper_90) - 6} textAnchor="end" {...NO_TRANSLATE}>
           {fmtNum(lastPt.median)}
         </text>
         {pts.map((p) => (
@@ -46,18 +47,18 @@ export function RtChart({ rows }: { rows: Row[] }) {
       </svg>
       {hover && (
         <Tooltip x={x(utc(hover.week_end)) * ((ref.current?.clientWidth ?? width) / width)} y={y(hover.median)} width={ref.current?.clientWidth ?? width}>
-          <strong>Week ending {fmtDate(hover.week_end)}</strong>
-          R_t {fmtNum(hover.median)} (90%: {fmtNum(hover.lower_90)}–{fmtNum(hover.upper_90)})
+          <strong>{t("Week ending {date}", { date: fmtDate(hover.week_end) })}</strong>
+          {t("R_t {median} (90%: {lower}–{upper})", { median: fmtNum(hover.median), lower: fmtNum(hover.lower_90), upper: fmtNum(hover.upper_90) })}
         </Tooltip>
       )}
       <TableToggle>
         <DataTable
           rows={rows}
           columns={[
-            { key: "w", header: "Week ending", render: (r) => fmtDate(r.week_end) },
-            { key: "m", header: "Median", render: (r) => fmtNum(r.median), numeric: true },
-            { key: "l", header: "90% lower", render: (r) => fmtNum(r.lower_90), numeric: true },
-            { key: "u", header: "90% upper", render: (r) => fmtNum(r.upper_90), numeric: true },
+            { key: "w", header: t("Week ending"), render: (r) => fmtDate(r.week_end) },
+            { key: "m", header: t("Median"), render: (r) => fmtNum(r.median), numeric: true },
+            { key: "l", header: t("90% lower"), render: (r) => fmtNum(r.lower_90), numeric: true },
+            { key: "u", header: t("90% upper"), render: (r) => fmtNum(r.upper_90), numeric: true },
           ]}
         />
       </TableToggle>

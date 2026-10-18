@@ -57,6 +57,7 @@
 | `pipeline/` | Seeding, ingestion, signals, modelling, evaluation, orchestration, scheduler, retention |
 | `views.py` | Public read models shared by every output channel |
 | `api/` | FastAPI app, security (API keys, roles), rate limiting, constrained Q&A, reviewer views |
+| `frontend/src/i18n/` | Interface languages: catalogs keyed by English text, templates for backend-generated sentences, locale-aware numbers and dates, right-to-left layout |
 | `publish/` | Static snapshot of the public API and dashboard; review, retractions and transport changes through GitHub issues (deployments without a server) |
 | `cli.py` | `ebolawatch` command |
 

@@ -1,21 +1,31 @@
 // A deliberately tiny Markdown renderer for situation reports. It builds React
 // elements (no innerHTML), supporting headings, lists, block quotes, bold and
 // paragraphs. Everything else is rendered as plain text.
+//
+// Reports are generated in English by the backend. Each line is translated
+// segment by segment around **bold** markers (the same split that
+// scripts/i18n-check.ts uses for coverage); segments without a catalog entry
+// stay in English.
 import type { ReactNode } from "react";
+import { fmtDateTime, tx } from "../i18n";
+
+const STAMPED = /^(\d{4}-\d{2}-\d{2}T[\d:.]+(?:Z|[+-]\d{2}:\d{2})?): (.+)$/s; // "<timestamp>: <message>" (alert lines)
+
+/** Translate a segment, keeping its surrounding whitespace. */
+function translateSegment(segment: string): string {
+  const m = /^(\s*)([\s\S]*?)(\s*)$/.exec(segment);
+  if (!m || !m[2]) return segment;
+  const stamped = STAMPED.exec(m[2]);
+  const text = stamped ? `${fmtDateTime(stamped[1])}: ${tx(stamped[2])}` : tx(m[2]);
+  return m[1] + text + m[3];
+}
 
 function inline(text: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  const re = /\*\*(.+?)\*\*/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let i = 0;
-  while ((m = re.exec(text))) {
-    if (m.index > last) out.push(text.slice(last, m.index));
-    out.push(<strong key={i++}>{m[1]}</strong>);
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) out.push(text.slice(last));
-  return out;
+  // odd indices of the split are the contents of **bold** markers
+  return text
+    .split(/\*\*(.+?)\*\*/)
+    .map((part, i) => (i % 2 ? <strong key={i}>{translateSegment(part)}</strong> : translateSegment(part)))
+    .filter((part) => part !== "");
 }
 
 export function Markdown({ source }: { source: string }) {

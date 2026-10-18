@@ -60,6 +60,13 @@ Stated plainly so that nobody mistakes the system for more than it is.
   attributed to the place nearest the first claim; counts stated for other
   places are dropped rather than misattributed.
 
+* The dashboard's French, Swahili, Lingala, Portuguese and Arabic versions
+  were produced with machine assistance and have not been reviewed by native
+  speakers; Lingala and Swahili technical terminology in particular needs
+  review. Sentences the backend generates in new forms fall back to English
+  until a template is added. Downloaded files (CSV, JSON, report Markdown)
+  are in English.
+
 ## Evidence assessment
 
 * Coordination detection relies on timing, near-duplication, author novelty and

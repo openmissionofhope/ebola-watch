@@ -5,47 +5,94 @@ import { PageHead } from "../components/Layout";
 import { Async } from "../components/Status";
 import { fmtDateTime, humanize } from "../format";
 import { useApi, useDocumentTitle } from "../hooks";
+import { T, t } from "../i18n";
 
 export function SourcesPage() {
-  useDocumentTitle("Sources");
+  useDocumentTitle(t("Sources"));
   const s = useApi<SourceStatus[]>("/sources");
   return (
     <>
-      <PageHead title="Data sources and connector status" />
+      <PageHead title={t("Data sources and connector status")} />
       <p className="secondary">
-        Every connector reports its real status. When a source is unavailable or needs credentials, no substitute data are generated. Platforms without a
-        lawful automated access path are listed as unsupported.
+        {t(
+          "Every connector reports its real status. When a source is unavailable or needs credentials, no substitute data are generated. Platforms without a lawful automated access path are listed as unsupported.",
+        )}
       </p>
+      <p className="small muted">{t("Source names, access methods, licences and technical status messages are shown in English, as published by each source.")}</p>
       <Async state={s}>
         {(rows) => (
           <div className="card">
             <DataTable
               rows={rows}
               columns={[
-                { key: "n", header: "Source", render: (r) => (<><strong>{r.name}</strong>{r.institution && <div className="small muted">{r.institution}</div>}</>) },
-                { key: "c", header: "Category", render: (r) => humanize(r.category) },
-                { key: "a", header: "Access", render: (r) => r.access_method },
-                { key: "s", header: "Status", render: (r) => (<><StatusPill status={r.status} />{r.status_message && <div className="small muted" style={{ marginTop: 4 }}>{r.status_message}</div>}</>) },
-                { key: "l", header: "Licence and terms", render: (r) => [r.license, r.terms_note].filter(Boolean).join(" · ") || "—" },
-                { key: "t", header: "Last attempt / success", render: (r) => `${fmtDateTime(r.last_attempt_at)} / ${fmtDateTime(r.last_success_at)}` },
+                {
+                  key: "n",
+                  header: t("Source"),
+                  render: (r) => (
+                    <span lang="en">
+                      <strong>{r.name}</strong>
+                      {r.institution && <div className="small muted">{r.institution}</div>}
+                    </span>
+                  ),
+                },
+                { key: "c", header: t("Category"), render: (r) => humanize(r.category) },
+                { key: "a", header: t("Access"), render: (r) => <span lang="en">{r.access_method}</span> },
+                {
+                  key: "s",
+                  header: t("Status"),
+                  render: (r) => (
+                    <>
+                      <StatusPill status={r.status} />
+                      {r.status_message && (
+                        <div className="small muted" style={{ marginTop: 4 }} lang="en">
+                          {r.status_message}
+                        </div>
+                      )}
+                    </>
+                  ),
+                },
+                { key: "l", header: t("Licence and terms"), render: (r) => <span lang="en">{[r.license, r.terms_note].filter(Boolean).join(" · ") || "—"}</span> },
+                { key: "t", header: t("Last attempt / success"), render: (r) => `${fmtDateTime(r.last_attempt_at)} / ${fmtDateTime(r.last_success_at)}` },
               ]}
             />
           </div>
         )}
       </Async>
       <section className="card section" aria-labelledby="dl-h">
-        <h2 id="dl-h">Download the data</h2>
+        <h2 id="dl-h">{t("Download the data")}</h2>
         <p className="secondary">
-          Aggregated tables with the same publication policy as the dashboard: countries and first-level units only, with small-area suppression.
+          {t("Aggregated tables with the same publication policy as the dashboard: countries and first-level units only, with small-area suppression.")}
         </p>
         <ul>
-          <li><a href={downloadUrl("/export/summaries.csv")} download>Summaries by area (CSV)</a>: official counts, estimated totals, severity and confidence.</li>
-          <li><a href={downloadUrl("/export/subnational.csv")} download>First-level units (CSV)</a>: official counts with suppression applied.</li>
           <li>
-            {STATIC ? "Every page's data as JSON files: " : "The full public API: "}
-            <a href={API_DOCS_URL}>{STATIC ? "how the data files are organised" : "API documentation"}</a>.
+            <T
+              k="{link}: official counts, estimated totals, severity and confidence."
+              link={
+                <a href={downloadUrl("/export/summaries.csv")} download>
+                  {t("Summaries by area (CSV)")}
+                </a>
+              }
+            />
+          </li>
+          <li>
+            <T
+              k="{link}: official counts with suppression applied."
+              link={
+                <a href={downloadUrl("/export/subnational.csv")} download>
+                  {t("First-level units (CSV)")}
+                </a>
+              }
+            />
+          </li>
+          <li>
+            {STATIC ? (
+              <T k="Every page's data as JSON files: {link}." link={<a href={API_DOCS_URL}>{t("how the data files are organised")}</a>} />
+            ) : (
+              <T k="The full public API: {link}." link={<a href={API_DOCS_URL}>{t("API documentation")}</a>} />
+            )}
           </li>
         </ul>
+        <p className="small muted">{t("Downloaded files are in English.")}</p>
       </section>
     </>
   );

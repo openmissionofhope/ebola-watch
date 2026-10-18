@@ -76,6 +76,7 @@ def test_static_export_matches_public_api_and_publishes_nothing_else(db, client,
     blob = "\n".join(p.read_text(errors="ignore") for p in data.rglob("*") if p.is_file())
     assert "must stay private" not in blob and "rumour headline" not in blob
     assert (out / "region/COD/index.html").read_text() == STATIC_INDEX
+    assert (out / "languages/index.html").exists()
     assert (out / "404.html").exists() and (out / ".nojekyll").exists() and (out / "assets/app.js").exists()
     assert (out / "CNAME").read_text().strip() == "ebolawatch.example.org"
 

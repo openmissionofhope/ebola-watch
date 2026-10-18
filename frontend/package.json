@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
+    "i18n:extract": "node --experimental-strip-types --no-warnings scripts/i18n-check.ts extract",
+    "i18n:check": "node --experimental-strip-types --no-warnings scripts/i18n-check.ts check",
+    "i18n:coverage": "node --experimental-strip-types --no-warnings scripts/i18n-check.ts coverage",
     "preview": "vite preview"
   },
   "dependencies": {

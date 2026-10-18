@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
       - run: npm ci
+      - name: Translation catalogs (placeholders, extracted keys)
+        run: npm run i18n:check
       - run: npm run build
       - name: Static build (GitHub Pages)
         run: npm run build

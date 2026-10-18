@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { API_DOCS_URL, STATIC, type Meta } from "../api";
 import { fmtDateTime } from "../format";
 import { useApi } from "../hooks";
+import { LANGUAGES, T, currentLanguage, t, useLanguage, type Lang } from "../i18n";
 
 const MetaContext = createContext<Meta | null>(null);
 export const useMeta = () => useContext(MetaContext);
@@ -10,27 +11,30 @@ export const useMeta = () => useContext(MetaContext);
 const SERVER_ONLY = new Set(["/ask", "/review"]); // need the live API (questions, authenticated review)
 const STALE_AFTER_MS = 36 * 3600 * 1000;
 
-const NAV: [string, string][] = ([
-  ["/", "Overview"],
-  ["/map", "Map"],
-  ["/regions", "Regions"],
-  ["/evidence", "Evidence"],
-  ["/evaluation", "Forecasts & evaluation"],
-  ["/transport", "Transport"],
-  ["/reports", "Reports"],
-  ["/sources", "Sources"],
-  ["/ask", "Ask"],
-  ["/methodology", "Methodology & ethics"],
-  ["/report-error", "Report an error"],
-  ["/review", "Review"],
-] as [string, string][]).filter(([to]) => !(STATIC && SERVER_ONLY.has(to)));
+function navItems(): [string, string][] {
+  const items: [string, string][] = [
+    ["/", t("Overview")],
+    ["/map", t("Map")],
+    ["/regions", t("Regions")],
+    ["/evidence", t("Evidence")],
+    ["/evaluation", t("Forecasts & evaluation")],
+    ["/transport", t("Transport")],
+    ["/reports", t("Reports")],
+    ["/sources", t("Sources")],
+    ["/ask", t("Ask")],
+    ["/methodology", t("Methodology & ethics")],
+    ["/report-error", t("Report an error")],
+    ["/review", t("Review")],
+  ];
+  return items.filter(([to]) => !(STATIC && SERVER_ONLY.has(to)));
+}
 
 type Theme = "system" | "light" | "dark";
 
 function readTheme(): Theme {
   try {
-    const t = localStorage.getItem("ew-theme");
-    return t === "light" || t === "dark" ? t : "system";
+    const v = localStorage.getItem("ew-theme");
+    return v === "light" || v === "dark" ? v : "system";
   } catch {
     return "system";
   }
@@ -49,10 +53,40 @@ function ThemeToggle() {
     }
   }, [theme]);
   const next: Theme = theme === "system" ? "light" : theme === "light" ? "dark" : "system";
+  const names: Record<Theme, string> = { system: t("System"), light: t("Light"), dark: t("Dark") };
   return (
-    <button type="button" className="theme-toggle" onClick={() => setTheme(next)} aria-label={`Colour theme: ${theme}. Switch to ${next}.`}>
-      Theme: {theme === "system" ? "System" : theme === "light" ? "Light" : "Dark"}
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={() => setTheme(next)}
+      aria-label={t("Colour theme: {current}. Switch to {next}.", { current: names[theme], next: names[next] })}
+    >
+      {t("Theme: {name}", { name: names[theme] })}
     </button>
+  );
+}
+
+function LanguageMenu() {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div className="lang-menu">
+      <label htmlFor="ew-lang" className="visually-hidden">
+        {t("Language")}
+      </label>
+      <span aria-hidden="true" className="lang-icon">
+        文A
+      </span>
+      <select id="ew-lang" value={lang} onChange={(e) => setLang(e.target.value as Lang)} translate="no">
+        {LANGUAGES.map((l) => (
+          <option key={l.code} value={l.code} lang={l.code}>
+            {l.name}
+          </option>
+        ))}
+      </select>
+      <Link to="/languages" className="small">
+        {t("Other languages")}
+      </Link>
+    </div>
   );
 }
 
@@ -67,19 +101,24 @@ export function Layout() {
   return (
     <MetaContext.Provider value={meta.data}>
       <a className="skip-link" href="#main">
-        Skip to main content
+        {t("Skip to main content")}
       </a>
       <header className="site-header">
         <div className="header-inner">
-          <NavLink to="/" className="brand" aria-label="Ebola Watch home">
-            <span className="brand-name">Ebola Watch</span>
-            <span className="brand-org">Open Mission of Hope · epidemiological intelligence</span>
+          <NavLink to="/" className="brand" aria-label={t("Ebola Watch home")}>
+            <span className="brand-name" translate="no">
+              Ebola Watch
+            </span>
+            <span className="brand-org">
+              <span translate="no">Open Mission of Hope</span> · {t("epidemiological intelligence")}
+            </span>
           </NavLink>
+          <LanguageMenu />
           <ThemeToggle />
         </div>
-        <nav className="main-nav" aria-label="Main">
+        <nav className="main-nav" aria-label={t("Main")}>
           <ul>
-            {NAV.map(([to, label]) => (
+            {navItems().map(([to, label]) => (
               <li key={to}>
                 <NavLink to={to} end={to === "/"} className={({ isActive }) => (isActive ? "active" : undefined)}>
                   {label}
@@ -93,26 +132,35 @@ export function Layout() {
         {meta.data?.contains_synthetic_data && (
           <div className="banner synthetic" role="alert">
             <span className="icon" aria-hidden="true">⚠</span>
-            <span>SYNTHETIC DATA PRESENT — not real outbreak data. Items marked synthetic are generated for testing or demonstration.</span>
+            <span>{t("SYNTHETIC DATA PRESENT — not real outbreak data. Items marked synthetic are generated for testing or demonstration.")}</span>
           </div>
         )}
         <StaleSnapshot meta={meta.data} />
+        <TranslationNotice />
         <Disclaimer />
-        <Outlet />
+        {/* a fresh subtree per page keeps browser translators and React in step */}
+        <Outlet key={loc.pathname} />
       </main>
       <footer className="site-footer">
         <div className="footer-inner">
           <p>
-            <strong>Not a medical service.</strong> {meta.data?.disclaimer ?? "Ebola Watch provides epidemiological intelligence and does not provide clinical advice."}
+            <strong>{t("Not a medical service.")}</strong>{" "}
+            {t(
+              "Ebola Watch provides epidemiological observation, burden estimation, forecasting and public-health intelligence. It is not a medical service and does not provide diagnosis, treatment, medicine, vaccine or other clinical advice. Estimates and forecasts are uncertain and must not be used to make decisions about an individual's care.",
+            )}
           </p>
           <p>
-            Official counts, model estimates, forecasts and unverified signals are shown as separate quantities. Published at first-level
-            administrative resolution at most; no patient, household or individual-level information is collected or shown.
+            {t(
+              "Official counts, model estimates, forecasts and unverified signals are shown as separate quantities. Published at first-level administrative resolution at most; no patient, household or individual-level information is collected or shown.",
+            )}
           </p>
           <p className="small">
-            Model {meta.data?.model_version ?? "—"} · latest model run {fmtDateTime(meta.data?.latest_model_run)} · <a href={API_DOCS_URL}>{STATIC ? "Data files" : "API documentation"}</a> ·{" "}
-            <a href="https://github.com/openmissionofhope/ebola-watch" rel="noopener noreferrer">Source code</a> · Released under the Christian Open Source
-            License (COSL) 1.0 · Boundaries: Natural Earth; geoBoundaries (see NOTICE).
+            {t("Model {version} · latest model run {when}", { version: meta.data?.model_version ?? "—", when: fmtDateTime(meta.data?.latest_model_run) })} ·{" "}
+            <a href={API_DOCS_URL}>{STATIC ? t("Data files") : t("API documentation")}</a> ·{" "}
+            <a href="https://github.com/openmissionofhope/ebola-watch" rel="noopener noreferrer">
+              {t("Source code")}
+            </a>{" "}
+            · {t("Released under the Christian Open Source License (COSL) 1.0 · Boundaries: Natural Earth; geoBoundaries (see NOTICE).")}
           </p>
         </div>
       </footer>
@@ -129,8 +177,33 @@ function StaleSnapshot({ meta }: { meta: Meta | null }) {
     <div className="banner warn" role="alert">
       <span className="icon" aria-hidden="true">⚠</span>
       <span>
-        <strong>Out of date.</strong> This page has not been updated since {fmtDateTime(meta.snapshot_generated_at)}. Automatic updates may have stopped; check official sources for
-        the latest information.
+        <strong>{t("Out of date.")}</strong>{" "}
+        {t(
+          "This page has not been updated since {when}. Automatic updates may have stopped; check official sources for the latest information.",
+          { when: fmtDateTime(meta.snapshot_generated_at) },
+        )}
+      </span>
+    </div>
+  );
+}
+
+/** Translations are machine-assisted until a native speaker has reviewed them. */
+function TranslationNotice() {
+  const { setLang } = useLanguage();
+  const lang = currentLanguage();
+  if (lang.reviewed) return null;
+  return (
+    <div className="banner info" role="note" lang={lang.code}>
+      <span className="icon" aria-hidden="true">文A</span>
+      <span>
+        <T
+          k="This translation was made with machine assistance and has not yet been reviewed by a native speaker. The English version is authoritative: {english}."
+          english={
+            <button type="button" className="link-button" onClick={() => setLang("en")} lang="en">
+              Read in English
+            </button>
+          }
+        />
       </span>
     </div>
   );
@@ -149,8 +222,10 @@ function Disclaimer() {
     <div className="banner info" role="note">
       <span className="icon" aria-hidden="true">ℹ</span>
       <div style={{ flex: 1 }}>
-        <strong>Epidemiological intelligence, not medical advice.</strong> Ebola Watch does not diagnose, recommend treatments, medicines or vaccines,
-        or assess anyone's symptoms. If someone may be ill or exposed, contact a health professional or your national public-health authority.
+        <strong>{t("Epidemiological intelligence, not medical advice.")}</strong>{" "}
+        {t(
+          "Ebola Watch does not diagnose, recommend treatments, medicines or vaccines, or assess anyone's symptoms. If someone may be ill or exposed, contact a health professional or your national public-health authority.",
+        )}
       </div>
       <button
         type="button"
@@ -163,9 +238,9 @@ function Disclaimer() {
             /* ignore */
           }
         }}
-        aria-label="Dismiss notice for this session"
+        aria-label={t("Dismiss notice for this session")}
       >
-        Dismiss
+        {t("Dismiss")}
       </button>
     </div>
   );
