@@ -6,7 +6,7 @@ computed.
 
 ## 1. Automated tests
 
-`pytest` → **67 passed** (offline; synthetic data only).
+`pytest` → **79 passed** (offline; synthetic data only).
 `pytest -m live` → **3 passed** (WHO Disease Outbreak News, World Bank,
 OpenStreetMap Overpass, contacted live).
 
@@ -39,8 +39,11 @@ Other tests cover extraction, Rt recovery on a synthetic outbreak with known R,
 mortality back-calculation recovering a known ascertainment, interval coverage
 on synthetic backtests, WIS, small-outbreak extinction, connectors against
 mocked HTTP (including 403/429 handling and XML entity attacks), manual import
-validation, report content, retention, API roles and security headers, and the
-optional translator with a stub client.
+validation, report content, retention, API roles and security headers, the
+optional translator with a stub client, the static export (identical to the
+API, nothing administrative or raw published) and review through GitHub issues
+(decisions applied only from labels, untrusted text inert, excerpts deleted
+after retention).
 
 Database migrations were applied to SQLite and to PostgreSQL 16 + PostGIS 3.4
 (Docker); the full pipeline ran on PostGIS and a spatial query

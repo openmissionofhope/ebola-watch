@@ -45,8 +45,9 @@ estimate."*
 | Africa CDC feed | Reachable; API returns 403 to automated clients (not bypassed) |
 | ReliefWeb, ProMED, local RSS, Reddit, YouTube, X | **Require configuration** (credentials/approval); implemented, not tested live |
 | Facebook, Telegram | **Unsupported** (no lawful automated read path for this use) |
-| Models, severity, transport, reports, API | **Operational** — 70+ automated tests incl. the 20 required scenarios; PostgreSQL/PostGIS migration tested |
-| Dashboard | **Operational** — React/Vite build served by the API |
+| Models, severity, transport, reports, API | **Operational** — 80+ automated tests incl. the 20 required scenarios; PostgreSQL/PostGIS migration tested |
+| Dashboard | **Operational** — React/Vite build served by the API, or as a static site |
+| Hosting without a server (GitHub Pages) | **Operational** — scheduled pipeline in a private operations repository, static snapshot on GitHub Pages, review through issues ([DEPLOYMENT.md](docs/DEPLOYMENT.md#without-a-server-github-pages)) |
 | Optional reviewer translation (Claude) | Implemented; requires `EW_ENABLE_LLM_TRANSLATION` + credentials; not tested live |
 | Lexicons beyond en/fr/pt | Drafts awaiting native-speaker review (content routed to people) |
 
@@ -65,7 +66,8 @@ uv pip install --python .venv/bin/python -e ".[dev,postgres,geo,llm]"
 ```
 
 Tests: `.venv/bin/pytest` (offline, synthetic data) and `.venv/bin/pytest -m live`
-(real services). Production: `docker compose up -d --build` — see
+(real services). Production: `docker compose up -d --build`, or without a
+server on GitHub Pages with `deploy/github/setup.sh` — see
 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Documentation

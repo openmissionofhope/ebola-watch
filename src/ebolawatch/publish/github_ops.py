@@ -299,8 +299,9 @@ def _excerpt_comment(docs: list[tuple[Document, Signal]], error_text: str | None
         parts += ["", f"- {when} · {plain(langs)} · {plain(doc.source.key if doc.source else '?')} · {link(doc.url)}"
                       + (f" · review notes: {plain(flags)}" if flags else "")]
         text = (doc.title or "").strip()
-        if doc.text_minimized:
-            text += "\n\n" + doc.text_minimized[:EXCERPT_CHARS] + ("…" if len(doc.text_minimized) > EXCERPT_CHARS else "")
+        body = (doc.text_minimized or "").strip()
+        if body and body != text:
+            text += "\n\n" + body[:EXCERPT_CHARS] + ("…" if len(body) > EXCERPT_CHARS else "")
         if text.strip():
             parts.append(fence(text.strip()))
     if len(docs) > MAX_EXCERPT_DOCS:
