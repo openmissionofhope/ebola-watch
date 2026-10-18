@@ -38,7 +38,7 @@ on:
       EW_SECRET_KEY: {required: true}
       EW_PSEUDONYM_SALT: {required: true}
       EW_STATE_KEY: {required: true}
-      PAGES_DEPLOY_KEY: {required: true}
+      PAGES_DEPLOY_KEY: {required: false}   # without it the run completes but nothing is published
       EW_RELIEFWEB_APPNAME: {required: false}
       EW_YOUTUBE_API_KEY: {required: false}
       EW_X_BEARER_TOKEN: {required: false}
@@ -160,6 +160,10 @@ jobs:
           PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
         run: |
           set -euo pipefail
+          if [ -z "$PAGES_DEPLOY_KEY" ]; then
+            echo "::warning::PAGES_DEPLOY_KEY is not set: the site was built but not published"
+            exit 0
+          fi
           install -m 600 /dev/null "$RUNNER_TEMP/deploy_key"
           printf '%s\n' "$PAGES_DEPLOY_KEY" > "$RUNNER_TEMP/deploy_key"
           gh api meta --jq '.ssh_keys[] | "github.com " + .' > "$RUNNER_TEMP/known_hosts"

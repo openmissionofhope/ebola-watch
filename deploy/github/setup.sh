@@ -38,12 +38,6 @@ init)
     gh secret set EW_STATE_KEY --repo "$ops" < "$key_file"
     echo "State key saved to $key_file"
   fi
-  if ! has_secret "$ops" PAGES_DEPLOY_KEY; then
-    ssh-keygen -q -t ed25519 -N "" -C "ebola-watch publisher ($ops)" -f "$tmp/deploy_key"
-    gh repo deploy-key add "$tmp/deploy_key.pub" --repo "$site" --allow-write --title "Ebola Watch publisher ($ops)"
-    gh secret set PAGES_DEPLOY_KEY --repo "$ops" < "$tmp/deploy_key"
-  fi
-
   # The deploy key can push to the site repository: keep it off the default
   # branch (people with write access or above are unaffected).
   if ! gh api "repos/$site/rulesets" --jq '.[].name' | grep -qx "Default branch: people only"; then
@@ -69,6 +63,21 @@ JSON
     git -C "$tmp/ops" push -q origin main
   fi
   gh label create data-error --repo "$site" --color d93f0b --description "Report of an error in published data" 2>/dev/null || true
+  # Publishing uses a deploy key with write access to the site repository.
+  # Organisations created since late 2024 disallow deploy keys by default.
+  owner=${site%%/*}
+  if [[ "$(gh api "orgs/$owner" --jq '.deploy_keys_enabled_for_repositories' 2>/dev/null)" == "false" ]]; then
+    echo "Deploy keys are disabled in the $owner organisation, so the site cannot be published yet." >&2
+    echo "An owner can enable them at https://github.com/organizations/$owner/settings/member_privileges" >&2
+    echo "(Deploy keys -> Enabled -> Save), then run this command again." >&2
+    exit 1
+  fi
+  if ! has_secret "$ops" PAGES_DEPLOY_KEY; then
+    ssh-keygen -q -t ed25519 -N "" -C "ebola-watch publisher ($ops)" -f "$tmp/deploy_key"
+    gh repo deploy-key add "$tmp/deploy_key.pub" --repo "$site" --allow-write --title "Ebola Watch publisher ($ops)"
+    gh secret set PAGES_DEPLOY_KEY --repo "$ops" < "$tmp/deploy_key"
+  fi
+
   echo "Done. Start the first run with: gh workflow run pipeline.yml --repo $ops"
   echo "When it has succeeded: $0 pages $site [custom domain]"
   ;;
