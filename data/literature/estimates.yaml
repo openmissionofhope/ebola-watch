@@ -1,0 +1,21 @@
+# Published external estimates of outbreak size, stored for comparison with
+# Ebola Watch's own estimates. Each entry quotes the source verbatim.
+# validation_status: verified (a reviewer checked the quote against the source)
+# or pending_review.
+estimates:
+  - key: imperial-bdbv-2026-05-20
+    region_code: COD
+    quantity: cumulative_cases
+    as_of: 2026-05-20
+    lower: 400
+    upper: 900
+    statement: >-
+      "as of 20 May 2026, approximately 400 to 900 cases of BVD may have occurred in the Democratic Republic
+      of the Congo" ... "with values of over 1000 not being able to be excluded given current data"
+    citation: >-
+      McCabe R, et al. Estimation of the size of the outbreak of Ebola disease caused by Bundibugyo virus in the
+      Democratic Republic of the Congo, 20 May 2026 update. MRC Centre for Global Infectious Disease Analysis,
+      Imperial College London.
+    url: https://www.imperial.ac.uk/mrc-global-infectious-disease-analysis/research-themes/preparedness-and-response-to-emerging-threats/report-ebola-update-20-05-2026/
+    validation_status: pending_review
+    note: "Quote retrieved by automated page summary on 2026-10-18; confirm against the report before treating as verified."

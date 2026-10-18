@@ -1,0 +1,11 @@
+code: pga
+name: Juba Arabic
+scripts: [Latn, Arab]
+support_level: low
+review_status: draft_requires_native_review
+notes: Juba Arabic is mostly written in Latin script in social media; spelling varies widely.
+identifiers: ["bita", "ita", "ana", "nas", "kalam", "kede", "ziyada"]
+terms:
+  ebola: [ebola, "إيبولا"]
+  illness: [ayan, ayanin, marad]
+  death: [mutu, motu, wafa]

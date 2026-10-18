@@ -1,0 +1,12 @@
+code: ach
+name: Acholi
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: >
+  Placeholder pending native review. Short Acholi words collide with English
+  function words, so only the disease name is listed; every Acholi-language
+  signal is escalated to human review.
+identifiers: ["ki", "pi", "me", "dano", "ento", "gin", "pe", "obedo"]
+terms:
+  ebola: [ebola, two ebola]

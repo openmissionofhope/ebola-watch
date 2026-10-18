@@ -1,0 +1,13 @@
+code: sg
+name: Sango
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Minimal draft. French is widely code-switched in Central African Republic media and is matched separately.
+identifiers: ["na", "ti", "so", "ala", "lo", "ape", "aye", "azo", "mbi"]
+terms:
+  ebola: [ebola]
+  illness: [kobela, wakobela]
+  death: [kui, akui]
+  temporal_recent: [lâsô, bîrï]
+relative_dates: {"lâsô": 0, "bîrï": 1}

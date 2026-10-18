@@ -1,0 +1,17 @@
+# Mobility inputs for the exportation-based estimator.
+#
+# The exportation method needs the volume of travel from an affected area to
+# destinations where imported cases are reliably detected. Ebola Watch does not
+# ship invented travel volumes: until an operator adds a sourced entry below, the
+# method reports "insufficient evidence".
+#
+# Format (one entry per source catchment):
+# - key: ituri-north-kivu-to-uganda
+#   source_units: [CD-IT, CD-NK]          # admin-1 units forming the catchment
+#   destination_iso3: [UGA]
+#   catchment_population: 0                # people in the catchment (cite)
+#   daily_travellers: {low: 0, central: 0, high: 0}   # cite source
+#   destination_detection_probability: [0.5, 1.0]
+#   citation: "..."
+#   as_of: YYYY-MM-DD
+catchments: []

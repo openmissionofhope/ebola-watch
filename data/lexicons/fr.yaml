@@ -1,0 +1,43 @@
+code: fr
+name: French
+scripts: [Latn]
+support_level: high
+review_status: reviewed
+identifiers: [le, la, les, des, et, est, une, dans, pour, sont, avec, qui, nous, ils, à, au, du, on, "c'est", dit, mais, pas, ont, cette, sur, "n'est", aussi]
+terms:
+  ebola: [ebola, ébola, virus ebola, bundibugyo, maladie à virus ebola, mve, "e-bola"]
+  vhf: [fièvre hémorragique, fievre hemorragique, fièvre hémorragique virale, fhv]
+  bleeding: [saignement, saignements, saigne, saignent, sang, vomit du sang, hémorragie]
+  illness: [malade, malades, maladie, fièvre, fievre, symptômes, vomissements, diarrhée, cas, patients, infecté, infectés]
+  death: [mort, morts, décès, décédé, décédés, décédée, meurt, meurent, mourir, enterré, enterrement, funérailles, inhumation]
+  unexplained: [maladie inconnue, maladie mystérieuse, mystérieuse, inexpliqué, inexpliqués, étrange maladie, maladie étrange, cause inconnue]
+  cluster: [plusieurs personnes, beaucoup de personnes, toute la famille, familles, villageois, habitants, tout le village, des dizaines, série de décès]
+  outbreak: [épidémie, flambée, foyer, propagation, se propage, nouveaux cas, cas confirmés, cas suspects, cas probables]
+  lab: [laboratoire, confirmé par, testé positif, test positif, pcr, échantillons, inrb]
+  surveillance: [recherche des contacts, suivi des contacts, dépistage, isolement, quarantaine, surveillance, riposte, centre de traitement, cte, vaccination]
+  negation: [pas ebola, pas d'ebola, n'est pas ebola, négatif, test négatif, écarté, aucun cas]
+  hedging: [peut-être, probablement, présumé, présumés, suspect, suspects, non confirmé, soupçonné, on craint, aurait, auraient]
+  firsthand: [j'ai vu, mon voisin, ma voisine, mon frère, ma soeur, mon père, ma mère, dans notre village, chez nous, ici à, nous avons enterré, j'ai été témoin]
+  secondary: [selon, d'après, rapporte, rapportent, source, via, relayé par, partagé par, transféré]
+  rumor: [on dit, il paraît, rumeur, rumeurs, bruit qui court, j'ai entendu, info non vérifiée]
+  satire: [satire, parodie, blague, humour, "😂", "🤣", mdr, lol]
+  debunk: [fausse information, fake news, intox, infox, faux, démenti, dément, rumeur infondée, montage]
+  official_body: [ministère de la santé, ministre de la santé, oms, organisation mondiale de la santé, africa cdc, inrb, insp, gouvernement, autorités sanitaires, division provinciale de la santé, dps, zone de santé]
+  preparedness: [prévention, vigilance, renforce sa vigilance, préparation, mesures préventives, riposte préventive, interceptée, intercepté, dépistage aux frontières, en alerte]
+  urgency: [urgent, alerte, dernière minute, partagez, partagez massivement, faites circuler]
+  temporal_recent: [aujourd'hui, hier, ce matin, cette nuit, hier soir, cette semaine, actuellement, en cours]
+  temporal_past: [il y a des années, l'année dernière, l'an dernier, en 2014, en 2018, en 2019, en 2007, en 2012, en 2022, en 2025, précédente épidémie]
+alternative_explanations:
+  cholera: [choléra, cholera]
+  malaria: [paludisme, malaria]
+  measles: [rougeole]
+  typhoid: [typhoïde, fièvre typhoïde]
+  meningitis: [méningite]
+  yellow_fever: [fièvre jaune]
+  marburg: [marburg]
+  lassa: [lassa]
+  mpox: [mpox, variole du singe, monkeypox]
+  anthrax: [charbon, anthrax]
+  poisoning: [empoisonnement, empoisonné, intoxication, eau contaminée]
+  sorcery: [sorcellerie, sort, envoûtement]
+relative_dates: {"aujourd'hui": 0, hier: 1, "hier soir": 1, "cette semaine": 3, "la semaine dernière": 7}

@@ -1,0 +1,13 @@
+code: kg
+name: Kikongo / Kituba
+aliases: [ktu, kng]
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Minimal draft covering Kituba (Kikongo ya leta) and Kikongo; French loanwords are common.
+identifiers: ["ya", "na", "ke", "ve", "yandi", "bantu", "beto", "bau", "kele"]
+terms:
+  ebola: [ebola, maladi ya ebola]
+  illness: [maladi, bimbefo, kimbevo]
+  death: [kufwa, me kufwa, lufwa]
+  cluster: [bantu mingi]

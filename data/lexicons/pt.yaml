@@ -1,0 +1,41 @@
+code: pt
+name: Portuguese
+scripts: [Latn]
+support_level: high
+review_status: reviewed
+identifiers: [não, uma, com, para, são, foram, pessoas, também, mas, está, estão, foi, pelo, pela, dos, das, nos, em, que, é, tem, muitas, muito, aldeia]
+terms:
+  ebola: [ébola, ebola, vírus ébola, doença por vírus ébola, bundibugyo]
+  vhf: [febre hemorrágica, febre hemorragica, febre hemorrágica viral]
+  bleeding: [sangramento, hemorragia, sangue, vómito com sangue, vômito com sangue]
+  illness: [doente, doentes, doença, febre, sintomas, vómitos, vômitos, diarreia, casos, pacientes, infetado, infectado]
+  death: [morreu, morreram, morte, mortes, óbito, óbitos, falecido, faleceram, enterro, funeral]
+  unexplained: [doença desconhecida, doença misteriosa, doença estranha, causa desconhecida]
+  cluster: [várias pessoas, muitas pessoas, família inteira, aldeia inteira, dezenas de pessoas]
+  outbreak: [surto, epidemia, propagação, novos casos, casos confirmados, casos suspeitos]
+  lab: [laboratório, confirmado por, testou positivo, teste positivo, pcr, amostras]
+  surveillance: [rastreio de contactos, rastreamento de contatos, isolamento, quarentena, vigilância, vacinação, centro de tratamento]
+  negation: [não é ébola, não é ebola, negativo, descartado]
+  hedging: [talvez, possivelmente, suspeito, suspeitos, não confirmado, alegadamente, teme-se]
+  firsthand: [eu vi, meu vizinho, minha vizinha, meu irmão, minha irmã, na nossa aldeia, aqui em, enterrámos]
+  secondary: [segundo, de acordo com, fontes dizem, via, citando]
+  rumor: [dizem que, boato, rumor, ouvi dizer]
+  satire: [sátira, paródia, piada, "😂", "🤣", kkk]
+  debunk: [notícia falsa, falso, boato falso, desmentido, montagem]
+  official_body: [ministério da saúde, organização mundial da saúde, oms, governo, autoridades sanitárias, africa cdc]
+  preparedness: [prevenção, vigilância reforçada, preparação, medidas preventivas, alerta]
+  urgency: [urgente, alerta, partilhe, compartilhe]
+  temporal_recent: [hoje, ontem, esta manhã, esta semana, atualmente]
+  temporal_past: [há anos, ano passado, em 2014, em 2018, em 2019, em 2022]
+alternative_explanations:
+  cholera: [cólera]
+  malaria: [malária, paludismo]
+  measles: [sarampo]
+  typhoid: [febre tifoide]
+  meningitis: [meningite]
+  yellow_fever: [febre amarela]
+  marburg: [marburg]
+  mpox: [mpox, varíola dos macacos]
+  poisoning: [envenenamento, intoxicação]
+  sorcery: [feitiçaria]
+relative_dates: {hoje: 0, ontem: 1, "esta semana": 3, "semana passada": 7}

@@ -1,0 +1,186 @@
+# Corridor-level multimodal connectivity between administrative units.
+#
+# Public-safety design: nodes are administrative units (admin-1 or country),
+# never facilities, stations, ports or border posts. Edges describe broad
+# corridors and carry no route geometry.
+#
+# Status vocabulary (see ebolawatch.domain.enums):
+#   physical_status: documented | unverified
+#   service_status:  operational | intermittent | seasonal | suspended | non_operational | unknown
+#   verification:    official | secondary | mapped_only | unverified
+#
+# Nothing here asserts that a passenger service currently runs unless
+# service_status says so with a source. Most entries are deliberately
+# "unknown": the model treats unknown services as scenarios (closed / partial /
+# open), never as operating. Operators update statuses through the admin API,
+# which keeps an append-only history with the evidence for each change.
+version: "2026.10.1"
+last_reviewed: null
+
+edges:
+  # --- Roads: DRC internal (eastern provinces) ---
+  - {key: road-it-nk, from: CD-IT, to: CD-NK, mode: road, corridor: "Ituri–Nord-Kivu national road corridor",
+     physical_status: documented, service_status: unknown, verification: mapped_only,
+     sources: ["OpenStreetMap road network"], seasonal_note: "Road condition degrades in rainy seasons", disruption_note: "Insecurity disrupts movement intermittently; no current status verified"}
+  - {key: road-it-to, from: CD-IT, to: CD-TO, mode: road, corridor: "Ituri–Tshopo road corridor",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"],
+     seasonal_note: "Long unpaved sections; seasonal accessibility not verified"}
+  - {key: road-it-hu, from: CD-IT, to: CD-HU, mode: road, corridor: "Ituri–Haut-Uélé road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-hu-bu, from: CD-HU, to: CD-BU, mode: road, corridor: "Haut-Uélé–Bas-Uélé road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-nk-sk, from: CD-NK, to: CD-SK, mode: road, corridor: "Nord-Kivu–Sud-Kivu road corridor",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"],
+     disruption_note: "Conflict-related disruption reported in the region; current status not verified"}
+  - {key: road-to-bu, from: CD-TO, to: CD-BU, mode: road, corridor: "Tshopo–Bas-Uélé road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-to-ma, from: CD-TO, to: CD-MA, mode: road, corridor: "Tshopo–Maniema road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-sk-ma, from: CD-SK, to: CD-MA, mode: road, corridor: "Sud-Kivu–Maniema road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-sk-ta, from: CD-SK, to: CD-TA, mode: road, corridor: "Sud-Kivu–Tanganyika road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-su-nu, from: CD-SU, to: CD-NU, mode: road, corridor: "Sud-Ubangi–Nord-Ubangi road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-su-mo, from: CD-SU, to: CD-MO, mode: road, corridor: "Sud-Ubangi–Mongala road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-bu-mo, from: CD-BU, to: CD-MO, mode: road, corridor: "Bas-Uélé–Mongala road connections",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  # --- Roads: cross-border from eastern DRC ---
+  - {key: road-it-ugn, from: CD-IT, to: UG-N, mode: road, corridor: "Ituri–West Nile (Uganda) cross-border roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-nk-ugw, from: CD-NK, to: UG-W, mode: road, corridor: "Nord-Kivu–western Uganda cross-border roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-it-ugw, from: CD-IT, to: UG-W, mode: road, corridor: "Ituri–western Uganda cross-border roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-nk-rwa, from: CD-NK, to: RWA, mode: road, corridor: "Nord-Kivu–Rwanda cross-border roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"],
+     disruption_note: "Border operations have varied with the security situation; status not verified"}
+  - {key: road-sk-rwa, from: CD-SK, to: RWA, mode: road, corridor: "Sud-Kivu–Rwanda cross-border roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-sk-bdi, from: CD-SK, to: BDI, mode: road, corridor: "Sud-Kivu–Burundi cross-border roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-hu-ssd, from: CD-HU, to: SSD, mode: road, corridor: "Haut-Uélé–South Sudan cross-border roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-it-ssd, from: CD-IT, to: SSD, mode: road, corridor: "Ituri–South Sudan cross-border roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-bu-caf, from: CD-BU, to: CAF, mode: road, corridor: "Bas-Uélé–Central African Republic border area", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  # --- Roads: regional ---
+  - {key: road-ugw-ugc, from: UG-W, to: UG-C, mode: road, corridor: "western Uganda–Central Uganda highways",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-ugn-ugc, from: UG-N, to: UG-C, mode: road, corridor: "northern Uganda–Central Uganda highways",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-uge-ugc, from: UG-E, to: UG-C, mode: road, corridor: "eastern Uganda–Central Uganda highways",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-uge-ken, from: UG-E, to: KEN, mode: road, corridor: "Uganda–Kenya Northern Corridor", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-ugn-ssd, from: UG-N, to: SSD, mode: road, corridor: "northern Uganda–South Sudan road corridor", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-ugw-rwa, from: UG-W, to: RWA, mode: road, corridor: "south-western Uganda–Rwanda roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-rwa-bdi, from: RWA, to: BDI, mode: road, corridor: "Rwanda–Burundi roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-rwa-tza, from: RWA, to: TZA, mode: road, corridor: "Rwanda–Tanzania Central Corridor", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-bdi-tza, from: BDI, to: TZA, mode: road, corridor: "Burundi–Tanzania roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-ken-tza, from: KEN, to: TZA, mode: road, corridor: "Kenya–Tanzania roads", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-ssd-sdn, from: SSD, to: SDN, mode: road, corridor: "South Sudan–Sudan roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: [],
+     disruption_note: "Conflict in Sudan affects movement; not verified"}
+  - {key: road-caf-cmr, from: CAF, to: CMR, mode: road, corridor: "Central African Republic–Cameroon corridor", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+  - {key: road-cog-gab, from: COG, to: GAB, mode: road, corridor: "Republic of the Congo–Gabon roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-cog-cmr, from: COG, to: CMR, mode: road, corridor: "Republic of the Congo–Cameroon roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-gab-gnq, from: GAB, to: GNQ, mode: road, corridor: "Gabon–Equatorial Guinea roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-cmr-gnq, from: CMR, to: GNQ, mode: road, corridor: "Cameroon–Equatorial Guinea roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-ago-bc, from: AGO, to: CD-BC, mode: road, corridor: "Angola–Kongo-Central cross-border roads", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: road-kn-bc, from: CD-KN, to: CD-BC, mode: road, corridor: "Kinshasa–Kongo-Central national road",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap road network"]}
+
+  # --- Rivers ---
+  - {key: river-kn-cog, from: CD-KN, to: COG, mode: river, corridor: "Congo River crossing between Kinshasa and Brazzaville", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap"],
+     notes: "Passenger crossing has operated historically; current operation and any border restrictions must be verified",
+     osm_check: {bbox: [-4.35, 15.24, -4.22, 15.34], selector: 'way["route"="ferry"]'}}
+  - {key: river-to-mo, from: CD-TO, to: CD-MO, mode: river, corridor: "Congo River, Tshopo–Mongala reach",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"],
+     seasonal_note: "Navigability varies with water levels; boat services irregular and not verified"}
+  - {key: river-mo-eq, from: CD-MO, to: CD-EQ, mode: river, corridor: "Congo River, Mongala–Équateur reach",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"]}
+  - {key: river-eq-kn, from: CD-EQ, to: CD-KN, mode: river, corridor: "Congo River, Équateur–Kinshasa reach",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"]}
+  - {key: river-su-caf, from: CD-SU, to: CAF, mode: river, corridor: "Ubangi River crossings between Sud-Ubangi and the Bangui area", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"],
+     seasonal_note: "Ubangi navigability is seasonal; crossing services not verified"}
+  - {key: river-su-eq, from: CD-SU, to: CD-EQ, mode: river, corridor: "Ubangi River, Sud-Ubangi–Équateur reach",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"],
+     seasonal_note: "Seasonal navigability"}
+  - {key: river-eq-cog, from: CD-EQ, to: COG, mode: river, corridor: "Congo/Ubangi river border reaches (Équateur–Republic of the Congo)", cross_border: true,
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"]}
+  - {key: river-ma-to, from: CD-MA, to: CD-TO, mode: river, corridor: "Lualaba (upper Congo) reaches between Maniema and Tshopo",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap waterways"],
+     notes: "Only some reaches are navigable; rapids interrupt navigation; services not verified"}
+
+  # --- Lakes ---
+  - {key: lake-kivu-nk-sk, from: CD-NK, to: CD-SK, mode: lake, corridor: "Lake Kivu passenger boats (Nord-Kivu–Sud-Kivu)",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap ferry routes"],
+     notes: "Boats between lake ports have operated historically; schedules and current operation not verified",
+     osm_check: {bbox: [-2.6, 28.8, -1.4, 29.5], selector: 'way["route"="ferry"]'}}
+  - {key: lake-albert-it-ugw, from: CD-IT, to: UG-W, mode: lake, corridor: "Lake Albert cross-lake movement", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: [],
+     notes: "Small-boat movement between shore communities is plausible but no verified passenger service is recorded"}
+  - {key: lake-edward-nk-ugw, from: CD-NK, to: UG-W, mode: lake, corridor: "Lake Edward cross-lake movement", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: lake-tanganyika-sk-bdi, from: CD-SK, to: BDI, mode: lake, corridor: "Lake Tanganyika (Sud-Kivu–Burundi)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: lake-tanganyika-ta-tza, from: CD-TA, to: TZA, mode: lake, corridor: "Lake Tanganyika (Tanganyika province–Tanzania)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: lake-victoria-ugc-tza, from: UG-C, to: TZA, mode: lake, corridor: "Lake Victoria (Uganda–Tanzania)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: [],
+     notes: "Lake shipping on Lake Victoria is largely freight; no verified passenger link recorded"}
+
+  # --- Rail ---
+  - {key: rail-bu-hu-historical, from: CD-BU, to: CD-HU, mode: rail, corridor: "Historical narrow-gauge railway through Bas-Uélé and Haut-Uélé",
+     physical_status: documented, service_status: non_operational, verification: secondary,
+     sources: ["Secondary sources describe the line as defunct; confirm before relying on this status"],
+     notes: "Railway infrastructure that exists geographically is not evidence of passenger service",
+     osm_check: {bbox: [2.5, 23.5, 3.5, 28.5], selector: 'way["railway"]'}}
+  - {key: rail-kn-bc, from: CD-KN, to: CD-BC, mode: rail, corridor: "Kinshasa–Kongo-Central railway",
+     physical_status: documented, service_status: unknown, verification: mapped_only, sources: ["OpenStreetMap railways"],
+     notes: "Passenger service has been intermittent historically; current operation not verified"}
+
+  # --- Air (route existence and schedules not verified) ---
+  - {key: air-nk-kn, from: CD-NK, to: CD-KN, mode: air, corridor: "Domestic air link, Nord-Kivu–Kinshasa",
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: [],
+     notes: "Requires current timetable verification; airport existence is not evidence of an active route"}
+  - {key: air-it-kn, from: CD-IT, to: CD-KN, mode: air, corridor: "Domestic air link, Ituri–Kinshasa",
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-to-kn, from: CD-TO, to: CD-KN, mode: air, corridor: "Domestic air link, Tshopo–Kinshasa",
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-ugc-ken, from: UG-C, to: KEN, mode: air, corridor: "Regional air link, Central Uganda–Kenya", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-ugc-rwa, from: UG-C, to: RWA, mode: air, corridor: "Regional air link, Central Uganda–Rwanda", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-kn-ken, from: CD-KN, to: KEN, mode: air, corridor: "Regional air link, Kinshasa–Kenya", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-kn-eth, from: CD-KN, to: ETH, mode: air, corridor: "International air link, Kinshasa–Ethiopia hub", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: air-ken-eth, from: KEN, to: ETH, mode: air, corridor: "Regional air link, Kenya–Ethiopia", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+
+  # --- Informal / pedestrian (coarse; no routes) ---
+  - {key: informal-it-ugn, from: CD-IT, to: UG-N, mode: informal, corridor: "Cross-border movement outside formal crossings (Ituri–northern Uganda)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: [],
+     notes: "Represented only at regional level; no routes are modelled or published"}
+  - {key: informal-nk-ugw, from: CD-NK, to: UG-W, mode: informal, corridor: "Cross-border movement outside formal crossings (Nord-Kivu–western Uganda)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}
+  - {key: informal-hu-ssd, from: CD-HU, to: SSD, mode: informal, corridor: "Cross-border movement outside formal crossings (Haut-Uélé–South Sudan)", cross_border: true,
+     physical_status: unverified, service_status: unknown, verification: unverified, sources: []}

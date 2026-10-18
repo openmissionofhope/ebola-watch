@@ -1,0 +1,10 @@
+code: ti
+name: Tigrinya
+scripts: [Ethi]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["እዩ", "ኣብ", "ናብ", "እዚ", "ሰባት"]
+terms:
+  ebola: ["ኢቦላ"]
+  illness: ["ሕማም", "ሕሙም"]
+  death: ["ሞት", "ሞይቱ"]

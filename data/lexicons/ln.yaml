@@ -1,0 +1,36 @@
+code: ln
+name: Lingala
+scripts: [Latn]
+support_level: medium
+review_status: draft_requires_native_review
+notes: >
+  Draft. Lingala in news and social media frequently code-switches with French;
+  French terms are matched by the French lexicon in the same document.
+identifiers: [na, ya, ezali, bato, mpe, te, oyo, bango, biso, nini, lisusu, mingi, wana, awa, kaka, boye]
+terms:
+  ebola: [ebola, bokono ya ebola, maladi ya ebola]
+  vhf: [fievre ya makila, bokono ya makila]
+  bleeding: [makila, kobima makila, kosanza makila]
+  illness: [bokono, maladi, mobeli, bato ya maladi, kobela, fievre, kosanza]
+  death: [kokufa, bakufi, akufi, liwa, bawei, awei, kokunda, matanga]
+  unexplained: [bokono ya kokamwa, bokono eyebani te, maladi eyebani te]
+  cluster: [bato mingi, libota mobimba, mboka mobimba]
+  outbreak: [bokono ezali kopanzana, epidemie]
+  lab: [laboratoire, bamekaki, ba test]
+  surveillance: [riposte, isolement, vaccination]
+  negation: [ezali ebola te, ezali te]
+  hedging: [ntango mosusu, mbala mosusu, bakanisi]
+  firsthand: [namoni, na mononi, mozalani na ngai, ndeko na ngai, tata na ngai, mama na ngai, na mboka na biso]
+  secondary: [baloba ete, bayebisi]
+  rumor: [baloba, balobaka, lisolo ya balabala, nayoki]
+  satire: [lisano, "😂", "🤣"]
+  debunk: [lokuta, ezali solo te]
+  official_body: [ministere ya bokolongono, oms, leta, inrb]
+  urgency: [noki, kabola epai ya bato nyonso]
+  temporal_recent: [lelo, lobi, butu oyo eleki, poso oyo]
+  temporal_past: [mibu eleki, mbula eleki]
+alternative_explanations:
+  cholera: [kolera, cholera]
+  malaria: [malaria, palu]
+  sorcery: [kindoki]
+relative_dates: {lelo: 0, lobi: 1, "poso oyo": 3}

@@ -1,0 +1,104 @@
+# Epidemiological parameters used by the estimation and forecasting models.
+#
+# Every value carries a source and a status:
+#   literature  - taken from the cited source
+#   transferred - estimated for another orthoebolavirus and applied here, with widened uncertainty
+#   assumption  - an explicit modelling assumption, varied in sensitivity analyses
+#
+# Ranges are sampled uniformly (or as stated) in Monte Carlo draws, so the
+# uncertainty in parameters propagates into every estimate and forecast.
+version: "2026.10.1"
+
+common:
+  incubation_days:
+    min: 2
+    max: 21
+    source: "WHO Ebola disease fact sheet (24 April 2025): incubation 2 to 21 days; no transmission before symptom onset"
+    status: literature
+  incubation_mean_days:
+    value: 11.4
+    range: [9.0, 12.5]
+    source: "WHO Ebola Response Team, NEJM 2014;371:1481-95 (EVD, West Africa): mean 11.4 days"
+    status: transferred
+  serial_interval:
+    dist: gamma
+    mean: 15.3
+    sd: 9.3
+    mean_range: [13.0, 17.5]
+    source: "WHO Ebola Response Team, NEJM 2014;371:1481-95 (EVD): mean 15.3 days, SD 9.3; WHO ERT 2015 reported 14.2 days"
+    status: transferred
+  onset_to_death:
+    dist: gamma
+    mean: 9.0
+    sd: 5.0
+    mean_range: [7.0, 12.0]
+    source: "Modelling assumption informed by EVD literature; replace with outbreak-specific estimates when line-list summaries are published"
+    status: assumption
+  onset_to_report:
+    dist: gamma
+    mean: 6.0
+    sd: 4.0
+    mean_range: [3.0, 10.0]
+    source: "Modelling assumption; estimated from onset-dated data when such data are available"
+    status: assumption
+  death_ascertainment:
+    # Fraction of fatal symptomatic infections that appear in the reported deaths
+    # used as model input. Community deaths that are never tested are the main
+    # reason this is below 1.
+    range: [0.5, 0.95]
+    source: "Modelling assumption. Deaths are generally better ascertained than cases, but community deaths without testing are common in insecure areas."
+    status: assumption
+  offspring_dispersion_k:
+    central: 0.3
+    range: [0.1, 1.0]
+    source: "Assumption reflecting heterogeneous (superspreading-prone) Ebola transmission reported in the EVD literature; used only for small-outbreak branching simulations"
+    status: assumption
+  rt_random_walk_sd_per_week:
+    value: 0.12
+    source: "Calibrated by backtesting (see /evaluation); default before calibration"
+    status: assumption
+
+pathogens:
+  BDBV:
+    name: "Bundibugyo virus disease (BVD)"
+    cfr_reported:
+      range: [0.30, 0.50]
+      source: "WHO Disease Outbreak News 2026-DON602: case fatality rates in the past two BVD outbreaks ranged from 30% to 50%"
+      status: literature
+    ifr_symptomatic:
+      # Fatality among all symptomatic infections, reported or not. Reported-case
+      # CFRs over-represent severe illness when mild cases are missed, so this
+      # prior extends below the reported-case range.
+      range: [0.20, 0.50]
+      source: "Assumption bracketing the historical reported-case CFR range and allowing for under-detection of milder illness"
+      status: assumption
+  EBOV:
+    name: "Ebola virus disease (EVD)"
+    cfr_reported:
+      range: [0.25, 0.90]
+      source: "WHO Ebola disease fact sheet: average CFR around 50%, varying from 25% to 90% in past outbreaks (all species)"
+      status: literature
+    ifr_symptomatic:
+      range: [0.30, 0.70]
+      source: "Assumption; narrower than the all-outbreak range. Refine with outbreak-specific estimates."
+      status: assumption
+  SUDV:
+    name: "Sudan virus disease (SVD)"
+    cfr_reported:
+      range: [0.25, 0.90]
+      source: "WHO Ebola disease fact sheet range for orthoebolaviruses; species-specific estimates should replace this"
+      status: literature
+    ifr_symptomatic:
+      range: [0.30, 0.65]
+      source: "Assumption. Refine with outbreak-specific estimates."
+      status: assumption
+  unknown_orthoebolavirus:
+    name: "Ebola disease (species not established)"
+    cfr_reported:
+      range: [0.25, 0.90]
+      source: "WHO Ebola disease fact sheet"
+      status: literature
+    ifr_symptomatic:
+      range: [0.20, 0.70]
+      source: "Assumption (wide, species unknown)"
+      status: assumption

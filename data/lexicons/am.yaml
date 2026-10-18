@@ -1,0 +1,12 @@
+code: am
+name: Amharic
+scripts: [Ethi]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["እና", "ነው", "ላይ", "ውስጥ", "ወደ", "ይህ", "ሰዎች"]
+terms:
+  ebola: ["ኢቦላ", "የኢቦላ"]
+  illness: ["በሽታ", "ታማሚ", "ትኩሳት"]
+  death: ["ሞት", "ሞቱ", "ሞተ"]
+  outbreak: ["ወረርሽኝ"]
+  official_body: ["ጤና ሚኒስቴር"]

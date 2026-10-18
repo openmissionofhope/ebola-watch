@@ -1,0 +1,11 @@
+code: rn
+name: Kirundi
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["ni", "na", "mu", "ku", "abantu", "kandi", "iyi", "uwo", "cane"]
+terms:
+  ebola: [ebola, ingwara ya ebola]
+  illness: [ingwara, indwara, abarwayi, umurwayi]
+  death: [gupfa, yapfuye, bapfuye, urupfu]
+  outbreak: [icorezo]

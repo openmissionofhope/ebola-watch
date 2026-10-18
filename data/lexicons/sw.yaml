@@ -1,0 +1,42 @@
+code: sw
+name: Swahili
+scripts: [Latn]
+support_level: medium
+review_status: draft_requires_native_review
+notes: Covers standard and Congolese (Kingwana) usage partially; regional variants welcome.
+identifiers: [na, ya, wa, kwa, ni, katika, watu, hii, hapa, sana, wameku, wengi, pia, lakini, kama]
+terms:
+  ebola: [ebola, homa ya ebola, ugonjwa wa ebola, virusi vya ebola, bundibugyo]
+  vhf: [homa ya kutokwa damu, homa ya kuvuja damu, homa ya damu]
+  bleeding: [kutokwa damu, kuvuja damu, damu, kutapika damu]
+  illness: [mgonjwa, wagonjwa, ugonjwa, homa, dalili, kutapika, kuhara, kuambukizwa, wameambukizwa, kesi, visa]
+  death: [kufa, wamekufa, amekufa, alikufa, walikufa, kifo, vifo, maziko, mazishi, wamezikwa, wamefariki, amefariki, alifariki]
+  unexplained: [ugonjwa usiojulikana, ugonjwa wa ajabu, ugonjwa wa kushangaza, chanzo hakijulikani]
+  cluster: [watu kadhaa, watu wengi, familia nzima, wanakijiji, kijiji kizima, makumi ya watu]
+  outbreak: [mlipuko, janga, kuenea, inaenea, visa vipya, wagonjwa wapya]
+  lab: [maabara, wamethibitishwa, imethibitishwa, kipimo, vipimo, sampuli]
+  surveillance: [ufuatiliaji, karantini, kutengwa, uchunguzi, chanjo, timu ya kukabiliana, kituo cha matibabu]
+  negation: [si ebola, sio ebola, hakuna ebola, hasi, haikuthibitishwa]
+  hedging: [labda, huenda, inadaiwa, inahofiwa, inashukiwa, wanaoshukiwa, bado haijathibitishwa]
+  firsthand: [nimeona, niliona, jirani yangu, kaka yangu, dada yangu, baba yangu, mama yangu, kijijini kwetu, hapa kwetu, tumezika]
+  secondary: [kwa mujibu wa, kulingana na, ripoti zinasema, vyanzo vinasema, kupitia]
+  rumor: [wanasema, inasemekana, uvumi, nimesikia, habari zisizothibitishwa]
+  satire: [utani, mzaha, "😂", "🤣"]
+  debunk: [habari za uongo, uongo, si kweli, uzushi, imekanushwa]
+  official_body: [wizara ya afya, shirika la afya duniani, who, serikali, mamlaka za afya, africa cdc]
+  preparedness: [kujiandaa, tahadhari, kinga, uchunguzi mipakani]
+  urgency: [haraka, dharura, sambaza, tuma kwa wote]
+  temporal_recent: [leo, jana, asubuhi hii, usiku wa jana, wiki hii, sasa hivi]
+  temporal_past: [miaka iliyopita, mwaka jana, mwaka 2014, mwaka 2018, mwaka 2019, mwaka 2022]
+alternative_explanations:
+  cholera: [kipindupindu, cholera]
+  malaria: [malaria, homa ya malaria]
+  measles: [surua]
+  typhoid: [homa ya matumbo, taifodi]
+  meningitis: [homa ya uti wa mgongo]
+  yellow_fever: [homa ya manjano]
+  marburg: [marburg]
+  mpox: [mpox, homa ya nyani]
+  poisoning: [sumu, kuwekewa sumu, maji machafu]
+  sorcery: [uchawi, ushirikina]
+relative_dates: {leo: 0, jana: 1, "wiki hii": 3, "wiki iliyopita": 7}

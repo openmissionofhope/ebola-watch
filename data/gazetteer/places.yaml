@@ -1,0 +1,230 @@
+# Gazetteer for geocoding official and unofficial text.
+#
+# Country names are loaded from data/boundaries/admin0.geojson (Natural Earth);
+# this file adds aliases and spelling variants (including local-language and
+# transliterated forms) and maps population centres to the first-level
+# administrative unit used for public outputs. Coordinates are deliberately not
+# stored here: places are resolved to administrative units, never to points.
+#
+# region codes: ISO 3166-1 alpha-3 for countries; ISO 3166-2 for admin-1 units.
+
+country_aliases:
+  COD: ["Democratic Republic of the Congo", "Democratic Republic of Congo", "Dem. Rep. Congo", "DR of Congo", "DR Congo", "DRC", "D.R.C.", "RDC", "R.D.C.", "RD Congo",
+        "République démocratique du Congo", "Republique democratique du Congo", "Congo-Kinshasa",
+        "Jamhuri ya Kidemokrasia ya Kongo", "Kongo ya Kidemokrasia", "Republiki ya Kidemokrasi ya Kongo",
+        "República Democrática do Congo", "Zaïre", "Zaire", "جمهورية الكونغو الديمقراطية", "الكونغو الديمقراطية"]
+  COG: ["Republic of the Congo", "Republic of Congo", "Congo-Brazzaville", "Congo Brazzaville",
+        "République du Congo", "Jamhuri ya Kongo", "República do Congo", "جمهورية الكونغو"]
+  CAF: ["Central African Republic", "CAR", "République centrafricaine", "Centrafrique", "Ködörösêse tî Bêafrîka",
+        "Bêafrîka", "Jamhuri ya Afrika ya Kati", "جمهورية أفريقيا الوسطى"]
+  UGA: ["Uganda", "Ouganda", "Yuganda", "أوغندا"]
+  RWA: ["Rwanda", "Ruanda", "Repubulika y'u Rwanda", "رواندا"]
+  BDI: ["Burundi", "Uburundi", "Republika y'Uburundi", "بوروندي"]
+  SSD: ["South Sudan", "Soudan du Sud", "Sudan Kusini", "جنوب السودان", "Sudão do Sul"]
+  SDN: ["Sudan", "Soudan", "السودان", "Sudani", "السودان"]
+  KEN: ["Kenya", "Quénia", "Kenia", "كينيا"]
+  TZA: ["Tanzania", "Tanzanie", "Tanzânia", "United Republic of Tanzania", "Jamhuri ya Muungano wa Tanzania", "تنزانيا"]
+  AGO: ["Angola", "أنغولا"]
+  CMR: ["Cameroon", "Cameroun", "Camarões", "Kamerun"]
+  GAB: ["Gabon", "Gabão"]
+  GNQ: ["Equatorial Guinea", "Guinée équatoriale", "Guiné Equatorial", "Guinea Ecuatorial"]
+  ETH: ["Ethiopia", "Éthiopie", "ኢትዮጵያ", "Ethiopia", "Uhabeshi", "إثيوبيا"]
+  ERI: ["Eritrea", "Érythrée", "ኤርትራ"]
+  GIN: ["Guinea", "Guinée", "Guiné"]
+  SLE: ["Sierra Leone"]
+  LBR: ["Liberia", "Libéria"]
+  NGA: ["Nigeria", "Nigéria"]
+  ZMB: ["Zambia", "Zambie"]
+  MOZ: ["Mozambique", "Moçambique", "Msumbiji"]
+  NLD: ["Netherlands", "Pays-Bas", "Holland"]
+  DEU: ["Germany", "Allemagne", "Ujerumani"]
+  FRA: ["France", "Ufaransa"]
+  USA: ["United States", "United States of America", "USA", "U.S.", "États-Unis", "Marekani"]
+  GBR: ["United Kingdom", "UK", "Royaume-Uni", "Uingereza"]
+  BEL: ["Belgium", "Belgique", "Ubelgiji"]
+
+# Canonical names for admin-1 units where the boundary source uses English or
+# outdated spellings, plus spelling variants seen in bulletins and posts.
+admin1:
+  CD-IT: {name: "Ituri", aliases: ["Ituri province", "Province de l'Ituri"]}
+  CD-NK: {name: "Nord-Kivu", aliases: ["North Kivu", "Nord Kivu", "N. Kivu", "Kivu Kaskazini", "Kivu ya Kaskazini"]}
+  CD-SK: {name: "Sud-Kivu", aliases: ["South Kivu", "Sud Kivu", "S. Kivu", "Kivu Kusini", "Kivu ya Kusini"]}
+  CD-HU: {name: "Haut-Uélé", aliases: ["Haut-Uele", "Haut Uele", "Haut-Uélé", "Upper Uele", "Haut-Uelé"]}
+  CD-BU: {name: "Bas-Uélé", aliases: ["Bas-Uele", "Bas Uele", "Lower Uele", "Bas-Uelé"]}
+  CD-TO: {name: "Tshopo", aliases: ["Tshopo province"]}
+  CD-SU: {name: "Sud-Ubangi", aliases: ["Sud Ubangi", "South Ubangi", "Sud-Oubangui"]}
+  CD-NU: {name: "Nord-Ubangi", aliases: ["Nord Ubangi", "North Ubangi"]}
+  CD-MO: {name: "Mongala", aliases: []}
+  CD-TU: {name: "Tshuapa", aliases: []}
+  CD-EQ: {name: "Équateur", aliases: ["Equateur", "Equator province"]}
+  CD-KN: {name: "Kinshasa", aliases: ["Kinshasa city", "Ville de Kinshasa", "Kin"]}
+  CD-BC: {name: "Kongo-Central", aliases: ["Kongo Central", "Bas-Congo"]}
+  CD-KG: {name: "Kwango", aliases: []}
+  CD-KL: {name: "Kwilu", aliases: []}
+  CD-MN: {name: "Mai-Ndombe", aliases: ["Maï-Ndombe", "Mai Ndombe"]}
+  CD-KS: {name: "Kasaï", aliases: ["Kasai"]}
+  CD-KC: {name: "Kasaï-Central", aliases: ["Kasai-Central", "Kasai Central", "Central Kasai"]}
+  CD-KE: {name: "Kasaï-Oriental", aliases: ["Kasai-Oriental", "Kasai Oriental", "East Kasai"]}
+  CD-LO: {name: "Lomami", aliases: []}
+  CD-SA: {name: "Sankuru", aliases: []}
+  CD-MA: {name: "Maniema", aliases: []}
+  CD-TA: {name: "Tanganyika", aliases: ["Tanganyika province"]}
+  CD-HL: {name: "Haut-Lomami", aliases: ["Haut Lomami", "Upper Lomami"]}
+  CD-LU: {name: "Lualaba", aliases: []}
+  CD-HK: {name: "Haut-Katanga", aliases: ["Haut Katanga", "Upper Katanga"]}
+
+# Province names as written in the DRC health-zone gazetteer -> ISO 3166-2
+cod_province_names:
+  Bas-Uele: CD-BU
+  Equateur: CD-EQ
+  Haut-Katanga: CD-HK
+  Haut-Lomami: CD-HL
+  Haut-Uele: CD-HU
+  Ituri: CD-IT
+  Kasaï: CD-KS
+  Kasaï-Central: CD-KC
+  Kasaï-Oriental: CD-KE
+  Kinshasa: CD-KN
+  Kongo-Central: CD-BC
+  Kwango: CD-KG
+  Kwilu: CD-KL
+  Lomami: CD-LO
+  Lualaba: CD-LU
+  Mai-Ndombe: CD-MN
+  Maniema: CD-MA
+  Mongala: CD-MO
+  Nord-Kivu: CD-NK
+  Nord-Ubangi: CD-NU
+  Sankuru: CD-SA
+  Sud-Kivu: CD-SK
+  Sud-Ubangi: CD-SU
+  Tanganyika: CD-TA
+  Tshopo: CD-TO
+  Tshuapa: CD-TU
+
+# Population centres -> administrative unit. Used only to resolve text to an
+# admin unit; outputs never show the town itself for unverified reports.
+places:
+  # Ituri
+  Bunia: CD-IT
+  Mongbwalu: CD-IT
+  Mongbalu: CD-IT
+  Rwampara: CD-IT
+  Mambasa: CD-IT
+  Mandima: CD-IT
+  Komanda: CD-IT
+  Mahagi: CD-IT
+  Aru: CD-IT
+  Djugu: CD-IT
+  Nyankunde: CD-IT
+  Tchomia: CD-IT
+  Kasenyi: CD-IT
+  # Nord-Kivu
+  Beni: CD-NK
+  Butembo: CD-NK
+  Katwa: CD-NK
+  Goma: CD-NK
+  Oicha: CD-NK
+  Mangina: CD-NK
+  Lubero: CD-NK
+  Rutshuru: CD-NK
+  Kasindi: CD-NK
+  Mabalako: CD-NK
+  Alimbongo: CD-NK
+  Kayna: CD-NK
+  Masisi: CD-NK
+  Walikale: CD-NK
+  Nyiragongo: CD-NK
+  # Sud-Kivu
+  Bukavu: CD-SK
+  Uvira: CD-SK
+  Kamituga: CD-SK
+  Fizi: CD-SK
+  # Tshopo
+  Kisangani: CD-TO
+  Banalia: CD-TO
+  Bafwasende: CD-TO
+  # Haut-Uélé
+  Isiro: CD-HU
+  Dungu: CD-HU
+  Watsa: CD-HU
+  Wamba: CD-HU
+  Niangara: CD-HU
+  Faradje: CD-HU
+  # Bas-Uélé
+  Buta: CD-BU
+  Aketi: CD-BU
+  Bondo: CD-BU
+  # Sud-Ubangi
+  Gemena: CD-SU
+  Zongo: CD-SU
+  Libenge: CD-SU
+  # Other DRC
+  Mbandaka: CD-EQ
+  Bikoro: CD-EQ
+  Kinshasa: CD-KN
+  Matadi: CD-BC
+  Boma: CD-BC
+  Kindu: CD-MA
+  Kalemie: CD-TA
+  Lubumbashi: CD-HK
+  Kolwezi: CD-LU
+  Kananga: CD-KC
+  Mbuji-Mayi: CD-KE
+  Tshikapa: CD-KS
+  Bulape: CD-KS
+  Gbadolite: CD-NU
+  Lisala: CD-MO
+  Bumba: CD-MO
+  Boende: CD-TU
+  Kikwit: CD-KL
+  # Uganda
+  Kampala: UG-C
+  Entebbe: UG-C
+  Mukono: UG-C
+  Masaka: UG-C
+  Mubende: UG-C
+  Bundibugyo: UG-W
+  Kasese: UG-W
+  Fort Portal: UG-W
+  Hoima: UG-W
+  Mbarara: UG-W
+  Ntoroko: UG-W
+  Kisoro: UG-W
+  Arua: UG-N
+  Gulu: UG-N
+  Koboko: UG-N
+  Nebbi: UG-N
+  Jinja: UG-E
+  Mbale: UG-E
+  Tororo: UG-E
+  # Country-level resolution only
+  Kigali: RWA
+  Rubavu: RWA
+  Gisenyi: RWA
+  Rusizi: RWA
+  Bujumbura: BDI
+  Gitega: BDI
+  Juba: SSD
+  Yei: SSD
+  Yambio: SSD
+  Bangui: CAF
+  Brazzaville: COG
+  Pointe-Noire: COG
+  Nairobi: KEN
+  Mombasa: KEN
+  Kisumu: KEN
+  Dar es Salaam: TZA
+  Kigoma: TZA
+  Mwanza: TZA
+  Dodoma: TZA
+  Luanda: AGO
+  Yaoundé: CMR
+  Yaounde: CMR
+  Douala: CMR
+  Libreville: GAB
+  Malabo: GNQ
+  Khartoum: SDN
+  Port Sudan: SDN
+  Addis Ababa: ETH
+  Addis Abeba: ETH

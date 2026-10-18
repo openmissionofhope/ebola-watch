@@ -1,0 +1,43 @@
+code: en
+name: English
+scripts: [Latn]
+support_level: high
+review_status: reviewed
+identifiers: [the, and, of, was, were, have, has, people, with, this, that, in, from, they, our, are, my, it, is, says, said, been, there, their, its, which, after]
+terms:
+  ebola: [ebola, ebola virus, bundibugyo, sudan virus, "e-bola", ebolavirus, evd, bvd]
+  vhf: [hemorrhagic fever, haemorrhagic fever, viral hemorrhagic, bleeding fever, vhf]
+  bleeding: [bleeding, blood from, vomiting blood, bloody]
+  illness: [sick, ill, illness, disease, fever, symptoms, vomiting, diarrhea, diarrhoea, unwell, infected, cases, case, patients]
+  death: [died, dead, death, deaths, dying, killed, passed away, buried, burial, funerals]
+  unexplained: [mysterious, unknown disease, unknown illness, unexplained, strange disease, strange illness, mystery illness, undiagnosed]
+  cluster: [several people, many people, whole family, families, villagers, residents, entire village, dozens, many deaths, wave of deaths]
+  outbreak: [outbreak, epidemic, spreading, spread, cluster, new cases, confirmed cases, suspected cases]
+  lab: [laboratory, lab confirmed, tested positive, test positive, pcr, confirmed by, samples]
+  surveillance: [contact tracing, screening, isolation, quarantine, surveillance, vaccination campaign, response team, treatment centre, treatment center]
+  negation: [not ebola, no ebola, isn't ebola, is not ebola, tested negative, ruled out, negative for, not linked]
+  hedging: [maybe, might, possibly, could be, suspected, unconfirmed, allegedly, reportedly, feared, fear of]
+  firsthand: [i saw, i have seen, my neighbor, my neighbour, my brother, my sister, my father, my mother, in our village, in our area, here in, we buried, i witnessed]
+  secondary: [according to, reports say, reported by, sources say, via, citing, rt, shared from, forwarded]
+  rumor: [they say, people say, rumor, rumour, heard that, word is, i heard, unverified]
+  satire: [satire, satirical, parody, joke, just kidding, lol, lmao, "😂", "🤣"]
+  debunk: [fake news, hoax, false claim, misinformation, not true, debunked, fabricated, doctored]
+  official_body: [ministry of health, health ministry, world health organization, who, africa cdc, national institute, public health, government, health authorities, inrb, insp]
+  preparedness: [preparedness, prevention, vigilance, on alert, precautionary, strengthens surveillance, steps up surveillance, readiness, screening at, intercepted, quarantined traveller]
+  urgency: [urgent, breaking, alert, share widely, share before deleted, forward to everyone]
+  temporal_recent: [today, yesterday, this morning, last night, this week, now, currently, ongoing]
+  temporal_past: [years ago, last year, in 2014, in 2018, in 2019, in 2007, in 2012, in 2022, in 2025, back in, previous outbreak]
+alternative_explanations:
+  cholera: [cholera]
+  malaria: [malaria]
+  measles: [measles]
+  typhoid: [typhoid]
+  meningitis: [meningitis]
+  yellow_fever: [yellow fever]
+  marburg: [marburg]
+  lassa: [lassa]
+  mpox: [mpox, monkeypox]
+  anthrax: [anthrax]
+  poisoning: [poison, poisoning, poisoned, contaminated water, food poisoning]
+  sorcery: [witchcraft, sorcery, curse]
+relative_dates: {today: 0, yesterday: 1, "last night": 1, "this week": 3, "last week": 7}

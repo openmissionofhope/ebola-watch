@@ -1,0 +1,10 @@
+code: lua
+name: Tshiluba
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["ne", "wa", "ba", "mu", "bantu", "tshia", "kudi", "bua"]
+terms:
+  ebola: [ebola, disama dia ebola]
+  illness: [disama, mayisha]
+  death: [lufu, kufua, mufue]

@@ -1,0 +1,13 @@
+code: rw
+name: Kinyarwanda
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["ni", "na", "mu", "ku", "abantu", "kandi", "iyi", "uyu", "byo", "cyane"]
+terms:
+  ebola: [ebola, indwara ya ebola]
+  illness: [indwara, abarwayi, umurwayi, umuriro]
+  death: [gupfa, yapfuye, bapfuye, urupfu]
+  outbreak: [icyorezo]
+  official_body: [minisiteri y'ubuzima, rbc]
+  cluster: [abantu benshi]

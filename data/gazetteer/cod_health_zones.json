@@ -1,0 +1,2602 @@
+{
+ "source": "INRB-UMIE/BDBV2026-Data build/drc_health_zones.geojson",
+ "source_url": "https://raw.githubusercontent.com/INRB-UMIE/BDBV2026-Data/main/build/drc_health_zones.geojson",
+ "population_source": "WorldPop (CC BY 4.0), rounded to nearest 100",
+ "zones": [
+  {
+   "name": "Aketi",
+   "province": "Bas-Uele",
+   "population": 188800
+  },
+  {
+   "name": "Ango",
+   "province": "Bas-Uele",
+   "population": 161100
+  },
+  {
+   "name": "Bili (Bas-Uele)",
+   "province": "Bas-Uele",
+   "population": 63500
+  },
+  {
+   "name": "Bondo",
+   "province": "Bas-Uele",
+   "population": 287100
+  },
+  {
+   "name": "Buta",
+   "province": "Bas-Uele",
+   "population": 275000
+  },
+  {
+   "name": "Ganga",
+   "province": "Bas-Uele",
+   "population": 235400
+  },
+  {
+   "name": "Likati",
+   "province": "Bas-Uele",
+   "population": 143500
+  },
+  {
+   "name": "Monga",
+   "province": "Bas-Uele",
+   "population": 129600
+  },
+  {
+   "name": "Poko",
+   "province": "Bas-Uele",
+   "population": 222600
+  },
+  {
+   "name": "Titule",
+   "province": "Bas-Uele",
+   "population": 75800
+  },
+  {
+   "name": "Viadana",
+   "province": "Bas-Uele",
+   "population": 187900
+  },
+  {
+   "name": "Basankusu",
+   "province": "Equateur",
+   "population": 223700
+  },
+  {
+   "name": "Bikoro",
+   "province": "Equateur",
+   "population": 170300
+  },
+  {
+   "name": "Bolenge",
+   "province": "Equateur",
+   "population": 78700
+  },
+  {
+   "name": "Bolomba",
+   "province": "Equateur",
+   "population": 243800
+  },
+  {
+   "name": "Bomongo",
+   "province": "Equateur",
+   "population": 113900
+  },
+  {
+   "name": "Djombo",
+   "province": "Equateur",
+   "population": 88300
+  },
+  {
+   "name": "Iboko",
+   "province": "Equateur",
+   "population": 108500
+  },
+  {
+   "name": "Ingende",
+   "province": "Equateur",
+   "population": 159500
+  },
+  {
+   "name": "Irebu",
+   "province": "Equateur",
+   "population": 31000
+  },
+  {
+   "name": "Lilanga Bobangi",
+   "province": "Equateur",
+   "population": 32000
+  },
+  {
+   "name": "Lotumbe",
+   "province": "Equateur",
+   "population": 89000
+  },
+  {
+   "name": "Lukolela",
+   "province": "Equateur",
+   "population": 184800
+  },
+  {
+   "name": "Makanza",
+   "province": "Equateur",
+   "population": 126100
+  },
+  {
+   "name": "Mampoko",
+   "province": "Equateur",
+   "population": 57700
+  },
+  {
+   "name": "Mbandaka",
+   "province": "Equateur",
+   "population": 245900
+  },
+  {
+   "name": "Monieka",
+   "province": "Equateur",
+   "population": 60500
+  },
+  {
+   "name": "Ntondo",
+   "province": "Equateur",
+   "population": 62500
+  },
+  {
+   "name": "Wangata",
+   "province": "Equateur",
+   "population": 219600
+  },
+  {
+   "name": "Kafubu",
+   "province": "Haut-Katanga",
+   "population": 160500
+  },
+  {
+   "name": "Kamalondo",
+   "province": "Haut-Katanga",
+   "population": 17400
+  },
+  {
+   "name": "Kambove",
+   "province": "Haut-Katanga",
+   "population": 240200
+  },
+  {
+   "name": "Kampemba",
+   "province": "Haut-Katanga",
+   "population": 330300
+  },
+  {
+   "name": "Kapolowe",
+   "province": "Haut-Katanga",
+   "population": 254200
+  },
+  {
+   "name": "Kasenga",
+   "province": "Haut-Katanga",
+   "population": 179000
+  },
+  {
+   "name": "Kashobwe",
+   "province": "Haut-Katanga",
+   "population": 68900
+  },
+  {
+   "name": "Katuba",
+   "province": "Haut-Katanga",
+   "population": 76700
+  },
+  {
+   "name": "Kenya",
+   "province": "Haut-Katanga",
+   "population": 120000
+  },
+  {
+   "name": "Kikula",
+   "province": "Haut-Katanga",
+   "population": 124000
+  },
+  {
+   "name": "Kilela Balanda",
+   "province": "Haut-Katanga",
+   "population": 67600
+  },
+  {
+   "name": "Kilwa",
+   "province": "Haut-Katanga",
+   "population": 251900
+  },
+  {
+   "name": "Kipushi",
+   "province": "Haut-Katanga",
+   "population": 226600
+  },
+  {
+   "name": "Kisanga",
+   "province": "Haut-Katanga",
+   "population": 272700
+  },
+  {
+   "name": "Kowe",
+   "province": "Haut-Katanga",
+   "population": 15600
+  },
+  {
+   "name": "Likasi",
+   "province": "Haut-Katanga",
+   "population": 187300
+  },
+  {
+   "name": "Lubumbashi",
+   "province": "Haut-Katanga",
+   "population": 466500
+  },
+  {
+   "name": "Lukafu",
+   "province": "Haut-Katanga",
+   "population": 120600
+  },
+  {
+   "name": "Mitwaba",
+   "province": "Haut-Katanga",
+   "population": 86400
+  },
+  {
+   "name": "Mufunga Sampwe",
+   "province": "Haut-Katanga",
+   "population": 142500
+  },
+  {
+   "name": "Mumbunda",
+   "province": "Haut-Katanga",
+   "population": 460200
+  },
+  {
+   "name": "Panda",
+   "province": "Haut-Katanga",
+   "population": 112900
+  },
+  {
+   "name": "Pweto",
+   "province": "Haut-Katanga",
+   "population": 141800
+  },
+  {
+   "name": "Ruashi",
+   "province": "Haut-Katanga",
+   "population": 297800
+  },
+  {
+   "name": "Sakania",
+   "province": "Haut-Katanga",
+   "population": 355600
+  },
+  {
+   "name": "Tshamilemba",
+   "province": "Haut-Katanga",
+   "population": 195100
+  },
+  {
+   "name": "Vangu",
+   "province": "Haut-Katanga",
+   "population": 42800
+  },
+  {
+   "name": "Baka",
+   "province": "Haut-Lomami",
+   "population": 42800
+  },
+  {
+   "name": "Bukama",
+   "province": "Haut-Lomami",
+   "population": 280600
+  },
+  {
+   "name": "Butumba",
+   "province": "Haut-Lomami",
+   "population": 90500
+  },
+  {
+   "name": "Kabondo Dianda",
+   "province": "Haut-Lomami",
+   "population": 232900
+  },
+  {
+   "name": "Kabongo",
+   "province": "Haut-Lomami",
+   "population": 367100
+  },
+  {
+   "name": "Kamina",
+   "province": "Haut-Lomami",
+   "population": 394500
+  },
+  {
+   "name": "Kaniama",
+   "province": "Haut-Lomami",
+   "population": 277000
+  },
+  {
+   "name": "Kayamba",
+   "province": "Haut-Lomami",
+   "population": 81900
+  },
+  {
+   "name": "Kinda",
+   "province": "Haut-Lomami",
+   "population": 55700
+  },
+  {
+   "name": "Kinkondja",
+   "province": "Haut-Lomami",
+   "population": 154300
+  },
+  {
+   "name": "Kitenge",
+   "province": "Haut-Lomami",
+   "population": 268600
+  },
+  {
+   "name": "Lwamba",
+   "province": "Haut-Lomami",
+   "population": 124200
+  },
+  {
+   "name": "Malemba Nkulu",
+   "province": "Haut-Lomami",
+   "population": 324200
+  },
+  {
+   "name": "Mukanga",
+   "province": "Haut-Lomami",
+   "population": 197400
+  },
+  {
+   "name": "Mulongo",
+   "province": "Haut-Lomami",
+   "population": 206000
+  },
+  {
+   "name": "Songa",
+   "province": "Haut-Lomami",
+   "population": 115400
+  },
+  {
+   "name": "Aba",
+   "province": "Haut-Uele",
+   "population": 209100
+  },
+  {
+   "name": "Boma Mangbetu",
+   "province": "Haut-Uele",
+   "population": 230100
+  },
+  {
+   "name": "Doruma",
+   "province": "Haut-Uele",
+   "population": 73600
+  },
+  {
+   "name": "Dungu",
+   "province": "Haut-Uele",
+   "population": 307800
+  },
+  {
+   "name": "Faradje",
+   "province": "Haut-Uele",
+   "population": 189400
+  },
+  {
+   "name": "Gombari",
+   "province": "Haut-Uele",
+   "population": 122900
+  },
+  {
+   "name": "Isiro",
+   "province": "Haut-Uele",
+   "population": 512400
+  },
+  {
+   "name": "Makoro",
+   "province": "Haut-Uele",
+   "population": 219900
+  },
+  {
+   "name": "Niangara",
+   "province": "Haut-Uele",
+   "population": 183400
+  },
+  {
+   "name": "Pawa",
+   "province": "Haut-Uele",
+   "population": 301800
+  },
+  {
+   "name": "Rungu",
+   "province": "Haut-Uele",
+   "population": 194800
+  },
+  {
+   "name": "Wamba",
+   "province": "Haut-Uele",
+   "population": 224800
+  },
+  {
+   "name": "Watsa",
+   "province": "Haut-Uele",
+   "population": 491600
+  },
+  {
+   "name": "Adi",
+   "province": "Ituri",
+   "population": 285400
+  },
+  {
+   "name": "Adja",
+   "province": "Ituri",
+   "population": 126900
+  },
+  {
+   "name": "Angumu",
+   "province": "Ituri",
+   "population": 103700
+  },
+  {
+   "name": "Ariwara",
+   "province": "Ituri",
+   "population": 314700
+  },
+  {
+   "name": "Aru",
+   "province": "Ituri",
+   "population": 329700
+  },
+  {
+   "name": "Aungba",
+   "province": "Ituri",
+   "population": 216800
+  },
+  {
+   "name": "Bambu",
+   "province": "Ituri",
+   "population": 136200
+  },
+  {
+   "name": "Biringi",
+   "province": "Ituri",
+   "population": 182600
+  },
+  {
+   "name": "Boga",
+   "province": "Ituri",
+   "population": 72000
+  },
+  {
+   "name": "Bunia",
+   "province": "Ituri",
+   "population": 509100
+  },
+  {
+   "name": "Damas",
+   "province": "Ituri",
+   "population": 94800
+  },
+  {
+   "name": "Drodro",
+   "province": "Ituri",
+   "population": 200000
+  },
+  {
+   "name": "Fataki",
+   "province": "Ituri",
+   "population": 158000
+  },
+  {
+   "name": "Gety",
+   "province": "Ituri",
+   "population": 143400
+  },
+  {
+   "name": "Jiba",
+   "province": "Ituri",
+   "population": 76000
+  },
+  {
+   "name": "Kambala",
+   "province": "Ituri",
+   "population": 141000
+  },
+  {
+   "name": "Kilo",
+   "province": "Ituri",
+   "population": 43100
+  },
+  {
+   "name": "Komanda",
+   "province": "Ituri",
+   "population": 219900
+  },
+  {
+   "name": "Laybo",
+   "province": "Ituri",
+   "population": 193200
+  },
+  {
+   "name": "Linga",
+   "province": "Ituri",
+   "population": 108300
+  },
+  {
+   "name": "Lita",
+   "province": "Ituri",
+   "population": 113400
+  },
+  {
+   "name": "Logo",
+   "province": "Ituri",
+   "population": 216900
+  },
+  {
+   "name": "Lolwa",
+   "province": "Ituri",
+   "population": 41300
+  },
+  {
+   "name": "Mahagi",
+   "province": "Ituri",
+   "population": 247900
+  },
+  {
+   "name": "Mambasa",
+   "province": "Ituri",
+   "population": 150800
+  },
+  {
+   "name": "Mandima",
+   "province": "Ituri",
+   "population": 286600
+  },
+  {
+   "name": "Mangala",
+   "province": "Ituri",
+   "population": 89700
+  },
+  {
+   "name": "Mongbwalu",
+   "province": "Ituri",
+   "population": 157700
+  },
+  {
+   "name": "Nia Nia",
+   "province": "Ituri",
+   "population": 91800
+  },
+  {
+   "name": "Nizi",
+   "province": "Ituri",
+   "population": 129700
+  },
+  {
+   "name": "Nyankunde",
+   "province": "Ituri",
+   "population": 94000
+  },
+  {
+   "name": "Nyarambe",
+   "province": "Ituri",
+   "population": 273900
+  },
+  {
+   "name": "Rethy",
+   "province": "Ituri",
+   "population": 215700
+  },
+  {
+   "name": "Rimba",
+   "province": "Ituri",
+   "population": 222300
+  },
+  {
+   "name": "Rwampara",
+   "province": "Ituri",
+   "population": 252300
+  },
+  {
+   "name": "Tchomia",
+   "province": "Ituri",
+   "population": 83900
+  },
+  {
+   "name": "Banga Lubaka",
+   "province": "Kasaï",
+   "population": 96400
+  },
+  {
+   "name": "Bulape",
+   "province": "Kasaï",
+   "population": 117500
+  },
+  {
+   "name": "Dekese",
+   "province": "Kasaï",
+   "population": 180900
+  },
+  {
+   "name": "Ilebo",
+   "province": "Kasaï",
+   "population": 244900
+  },
+  {
+   "name": "Kakenge",
+   "province": "Kasaï",
+   "population": 171400
+  },
+  {
+   "name": "Kalonda Ouest",
+   "province": "Kasaï",
+   "population": 286500
+  },
+  {
+   "name": "Kamonia",
+   "province": "Kasaï",
+   "population": 211600
+  },
+  {
+   "name": "Kamwesha",
+   "province": "Kasaï",
+   "population": 390900
+  },
+  {
+   "name": "Kanzala",
+   "province": "Kasaï",
+   "population": 243600
+  },
+  {
+   "name": "Kitangwa",
+   "province": "Kasaï",
+   "population": 171000
+  },
+  {
+   "name": "Luebo",
+   "province": "Kasaï",
+   "population": 300700
+  },
+  {
+   "name": "Mikope",
+   "province": "Kasaï",
+   "population": 262000
+  },
+  {
+   "name": "Mushenge",
+   "province": "Kasaï",
+   "population": 135700
+  },
+  {
+   "name": "Mutena",
+   "province": "Kasaï",
+   "population": 140400
+  },
+  {
+   "name": "Mweka",
+   "province": "Kasaï",
+   "population": 321800
+  },
+  {
+   "name": "Ndjoko Mpunda",
+   "province": "Kasaï",
+   "population": 186500
+  },
+  {
+   "name": "Nyanga",
+   "province": "Kasaï",
+   "population": 112800
+  },
+  {
+   "name": "Tshikapa",
+   "province": "Kasaï",
+   "population": 427300
+  },
+  {
+   "name": "Bena Leka",
+   "province": "Kasaï-Central",
+   "population": 289600
+  },
+  {
+   "name": "Bena Tshadi",
+   "province": "Kasaï-Central",
+   "population": 89100
+  },
+  {
+   "name": "Bilomba",
+   "province": "Kasaï-Central",
+   "population": 134800
+  },
+  {
+   "name": "Bobozo",
+   "province": "Kasaï-Central",
+   "population": 30600
+  },
+  {
+   "name": "Bunkonde",
+   "province": "Kasaï-Central",
+   "population": 89000
+  },
+  {
+   "name": "Demba",
+   "province": "Kasaï-Central",
+   "population": 321100
+  },
+  {
+   "name": "Dibaya",
+   "province": "Kasaï-Central",
+   "population": 169500
+  },
+  {
+   "name": "Kalomba",
+   "province": "Kasaï-Central",
+   "population": 98900
+  },
+  {
+   "name": "Kananga",
+   "province": "Kasaï-Central",
+   "population": 424400
+  },
+  {
+   "name": "Katende",
+   "province": "Kasaï-Central",
+   "population": 174300
+  },
+  {
+   "name": "Katoka",
+   "province": "Kasaï-Central",
+   "population": 124400
+  },
+  {
+   "name": "Luambo",
+   "province": "Kasaï-Central",
+   "population": 261500
+  },
+  {
+   "name": "Lubondaie",
+   "province": "Kasaï-Central",
+   "population": 106800
+  },
+  {
+   "name": "Lubunga (Kasaï-Central)",
+   "province": "Kasaï-Central",
+   "population": 101000
+  },
+  {
+   "name": "Luiza",
+   "province": "Kasaï-Central",
+   "population": 292200
+  },
+  {
+   "name": "Lukonga",
+   "province": "Kasaï-Central",
+   "population": 171700
+  },
+  {
+   "name": "Masuika",
+   "province": "Kasaï-Central",
+   "population": 298600
+  },
+  {
+   "name": "Mikalayi",
+   "province": "Kasaï-Central",
+   "population": 291200
+  },
+  {
+   "name": "Muetshi",
+   "province": "Kasaï-Central",
+   "population": 153000
+  },
+  {
+   "name": "Mutoto",
+   "province": "Kasaï-Central",
+   "population": 97300
+  },
+  {
+   "name": "Ndekesha",
+   "province": "Kasaï-Central",
+   "population": 198300
+  },
+  {
+   "name": "Ndesha",
+   "province": "Kasaï-Central",
+   "population": 84500
+  },
+  {
+   "name": "Tshibala",
+   "province": "Kasaï-Central",
+   "population": 204500
+  },
+  {
+   "name": "Tshikaji",
+   "province": "Kasaï-Central",
+   "population": 193200
+  },
+  {
+   "name": "Tshikula",
+   "province": "Kasaï-Central",
+   "population": 127800
+  },
+  {
+   "name": "Yangala",
+   "province": "Kasaï-Central",
+   "population": 168600
+  },
+  {
+   "name": "Bibanga",
+   "province": "Kasaï-Oriental",
+   "population": 188900
+  },
+  {
+   "name": "Bipemba",
+   "province": "Kasaï-Oriental",
+   "population": 151200
+  },
+  {
+   "name": "Bonzola",
+   "province": "Kasaï-Oriental",
+   "population": 383600
+  },
+  {
+   "name": "Cilundu",
+   "province": "Kasaï-Oriental",
+   "population": 215500
+  },
+  {
+   "name": "Citenge",
+   "province": "Kasaï-Oriental",
+   "population": 173900
+  },
+  {
+   "name": "Dibindi",
+   "province": "Kasaï-Oriental",
+   "population": 145000
+  },
+  {
+   "name": "Diulu",
+   "province": "Kasaï-Oriental",
+   "population": 197700
+  },
+  {
+   "name": "Kabeya Kamwanga",
+   "province": "Kasaï-Oriental",
+   "population": 269000
+  },
+  {
+   "name": "Kansele",
+   "province": "Kasaï-Oriental",
+   "population": 137700
+  },
+  {
+   "name": "Kasansa",
+   "province": "Kasaï-Oriental",
+   "population": 317500
+  },
+  {
+   "name": "Lubilanji",
+   "province": "Kasaï-Oriental",
+   "population": 147600
+  },
+  {
+   "name": "Lukelenge",
+   "province": "Kasaï-Oriental",
+   "population": 202500
+  },
+  {
+   "name": "Miabi",
+   "province": "Kasaï-Oriental",
+   "population": 178700
+  },
+  {
+   "name": "Mpokolo",
+   "province": "Kasaï-Oriental",
+   "population": 150900
+  },
+  {
+   "name": "Mukumbi",
+   "province": "Kasaï-Oriental",
+   "population": 140200
+  },
+  {
+   "name": "Muya",
+   "province": "Kasaï-Oriental",
+   "population": 153300
+  },
+  {
+   "name": "Nzaba",
+   "province": "Kasaï-Oriental",
+   "population": 294900
+  },
+  {
+   "name": "Tshilenge",
+   "province": "Kasaï-Oriental",
+   "population": 266600
+  },
+  {
+   "name": "Tshishimbi",
+   "province": "Kasaï-Oriental",
+   "population": 154900
+  },
+  {
+   "name": "Bandalungwa",
+   "province": "Kinshasa",
+   "population": 134900
+  },
+  {
+   "name": "Barumbu",
+   "province": "Kinshasa",
+   "population": 110300
+  },
+  {
+   "name": "Binza Meteo",
+   "province": "Kinshasa",
+   "population": 620000
+  },
+  {
+   "name": "Binza Ozone",
+   "province": "Kinshasa",
+   "population": 696300
+  },
+  {
+   "name": "Biyela",
+   "province": "Kinshasa",
+   "population": 320400
+  },
+  {
+   "name": "Bumbu",
+   "province": "Kinshasa",
+   "population": 149600
+  },
+  {
+   "name": "Gombe",
+   "province": "Kinshasa",
+   "population": 233700
+  },
+  {
+   "name": "Kalamu 1",
+   "province": "Kinshasa",
+   "population": 112100
+  },
+  {
+   "name": "Kalamu 2",
+   "province": "Kinshasa",
+   "population": 62000
+  },
+  {
+   "name": "Kasa Vubu",
+   "province": "Kinshasa",
+   "population": 86800
+  },
+  {
+   "name": "Kikimi",
+   "province": "Kinshasa",
+   "population": 243900
+  },
+  {
+   "name": "Kimbanseke",
+   "province": "Kinshasa",
+   "population": 284600
+  },
+  {
+   "name": "Kingabwa",
+   "province": "Kinshasa",
+   "population": 210600
+  },
+  {
+   "name": "Kingasani",
+   "province": "Kinshasa",
+   "population": 150900
+  },
+  {
+   "name": "Kinshasa",
+   "province": "Kinshasa",
+   "population": 98900
+  },
+  {
+   "name": "Kintambo",
+   "province": "Kinshasa",
+   "population": 123200
+  },
+  {
+   "name": "Kisenso",
+   "province": "Kinshasa",
+   "population": 384300
+  },
+  {
+   "name": "Kokolo",
+   "province": "Kinshasa",
+   "population": 215200
+  },
+  {
+   "name": "Lemba",
+   "province": "Kinshasa",
+   "population": 354800
+  },
+  {
+   "name": "Limete",
+   "province": "Kinshasa",
+   "population": 273300
+  },
+  {
+   "name": "Lingwala",
+   "province": "Kinshasa",
+   "population": 80500
+  },
+  {
+   "name": "Makala",
+   "province": "Kinshasa",
+   "population": 158500
+  },
+  {
+   "name": "Maluku 1",
+   "province": "Kinshasa",
+   "population": 308100
+  },
+  {
+   "name": "Maluku 2",
+   "province": "Kinshasa",
+   "population": 191500
+  },
+  {
+   "name": "Masina 1",
+   "province": "Kinshasa",
+   "population": 192800
+  },
+  {
+   "name": "Masina 2",
+   "province": "Kinshasa",
+   "population": 172900
+  },
+  {
+   "name": "Matete",
+   "province": "Kinshasa",
+   "population": 142500
+  },
+  {
+   "name": "Mont Ngafula 1",
+   "province": "Kinshasa",
+   "population": 816900
+  },
+  {
+   "name": "Mont Ngafula 2",
+   "province": "Kinshasa",
+   "population": 555800
+  },
+  {
+   "name": "Ndjili",
+   "province": "Kinshasa",
+   "population": 266500
+  },
+  {
+   "name": "Ngaba",
+   "province": "Kinshasa",
+   "population": 99200
+  },
+  {
+   "name": "Ngiri Ngiri",
+   "province": "Kinshasa",
+   "population": 96900
+  },
+  {
+   "name": "Nsele",
+   "province": "Kinshasa",
+   "population": 975900
+  },
+  {
+   "name": "Police",
+   "province": "Kinshasa",
+   "population": 38300
+  },
+  {
+   "name": "Selembao",
+   "province": "Kinshasa",
+   "population": 480900
+  },
+  {
+   "name": "Boko Kivulu",
+   "province": "Kongo-Central",
+   "population": 336600
+  },
+  {
+   "name": "Boma",
+   "province": "Kongo-Central",
+   "population": 371800
+  },
+  {
+   "name": "Boma Bungu",
+   "province": "Kongo-Central",
+   "population": 128400
+  },
+  {
+   "name": "Gombe Matadi",
+   "province": "Kongo-Central",
+   "population": 196900
+  },
+  {
+   "name": "Inga",
+   "province": "Kongo-Central",
+   "population": 201300
+  },
+  {
+   "name": "Kangu",
+   "province": "Kongo-Central",
+   "population": 241400
+  },
+  {
+   "name": "Kibunzi",
+   "province": "Kongo-Central",
+   "population": 80400
+  },
+  {
+   "name": "Kimpangu",
+   "province": "Kongo-Central",
+   "population": 149000
+  },
+  {
+   "name": "Kimpese",
+   "province": "Kongo-Central",
+   "population": 372100
+  },
+  {
+   "name": "Kimvula",
+   "province": "Kongo-Central",
+   "population": 166000
+  },
+  {
+   "name": "Kinkonzi",
+   "province": "Kongo-Central",
+   "population": 139200
+  },
+  {
+   "name": "Kisantu",
+   "province": "Kongo-Central",
+   "population": 441400
+  },
+  {
+   "name": "Kitona",
+   "province": "Kongo-Central",
+   "population": 23100
+  },
+  {
+   "name": "Kizu",
+   "province": "Kongo-Central",
+   "population": 157900
+  },
+  {
+   "name": "Kuimba",
+   "province": "Kongo-Central",
+   "population": 148900
+  },
+  {
+   "name": "Kwilu Ngongo",
+   "province": "Kongo-Central",
+   "population": 305900
+  },
+  {
+   "name": "Lukula",
+   "province": "Kongo-Central",
+   "population": 404600
+  },
+  {
+   "name": "Luozi",
+   "province": "Kongo-Central",
+   "population": 194800
+  },
+  {
+   "name": "Mangembo",
+   "province": "Kongo-Central",
+   "population": 151400
+  },
+  {
+   "name": "Massa",
+   "province": "Kongo-Central",
+   "population": 236300
+  },
+  {
+   "name": "Matadi",
+   "province": "Kongo-Central",
+   "population": 546500
+  },
+  {
+   "name": "Mbanza Ngungu",
+   "province": "Kongo-Central",
+   "population": 323500
+  },
+  {
+   "name": "Muanda",
+   "province": "Kongo-Central",
+   "population": 500400
+  },
+  {
+   "name": "Ngidinga",
+   "province": "Kongo-Central",
+   "population": 210000
+  },
+  {
+   "name": "Nselo",
+   "province": "Kongo-Central",
+   "population": 132800
+  },
+  {
+   "name": "Nsona Mpangu",
+   "province": "Kongo-Central",
+   "population": 240100
+  },
+  {
+   "name": "Nzanza",
+   "province": "Kongo-Central",
+   "population": 159900
+  },
+  {
+   "name": "Seke Banza",
+   "province": "Kongo-Central",
+   "population": 303900
+  },
+  {
+   "name": "Sona Bata",
+   "province": "Kongo-Central",
+   "population": 102700
+  },
+  {
+   "name": "Tshela",
+   "province": "Kongo-Central",
+   "population": 153300
+  },
+  {
+   "name": "Vaku",
+   "province": "Kongo-Central",
+   "population": 102800
+  },
+  {
+   "name": "Boko",
+   "province": "Kwango",
+   "population": 253900
+  },
+  {
+   "name": "Feshi",
+   "province": "Kwango",
+   "population": 249000
+  },
+  {
+   "name": "Kahemba",
+   "province": "Kwango",
+   "population": 233900
+  },
+  {
+   "name": "Kajiji",
+   "province": "Kwango",
+   "population": 104000
+  },
+  {
+   "name": "Kasongo Lunda",
+   "province": "Kwango",
+   "population": 207000
+  },
+  {
+   "name": "Kenge",
+   "province": "Kwango",
+   "population": 494600
+  },
+  {
+   "name": "Kimbao",
+   "province": "Kwango",
+   "population": 217800
+  },
+  {
+   "name": "Kisanji",
+   "province": "Kwango",
+   "population": 115500
+  },
+  {
+   "name": "Kitenda",
+   "province": "Kwango",
+   "population": 133600
+  },
+  {
+   "name": "Mwela Lembwa",
+   "province": "Kwango",
+   "population": 132500
+  },
+  {
+   "name": "Panzi",
+   "province": "Kwango",
+   "population": 295300
+  },
+  {
+   "name": "Popokabaka",
+   "province": "Kwango",
+   "population": 310400
+  },
+  {
+   "name": "Tembo",
+   "province": "Kwango",
+   "population": 115900
+  },
+  {
+   "name": "Wamba Lwadi",
+   "province": "Kwango",
+   "population": 211500
+  },
+  {
+   "name": "Bagata",
+   "province": "Kwilu",
+   "population": 275000
+  },
+  {
+   "name": "Bandundu",
+   "province": "Kwilu",
+   "population": 363100
+  },
+  {
+   "name": "Bulungu",
+   "province": "Kwilu",
+   "population": 488000
+  },
+  {
+   "name": "Djuma",
+   "province": "Kwilu",
+   "population": 354400
+  },
+  {
+   "name": "Gungu",
+   "province": "Kwilu",
+   "population": 366600
+  },
+  {
+   "name": "Idiofa",
+   "province": "Kwilu",
+   "population": 590300
+  },
+  {
+   "name": "Ipamu",
+   "province": "Kwilu",
+   "population": 386100
+  },
+  {
+   "name": "Kikongo",
+   "province": "Kwilu",
+   "population": 258200
+  },
+  {
+   "name": "Kikwit Nord",
+   "province": "Kwilu",
+   "population": 398900
+  },
+  {
+   "name": "Kikwit Sud",
+   "province": "Kwilu",
+   "population": 317400
+  },
+  {
+   "name": "Kimputu",
+   "province": "Kwilu",
+   "population": 229600
+  },
+  {
+   "name": "Kingandu",
+   "province": "Kwilu",
+   "population": 160900
+  },
+  {
+   "name": "Koshibanda",
+   "province": "Kwilu",
+   "population": 335100
+  },
+  {
+   "name": "Lusanga",
+   "province": "Kwilu",
+   "population": 504200
+  },
+  {
+   "name": "Masi Manimba",
+   "province": "Kwilu",
+   "population": 317800
+  },
+  {
+   "name": "Moanza",
+   "province": "Kwilu",
+   "population": 152100
+  },
+  {
+   "name": "Mokala",
+   "province": "Kwilu",
+   "population": 322700
+  },
+  {
+   "name": "Mosango",
+   "province": "Kwilu",
+   "population": 219800
+  },
+  {
+   "name": "Mukedi",
+   "province": "Kwilu",
+   "population": 324100
+  },
+  {
+   "name": "Mungindu",
+   "province": "Kwilu",
+   "population": 180100
+  },
+  {
+   "name": "Pay Kongila",
+   "province": "Kwilu",
+   "population": 255700
+  },
+  {
+   "name": "Sia",
+   "province": "Kwilu",
+   "population": 190900
+  },
+  {
+   "name": "Vanga",
+   "province": "Kwilu",
+   "population": 500100
+  },
+  {
+   "name": "Yasa Bonga",
+   "province": "Kwilu",
+   "population": 378100
+  },
+  {
+   "name": "Kabinda",
+   "province": "Lomami",
+   "population": 367100
+  },
+  {
+   "name": "Kalambayi Kabanga",
+   "province": "Lomami",
+   "population": 157800
+  },
+  {
+   "name": "Kalenda",
+   "province": "Lomami",
+   "population": 214300
+  },
+  {
+   "name": "Kalonda Est",
+   "province": "Lomami",
+   "population": 127500
+  },
+  {
+   "name": "Kamana",
+   "province": "Lomami",
+   "population": 134600
+  },
+  {
+   "name": "Kamiji",
+   "province": "Lomami",
+   "population": 88700
+  },
+  {
+   "name": "Kanda Kanda",
+   "province": "Lomami",
+   "population": 188000
+  },
+  {
+   "name": "Lubao",
+   "province": "Lomami",
+   "population": 164300
+  },
+  {
+   "name": "Ludimbi Lukula",
+   "province": "Lomami",
+   "population": 141300
+  },
+  {
+   "name": "Luputa",
+   "province": "Lomami",
+   "population": 320500
+  },
+  {
+   "name": "Makota",
+   "province": "Lomami",
+   "population": 117200
+  },
+  {
+   "name": "Mulumba",
+   "province": "Lomami",
+   "population": 264400
+  },
+  {
+   "name": "Mweneditu",
+   "province": "Lomami",
+   "population": 299500
+  },
+  {
+   "name": "Ngandajika",
+   "province": "Lomami",
+   "population": 205900
+  },
+  {
+   "name": "Tshofa",
+   "province": "Lomami",
+   "population": 158300
+  },
+  {
+   "name": "Wikong",
+   "province": "Lomami",
+   "population": 115400
+  },
+  {
+   "name": "Bunkeya",
+   "province": "Lualaba",
+   "population": 57400
+  },
+  {
+   "name": "Dilala",
+   "province": "Lualaba",
+   "population": 345600
+  },
+  {
+   "name": "Dilolo",
+   "province": "Lualaba",
+   "population": 187100
+  },
+  {
+   "name": "Fungurume",
+   "province": "Lualaba",
+   "population": 397400
+  },
+  {
+   "name": "Kafakumba",
+   "province": "Lualaba",
+   "population": 103800
+  },
+  {
+   "name": "Kalamba",
+   "province": "Lualaba",
+   "population": 102900
+  },
+  {
+   "name": "Kanzenze",
+   "province": "Lualaba",
+   "population": 157100
+  },
+  {
+   "name": "Kapanga",
+   "province": "Lualaba",
+   "population": 173800
+  },
+  {
+   "name": "Kasaji",
+   "province": "Lualaba",
+   "population": 250800
+  },
+  {
+   "name": "Lualaba",
+   "province": "Lualaba",
+   "population": 246100
+  },
+  {
+   "name": "Lubudi",
+   "province": "Lualaba",
+   "population": 95200
+  },
+  {
+   "name": "Manika",
+   "province": "Lualaba",
+   "population": 403600
+  },
+  {
+   "name": "Mutshatsha",
+   "province": "Lualaba",
+   "population": 32300
+  },
+  {
+   "name": "Sandoa",
+   "province": "Lualaba",
+   "population": 210800
+  },
+  {
+   "name": "Banzow Moke",
+   "province": "Mai-Ndombe",
+   "population": 168900
+  },
+  {
+   "name": "Bokoro",
+   "province": "Mai-Ndombe",
+   "population": 377500
+  },
+  {
+   "name": "Bolobo",
+   "province": "Mai-Ndombe",
+   "population": 191300
+  },
+  {
+   "name": "Bosobe",
+   "province": "Mai-Ndombe",
+   "population": 173200
+  },
+  {
+   "name": "Inongo",
+   "province": "Mai-Ndombe",
+   "population": 252400
+  },
+  {
+   "name": "Kiri",
+   "province": "Mai-Ndombe",
+   "population": 149600
+  },
+  {
+   "name": "Kwamouth",
+   "province": "Mai-Ndombe",
+   "population": 189900
+  },
+  {
+   "name": "Mimia",
+   "province": "Mai-Ndombe",
+   "population": 49000
+  },
+  {
+   "name": "Mushie",
+   "province": "Mai-Ndombe",
+   "population": 204200
+  },
+  {
+   "name": "Nioki",
+   "province": "Mai-Ndombe",
+   "population": 224400
+  },
+  {
+   "name": "Ntandembelo",
+   "province": "Mai-Ndombe",
+   "population": 167000
+  },
+  {
+   "name": "Oshwe",
+   "province": "Mai-Ndombe",
+   "population": 259000
+  },
+  {
+   "name": "Pendjwa",
+   "province": "Mai-Ndombe",
+   "population": 94000
+  },
+  {
+   "name": "Yumbi",
+   "province": "Mai-Ndombe",
+   "population": 181200
+  },
+  {
+   "name": "Alunguli",
+   "province": "Maniema",
+   "population": 89500
+  },
+  {
+   "name": "Ferekeni",
+   "province": "Maniema",
+   "population": 60900
+  },
+  {
+   "name": "Kabambare",
+   "province": "Maniema",
+   "population": 100700
+  },
+  {
+   "name": "Kailo",
+   "province": "Maniema",
+   "population": 189900
+  },
+  {
+   "name": "Kalima",
+   "province": "Maniema",
+   "population": 211200
+  },
+  {
+   "name": "Kampene",
+   "province": "Maniema",
+   "population": 183000
+  },
+  {
+   "name": "Kasongo",
+   "province": "Maniema",
+   "population": 385200
+  },
+  {
+   "name": "Kibombo",
+   "province": "Maniema",
+   "population": 120900
+  },
+  {
+   "name": "Kindu",
+   "province": "Maniema",
+   "population": 366800
+  },
+  {
+   "name": "Kunda",
+   "province": "Maniema",
+   "population": 328200
+  },
+  {
+   "name": "Lubutu",
+   "province": "Maniema",
+   "population": 172300
+  },
+  {
+   "name": "Lusangi",
+   "province": "Maniema",
+   "population": 153200
+  },
+  {
+   "name": "Obokote",
+   "province": "Maniema",
+   "population": 48200
+  },
+  {
+   "name": "Pangi",
+   "province": "Maniema",
+   "population": 78200
+  },
+  {
+   "name": "Punia",
+   "province": "Maniema",
+   "population": 159400
+  },
+  {
+   "name": "Samba",
+   "province": "Maniema",
+   "population": 150400
+  },
+  {
+   "name": "Saramabila",
+   "province": "Maniema",
+   "population": 245200
+  },
+  {
+   "name": "Tunda",
+   "province": "Maniema",
+   "population": 79800
+  },
+  {
+   "name": "Binga",
+   "province": "Mongala",
+   "population": 212300
+  },
+  {
+   "name": "Bongandanga",
+   "province": "Mongala",
+   "population": 72300
+  },
+  {
+   "name": "Boso Manzi",
+   "province": "Mongala",
+   "population": 159700
+  },
+  {
+   "name": "Boso Mondanda",
+   "province": "Mongala",
+   "population": 140600
+  },
+  {
+   "name": "Bosondjo",
+   "province": "Mongala",
+   "population": 160900
+  },
+  {
+   "name": "Bumba",
+   "province": "Mongala",
+   "population": 285800
+  },
+  {
+   "name": "Lisala",
+   "province": "Mongala",
+   "population": 355000
+  },
+  {
+   "name": "Lolo",
+   "province": "Mongala",
+   "population": 200300
+  },
+  {
+   "name": "Pimu",
+   "province": "Mongala",
+   "population": 205000
+  },
+  {
+   "name": "Yamaluka",
+   "province": "Mongala",
+   "population": 133000
+  },
+  {
+   "name": "Yambuku",
+   "province": "Mongala",
+   "population": 508600
+  },
+  {
+   "name": "Yamongili",
+   "province": "Mongala",
+   "population": 183500
+  },
+  {
+   "name": "Alimbongo",
+   "province": "Nord-Kivu",
+   "population": 296800
+  },
+  {
+   "name": "Bambo",
+   "province": "Nord-Kivu",
+   "population": 135000
+  },
+  {
+   "name": "Beni",
+   "province": "Nord-Kivu",
+   "population": 428900
+  },
+  {
+   "name": "Biena",
+   "province": "Nord-Kivu",
+   "population": 136200
+  },
+  {
+   "name": "Binza",
+   "province": "Nord-Kivu",
+   "population": 191400
+  },
+  {
+   "name": "Birambizo",
+   "province": "Nord-Kivu",
+   "population": 127900
+  },
+  {
+   "name": "Butembo",
+   "province": "Nord-Kivu",
+   "population": 289400
+  },
+  {
+   "name": "Goma",
+   "province": "Nord-Kivu",
+   "population": 282800
+  },
+  {
+   "name": "Itebero",
+   "province": "Nord-Kivu",
+   "population": 96900
+  },
+  {
+   "name": "Kalunguta",
+   "province": "Nord-Kivu",
+   "population": 191700
+  },
+  {
+   "name": "Kamango",
+   "province": "Nord-Kivu",
+   "population": 111400
+  },
+  {
+   "name": "Karisimbi",
+   "province": "Nord-Kivu",
+   "population": 403400
+  },
+  {
+   "name": "Katoyi",
+   "province": "Nord-Kivu",
+   "population": 253800
+  },
+  {
+   "name": "Katwa",
+   "province": "Nord-Kivu",
+   "population": 612200
+  },
+  {
+   "name": "Kayna",
+   "province": "Nord-Kivu",
+   "population": 322600
+  },
+  {
+   "name": "Kibirizi",
+   "province": "Nord-Kivu",
+   "population": 185400
+  },
+  {
+   "name": "Kibua",
+   "province": "Nord-Kivu",
+   "population": 63600
+  },
+  {
+   "name": "Kirotshe",
+   "province": "Nord-Kivu",
+   "population": 542000
+  },
+  {
+   "name": "Kyondo",
+   "province": "Nord-Kivu",
+   "population": 270300
+  },
+  {
+   "name": "Lubero",
+   "province": "Nord-Kivu",
+   "population": 377500
+  },
+  {
+   "name": "Mabalako",
+   "province": "Nord-Kivu",
+   "population": 197100
+  },
+  {
+   "name": "Manguredjipa",
+   "province": "Nord-Kivu",
+   "population": 68000
+  },
+  {
+   "name": "Masereka",
+   "province": "Nord-Kivu",
+   "population": 298600
+  },
+  {
+   "name": "Masisi",
+   "province": "Nord-Kivu",
+   "population": 356800
+  },
+  {
+   "name": "Musienene",
+   "province": "Nord-Kivu",
+   "population": 348400
+  },
+  {
+   "name": "Mutwanga",
+   "province": "Nord-Kivu",
+   "population": 255300
+  },
+  {
+   "name": "Mweso",
+   "province": "Nord-Kivu",
+   "population": 289600
+  },
+  {
+   "name": "Nyiragongo",
+   "province": "Nord-Kivu",
+   "population": 248100
+  },
+  {
+   "name": "Oicha",
+   "province": "Nord-Kivu",
+   "population": 275000
+  },
+  {
+   "name": "Pinga",
+   "province": "Nord-Kivu",
+   "population": 101200
+  },
+  {
+   "name": "Rutshuru",
+   "province": "Nord-Kivu",
+   "population": 343500
+  },
+  {
+   "name": "Rwanguba",
+   "province": "Nord-Kivu",
+   "population": 321000
+  },
+  {
+   "name": "Vuhovi",
+   "province": "Nord-Kivu",
+   "population": 152000
+  },
+  {
+   "name": "Walikale",
+   "province": "Nord-Kivu",
+   "population": 176300
+  },
+  {
+   "name": "Abuzi",
+   "province": "Nord-Ubangi",
+   "population": 143500
+  },
+  {
+   "name": "Bili (Nord-Ubangi)",
+   "province": "Nord-Ubangi",
+   "population": 216000
+  },
+  {
+   "name": "Bosobolo",
+   "province": "Nord-Ubangi",
+   "population": 206300
+  },
+  {
+   "name": "Businga",
+   "province": "Nord-Ubangi",
+   "population": 153700
+  },
+  {
+   "name": "Gbadolite",
+   "province": "Nord-Ubangi",
+   "population": 188100
+  },
+  {
+   "name": "Karawa",
+   "province": "Nord-Ubangi",
+   "population": 335500
+  },
+  {
+   "name": "Loko",
+   "province": "Nord-Ubangi",
+   "population": 166200
+  },
+  {
+   "name": "Mobayi Mbongo",
+   "province": "Nord-Ubangi",
+   "population": 155300
+  },
+  {
+   "name": "Wapinda",
+   "province": "Nord-Ubangi",
+   "population": 97700
+  },
+  {
+   "name": "Wasolo",
+   "province": "Nord-Ubangi",
+   "population": 99300
+  },
+  {
+   "name": "Yakoma",
+   "province": "Nord-Ubangi",
+   "population": 167100
+  },
+  {
+   "name": "Bena Dibele",
+   "province": "Sankuru",
+   "population": 141000
+  },
+  {
+   "name": "Dikungu",
+   "province": "Sankuru",
+   "population": 157000
+  },
+  {
+   "name": "Djalo Ndjeka",
+   "province": "Sankuru",
+   "population": 82000
+  },
+  {
+   "name": "Katako Kombe",
+   "province": "Sankuru",
+   "population": 179200
+  },
+  {
+   "name": "Kole",
+   "province": "Sankuru",
+   "population": 169500
+  },
+  {
+   "name": "Lodja",
+   "province": "Sankuru",
+   "population": 410700
+  },
+  {
+   "name": "Lomela",
+   "province": "Sankuru",
+   "population": 147900
+  },
+  {
+   "name": "Lusambo",
+   "province": "Sankuru",
+   "population": 172600
+  },
+  {
+   "name": "Minga",
+   "province": "Sankuru",
+   "population": 167400
+  },
+  {
+   "name": "Omendjadi",
+   "province": "Sankuru",
+   "population": 164300
+  },
+  {
+   "name": "Ototo",
+   "province": "Sankuru",
+   "population": 187600
+  },
+  {
+   "name": "Pania Mutombo",
+   "province": "Sankuru",
+   "population": 79500
+  },
+  {
+   "name": "Tshudi Loto",
+   "province": "Sankuru",
+   "population": 75200
+  },
+  {
+   "name": "Tshumbe",
+   "province": "Sankuru",
+   "population": 150800
+  },
+  {
+   "name": "Vanga Kete",
+   "province": "Sankuru",
+   "population": 188200
+  },
+  {
+   "name": "Wembo Nyama",
+   "province": "Sankuru",
+   "population": 125900
+  },
+  {
+   "name": "Bagira",
+   "province": "Sud-Kivu",
+   "population": 211300
+  },
+  {
+   "name": "Bunyakiri",
+   "province": "Sud-Kivu",
+   "population": 222900
+  },
+  {
+   "name": "Fizi",
+   "province": "Sud-Kivu",
+   "population": 512700
+  },
+  {
+   "name": "Haut Plateau",
+   "province": "Sud-Kivu",
+   "population": 73800
+  },
+  {
+   "name": "Ibanda",
+   "province": "Sud-Kivu",
+   "population": 368200
+  },
+  {
+   "name": "Idjwi",
+   "province": "Sud-Kivu",
+   "population": 275600
+  },
+  {
+   "name": "Itombwe",
+   "province": "Sud-Kivu",
+   "population": 69300
+  },
+  {
+   "name": "Kabare",
+   "province": "Sud-Kivu",
+   "population": 312700
+  },
+  {
+   "name": "Kadutu",
+   "province": "Sud-Kivu",
+   "population": 267900
+  },
+  {
+   "name": "Kalehe",
+   "province": "Sud-Kivu",
+   "population": 178400
+  },
+  {
+   "name": "Kalole",
+   "province": "Sud-Kivu",
+   "population": 170700
+  },
+  {
+   "name": "Kalonge",
+   "province": "Sud-Kivu",
+   "population": 138400
+  },
+  {
+   "name": "Kamituga",
+   "province": "Sud-Kivu",
+   "population": 136800
+  },
+  {
+   "name": "Kaniola",
+   "province": "Sud-Kivu",
+   "population": 225700
+  },
+  {
+   "name": "Katana",
+   "province": "Sud-Kivu",
+   "population": 248100
+  },
+  {
+   "name": "Kaziba",
+   "province": "Sud-Kivu",
+   "population": 116300
+  },
+  {
+   "name": "Kimbi Lulenge",
+   "province": "Sud-Kivu",
+   "population": 196100
+  },
+  {
+   "name": "Kitutu",
+   "province": "Sud-Kivu",
+   "population": 166100
+  },
+  {
+   "name": "Lemera",
+   "province": "Sud-Kivu",
+   "population": 248500
+  },
+  {
+   "name": "Lulingu",
+   "province": "Sud-Kivu",
+   "population": 132000
+  },
+  {
+   "name": "Minembwe",
+   "province": "Sud-Kivu",
+   "population": 107900
+  },
+  {
+   "name": "Minova",
+   "province": "Sud-Kivu",
+   "population": 341400
+  },
+  {
+   "name": "Miti Murhesa",
+   "province": "Sud-Kivu",
+   "population": 304000
+  },
+  {
+   "name": "Mubumbano",
+   "province": "Sud-Kivu",
+   "population": 244900
+  },
+  {
+   "name": "Mulungu",
+   "province": "Sud-Kivu",
+   "population": 121500
+  },
+  {
+   "name": "Mwana",
+   "province": "Sud-Kivu",
+   "population": 241900
+  },
+  {
+   "name": "Mwenga",
+   "province": "Sud-Kivu",
+   "population": 125200
+  },
+  {
+   "name": "Nundu",
+   "province": "Sud-Kivu",
+   "population": 185700
+  },
+  {
+   "name": "Nyangezi",
+   "province": "Sud-Kivu",
+   "population": 166900
+  },
+  {
+   "name": "Nyantende",
+   "province": "Sud-Kivu",
+   "population": 171700
+  },
+  {
+   "name": "Ruzizi",
+   "province": "Sud-Kivu",
+   "population": 279700
+  },
+  {
+   "name": "Shabunda",
+   "province": "Sud-Kivu",
+   "population": 244300
+  },
+  {
+   "name": "Uvira",
+   "province": "Sud-Kivu",
+   "population": 424300
+  },
+  {
+   "name": "Walungu",
+   "province": "Sud-Kivu",
+   "population": 332700
+  },
+  {
+   "name": "Bangabola",
+   "province": "Sud-Ubangi",
+   "population": 162100
+  },
+  {
+   "name": "Bogosenubea",
+   "province": "Sud-Ubangi",
+   "population": 245300
+  },
+  {
+   "name": "Bokonzi",
+   "province": "Sud-Ubangi",
+   "population": 238100
+  },
+  {
+   "name": "Bominenge",
+   "province": "Sud-Ubangi",
+   "population": 124100
+  },
+  {
+   "name": "Boto",
+   "province": "Sud-Ubangi",
+   "population": 250500
+  },
+  {
+   "name": "Budjala",
+   "province": "Sud-Ubangi",
+   "population": 196400
+  },
+  {
+   "name": "Bulu",
+   "province": "Sud-Ubangi",
+   "population": 167500
+  },
+  {
+   "name": "Bwamanda",
+   "province": "Sud-Ubangi",
+   "population": 366500
+  },
+  {
+   "name": "Gemena",
+   "province": "Sud-Ubangi",
+   "population": 539900
+  },
+  {
+   "name": "Kungu",
+   "province": "Sud-Ubangi",
+   "population": 232500
+  },
+  {
+   "name": "Libenge",
+   "province": "Sud-Ubangi",
+   "population": 291400
+  },
+  {
+   "name": "Mawuya",
+   "province": "Sud-Ubangi",
+   "population": 164100
+  },
+  {
+   "name": "Mbaya",
+   "province": "Sud-Ubangi",
+   "population": 82400
+  },
+  {
+   "name": "Ndage",
+   "province": "Sud-Ubangi",
+   "population": 174800
+  },
+  {
+   "name": "Tandala",
+   "province": "Sud-Ubangi",
+   "population": 325000
+  },
+  {
+   "name": "Zongo",
+   "province": "Sud-Ubangi",
+   "population": 122300
+  },
+  {
+   "name": "Ankoro",
+   "province": "Tanganyika",
+   "population": 212200
+  },
+  {
+   "name": "Kabalo",
+   "province": "Tanganyika",
+   "population": 304000
+  },
+  {
+   "name": "Kalemie",
+   "province": "Tanganyika",
+   "population": 331400
+  },
+  {
+   "name": "Kansimba",
+   "province": "Tanganyika",
+   "population": 199300
+  },
+  {
+   "name": "Kiambi",
+   "province": "Tanganyika",
+   "population": 125800
+  },
+  {
+   "name": "Kongolo",
+   "province": "Tanganyika",
+   "population": 397400
+  },
+  {
+   "name": "Manono",
+   "province": "Tanganyika",
+   "population": 352500
+  },
+  {
+   "name": "Mbulula",
+   "province": "Tanganyika",
+   "population": 264500
+  },
+  {
+   "name": "Moba",
+   "province": "Tanganyika",
+   "population": 474800
+  },
+  {
+   "name": "Nyemba",
+   "province": "Tanganyika",
+   "population": 378100
+  },
+  {
+   "name": "Nyunzu",
+   "province": "Tanganyika",
+   "population": 243300
+  },
+  {
+   "name": "Bafwagbogbo",
+   "province": "Tshopo",
+   "population": 65500
+  },
+  {
+   "name": "Bafwasende",
+   "province": "Tshopo",
+   "population": 132300
+  },
+  {
+   "name": "Banalia",
+   "province": "Tshopo",
+   "population": 195700
+  },
+  {
+   "name": "Basali",
+   "province": "Tshopo",
+   "population": 71200
+  },
+  {
+   "name": "Basoko",
+   "province": "Tshopo",
+   "population": 205700
+  },
+  {
+   "name": "Bengamisa",
+   "province": "Tshopo",
+   "population": 191500
+  },
+  {
+   "name": "Isangi",
+   "province": "Tshopo",
+   "population": 243400
+  },
+  {
+   "name": "Kabondo",
+   "province": "Tshopo",
+   "population": 204600
+  },
+  {
+   "name": "Lowa",
+   "province": "Tshopo",
+   "population": 68200
+  },
+  {
+   "name": "Lubunga (Tshopo)",
+   "province": "Tshopo",
+   "population": 154700
+  },
+  {
+   "name": "Makiso Kisangani",
+   "province": "Tshopo",
+   "population": 535800
+  },
+  {
+   "name": "Mangobo",
+   "province": "Tshopo",
+   "population": 188700
+  },
+  {
+   "name": "Opala",
+   "province": "Tshopo",
+   "population": 181700
+  },
+  {
+   "name": "Opienge",
+   "province": "Tshopo",
+   "population": 48400
+  },
+  {
+   "name": "Tshopo",
+   "province": "Tshopo",
+   "population": 172900
+  },
+  {
+   "name": "Ubundu",
+   "province": "Tshopo",
+   "population": 157500
+  },
+  {
+   "name": "Wanierukula",
+   "province": "Tshopo",
+   "population": 155300
+  },
+  {
+   "name": "Yabaondo",
+   "province": "Tshopo",
+   "population": 227500
+  },
+  {
+   "name": "Yahisuli",
+   "province": "Tshopo",
+   "population": 127200
+  },
+  {
+   "name": "Yahuma",
+   "province": "Tshopo",
+   "population": 218400
+  },
+  {
+   "name": "Yakusu",
+   "province": "Tshopo",
+   "population": 155700
+  },
+  {
+   "name": "Yaleko",
+   "province": "Tshopo",
+   "population": 216600
+  },
+  {
+   "name": "Yalimbongo",
+   "province": "Tshopo",
+   "population": 112500
+  },
+  {
+   "name": "Befale",
+   "province": "Tshuapa",
+   "population": 150300
+  },
+  {
+   "name": "Boende",
+   "province": "Tshuapa",
+   "population": 376000
+  },
+  {
+   "name": "Bokungu",
+   "province": "Tshuapa",
+   "population": 222300
+  },
+  {
+   "name": "Busanga",
+   "province": "Tshuapa",
+   "population": 90500
+  },
+  {
+   "name": "Djolu",
+   "province": "Tshuapa",
+   "population": 341800
+  },
+  {
+   "name": "Ikela",
+   "province": "Tshuapa",
+   "population": 184900
+  },
+  {
+   "name": "Lingomo",
+   "province": "Tshuapa",
+   "population": 196600
+  },
+  {
+   "name": "Mompono",
+   "province": "Tshuapa",
+   "population": 142700
+  },
+  {
+   "name": "Mondombe",
+   "province": "Tshuapa",
+   "population": 228400
+  },
+  {
+   "name": "Monkoto",
+   "province": "Tshuapa",
+   "population": 184600
+  },
+  {
+   "name": "Wema",
+   "province": "Tshuapa",
+   "population": 119500
+  },
+  {
+   "name": "Yalifafu",
+   "province": "Tshuapa",
+   "population": 171800
+  }
+ ]
+}

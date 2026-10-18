@@ -1,0 +1,52 @@
+# Production-style stack: PostgreSQL/PostGIS, API + dashboard, scheduled worker.
+# Usage: cp .env.example .env  (set EW_SECRET_KEY, EW_PSEUDONYM_SALT, POSTGRES_PASSWORD)
+#        docker compose up -d --build
+#        docker compose exec api ebolawatch init-db
+#        docker compose exec api ebolawatch create-api-key "reviewer name" --role reviewer
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ebolawatch
+      POSTGRES_USER: ebolawatch
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ebolawatch"]
+      interval: 10s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      EW_ENV: production
+      EW_DATABASE_URL: postgresql+psycopg://ebolawatch:${POSTGRES_PASSWORD}@db:5432/ebolawatch
+      EW_TRUST_FORWARDED_FOR: ${EW_TRUST_FORWARDED_FOR:-false}
+    depends_on:
+      db: {condition: service_healthy}
+    ports: ["127.0.0.1:8000:8000"]   # publish through a TLS-terminating reverse proxy
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["ebolawatch", "scheduler"]
+    env_file: .env
+    environment:
+      EW_ENV: production
+      EW_DATABASE_URL: postgresql+psycopg://ebolawatch:${POSTGRES_PASSWORD}@db:5432/ebolawatch
+    depends_on:
+      db: {condition: service_healthy}
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    restart: unless-stopped
+
+volumes:
+  dbdata:

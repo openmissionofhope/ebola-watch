@@ -1,0 +1,35 @@
+# Severity thresholds. Rationale for every number is in docs/SEVERITY.md.
+#
+# Windows are tied to Ebola natural history: 21 days is the maximum incubation
+# period (WHO); 42 days (two incubation periods) is the WHO criterion for
+# declaring the end of an outbreak.
+version: "2026.10.1"
+windows:
+  recent_days: 21
+  end_of_outbreak_days: 42
+  stale_data_days: 28
+critical:
+  sustained_cases_21d: 300          # ~100 confirmed cases/week for three weeks
+  growth_cases_21d: 50              # with rapid growth below
+  growth_p_rt_above_1: 0.9
+  expansion_new_admin1_42d: 2       # combined with expansion_min_cases_21d
+  expansion_min_cases_21d: 100
+high:
+  cases_21d: 20
+  p_rt_above_1: 0.75
+  p_rt_min_cases_21d: 5
+  new_admin1_21d: 1                 # laboratory-confirmed geographic expansion
+elevated:
+  min_local_cases_21d: 1
+  imported_case_days: 21
+watch:
+  min_independent_signal_origins: 2
+  imported_case_days: 42
+  connectivity_min_source_cases_21d: 20
+  connectivity_min_edge_weight: 0.25
+surveillance:
+  contact_followup_target: 0.85
+  contact_followup_concern: 0.80
+  community_deaths_concern: 0.5
+  ascertainment_concern: 0.6
+  reporting_gap_concern_days: 14

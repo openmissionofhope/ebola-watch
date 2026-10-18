@@ -1,0 +1,26 @@
+# Outbreak registry. Each entry cites the official source of its declaration
+# (and end, where declared). The pipeline links observations to an outbreak by
+# country, pathogen and date. Add new outbreaks here as they are declared, or
+# let the WHO DON connector propose them for review.
+outbreaks:
+  - key: COD-BDBV-2026
+    name: "Bundibugyo virus disease, Democratic Republic of the Congo, 2026"
+    pathogen: BDBV
+    iso3: COD
+    declared_on: 2026-05-15
+    ended_on: null
+    citation: "WHO Disease Outbreak News 2026-DON602 (16 May 2026): outbreak declared by the Ministry of Public Health, Hygiene and Social Welfare on 15 May 2026"
+  - key: UGA-BDBV-2026
+    name: "Bundibugyo virus disease, Uganda, 2026"
+    pathogen: BDBV
+    iso3: UGA
+    declared_on: 2026-05-15
+    ended_on: 2026-07-28
+    citation: "WHO DON 2026-DON602 (declaration); WHO DON 2026-DON614 (end declared 28 July 2026)"
+  - key: COD-EBOV-2025
+    name: "Ebola virus disease, Democratic Republic of the Congo (Kasaï), 2025"
+    pathogen: EBOV
+    iso3: COD
+    declared_on: 2025-09-04
+    ended_on: 2025-12-01
+    citation: "WHO Disease Outbreak News 2025-DON580 and 2025-DON589"

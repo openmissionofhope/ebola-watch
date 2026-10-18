@@ -1,0 +1,11 @@
+code: lg
+name: Luganda
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: ["mu", "ku", "era", "nga", "abantu", "kino", "kye", "ne", "bwe"]
+terms:
+  ebola: [ebola, obulwadde bwa ebola]
+  illness: [obulwadde, omulwadde, abalwadde, omusujja]
+  death: [okufa, afudde, baafudde, bafudde]
+  official_body: [minisitule y'ebyobulamu]
