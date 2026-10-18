@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import type { ReportDetail, ReportListItem } from "../api";
+import { downloadUrl, type ReportDetail, type ReportListItem } from "../api";
 import { DataTable } from "../components/DataTable";
 import { PageHead } from "../components/Layout";
 import { Markdown } from "../components/Markdown";
@@ -44,7 +44,7 @@ export function ReportViewPage() {
       {(r) => (
         <article className="card">
           <nav className="small" aria-label="Breadcrumb"><Link to="/reports">Reports</Link> / {r.title}</nav>
-          <p className="small muted">Generated {fmtDateTime(r.generated_at)} · <a href={`/api/v1/reports/${r.id}?format=markdown`}>Download Markdown</a></p>
+          <p className="small muted">Generated {fmtDateTime(r.generated_at)} · <a href={downloadUrl(`/reports/${r.id}.md`)}>Download Markdown</a></p>
           {r.is_synthetic && <div className="banner synthetic">This report contains SYNTHETIC data.</div>}
           {r.status === "retracted" ? (
             <div className="callout danger"><strong>Retracted.</strong> {r.retraction_note}</div>

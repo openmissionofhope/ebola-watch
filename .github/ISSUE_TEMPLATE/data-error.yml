@@ -1,0 +1,50 @@
+name: Report a data error or request a correction
+description: Something on the Ebola Watch site is wrong — a figure, an area, an alert, a translation or a transport status.
+title: "[Data error] "
+labels: ["data-error"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This report is public:** anyone can read it, and your GitHub username is shown. Do not include names, phone numbers, addresses, or any information about patients, contacts or other individuals.
+
+        Ebola Watch is not a medical service. If someone may be ill or exposed, contact a health professional or your national public-health authority.
+  - type: dropdown
+    id: target
+    attributes:
+      label: What is the report about?
+      options:
+        - Official figure
+        - Estimate or forecast
+        - Severity level
+        - Alert
+        - Situation report
+        - Unofficial signal
+        - Transport status
+        - Translation
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where did you see it?
+      description: Page, area or report, e.g. "Ituri, daily report of 18 Oct 2026".
+  - type: textarea
+    id: description
+    attributes:
+      label: What is wrong?
+      description: If possible, link the public source that shows the correct information.
+    validations:
+      required: true
+  - type: input
+    id: organisation
+    attributes:
+      label: Organisation (optional)
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: My report contains no personal information about patients, contacts or other individuals.
+          required: true

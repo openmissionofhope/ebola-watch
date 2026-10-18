@@ -15,7 +15,8 @@ app = typer.Typer(help="Ebola Watch — epidemiological intelligence (not a medi
 
 def _setup() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    logging.getLogger("httpx").setLevel(logging.WARNING)
+    for name in ("httpx", "httpx2"):
+        logging.getLogger(name).setLevel(logging.WARNING)
     get_settings().validate_for_production()
 
 
@@ -80,12 +81,13 @@ def analyze(sims: int = typer.Option(2000, help="Simulations per scenario"),
 
 
 @app.command("run")
-def run_pipeline(skip_ingest: bool = False) -> None:
+def run_pipeline(skip_ingest: bool = False,
+                 due_only: bool = typer.Option(False, help="Skip sources that are not due (reference data, persistently failing sources)")) -> None:
     """Full pipeline: seed, ingest, analyze, retention."""
     _setup()
     from .pipeline.run import run_all
 
-    typer.echo(json.dumps(run_all(skip_ingest=skip_ingest), indent=1, default=str))
+    typer.echo(json.dumps(run_all(skip_ingest=skip_ingest, due_only=due_only), indent=1, default=str))
 
 
 @app.command()
@@ -166,6 +168,46 @@ def retention() -> None:
 
     with session_scope() as s:
         typer.echo(json.dumps(apply_retention(s)))
+
+
+@app.command("export-static")
+def export_static(out: Path = typer.Option(..., help="Output directory (created; replaced if it holds a previous export)"),
+                  frontend_dist: Path = typer.Option(None, help="Dashboard built with VITE_STATIC=1; omit to export data only"),
+                  cname: str = typer.Option(None, help="Custom domain to write to CNAME (GitHub Pages)")) -> None:
+    """Write a static snapshot of the public API and dashboard (hosting without a server)."""
+    _setup()
+    from .publish.static import export_static as run_export
+
+    typer.echo(json.dumps(run_export(out, frontend_dist, cname)))
+
+
+github_app = typer.Typer(help="Human review through GitHub issues (deployments without a server).", no_args_is_help=True)
+app.add_typer(github_app, name="github")
+
+
+@github_app.command("apply")
+def github_apply(repo: str = typer.Option(..., help="Operations repository (owner/name)")) -> None:
+    """Apply decisions and authorised requests recorded on GitHub issues (database only)."""
+    _setup()
+    from .db.session import session_scope
+    from .publish.github_ops import GitHub, apply_from_github
+
+    gh = GitHub.from_env(repo)
+    with session_scope() as s:
+        typer.echo(json.dumps(apply_from_github(s, gh)))
+
+
+@github_app.command("sync")
+def github_sync(repo: str = typer.Option(..., help="Operations repository (owner/name)"),
+                max_new: int = typer.Option(25, help="Maximum new issues per run")) -> None:
+    """Acknowledge decisions, open issues for new review items, delete expired excerpts. Run after the state is saved."""
+    _setup()
+    from .db.session import session_scope
+    from .publish.github_ops import GitHub, sync_to_github
+
+    gh = GitHub.from_env(repo)
+    with session_scope() as s:
+        typer.echo(json.dumps(sync_to_github(s, gh, max_new=max_new)))
 
 
 @app.command()

@@ -1,13 +1,16 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import type { Meta } from "../api";
+import { API_DOCS_URL, STATIC, type Meta } from "../api";
 import { fmtDateTime } from "../format";
 import { useApi } from "../hooks";
 
 const MetaContext = createContext<Meta | null>(null);
 export const useMeta = () => useContext(MetaContext);
 
-const NAV: [string, string][] = [
+const SERVER_ONLY = new Set(["/ask", "/review"]); // need the live API (questions, authenticated review)
+const STALE_AFTER_MS = 36 * 3600 * 1000;
+
+const NAV: [string, string][] = ([
   ["/", "Overview"],
   ["/map", "Map"],
   ["/regions", "Regions"],
@@ -20,7 +23,7 @@ const NAV: [string, string][] = [
   ["/methodology", "Methodology & ethics"],
   ["/report-error", "Report an error"],
   ["/review", "Review"],
-];
+] as [string, string][]).filter(([to]) => !(STATIC && SERVER_ONLY.has(to)));
 
 type Theme = "system" | "light" | "dark";
 
@@ -93,6 +96,7 @@ export function Layout() {
             <span>SYNTHETIC DATA PRESENT — not real outbreak data. Items marked synthetic are generated for testing or demonstration.</span>
           </div>
         )}
+        <StaleSnapshot meta={meta.data} />
         <Disclaimer />
         <Outlet />
       </main>
@@ -106,13 +110,29 @@ export function Layout() {
             administrative resolution at most; no patient, household or individual-level information is collected or shown.
           </p>
           <p className="small">
-            Model {meta.data?.model_version ?? "—"} · latest model run {fmtDateTime(meta.data?.latest_model_run)} · <a href="/api/docs">API documentation</a> ·{" "}
+            Model {meta.data?.model_version ?? "—"} · latest model run {fmtDateTime(meta.data?.latest_model_run)} · <a href={API_DOCS_URL}>{STATIC ? "Data files" : "API documentation"}</a> ·{" "}
             <a href="https://github.com/openmissionofhope/ebola-watch" rel="noopener noreferrer">Source code</a> · Released under the Christian Open Source
             License (COSL) 1.0 · Boundaries: Natural Earth; geoBoundaries (see NOTICE).
           </p>
         </div>
       </footer>
     </MetaContext.Provider>
+  );
+}
+
+/** A published snapshot that has stopped updating must say so, not look current. */
+function StaleSnapshot({ meta }: { meta: Meta | null }) {
+  if (!meta?.static || !meta.snapshot_generated_at) return null;
+  const age = Date.now() - new Date(meta.snapshot_generated_at).getTime();
+  if (!(age > STALE_AFTER_MS)) return null;
+  return (
+    <div className="banner warn" role="alert">
+      <span className="icon" aria-hidden="true">⚠</span>
+      <span>
+        <strong>Out of date.</strong> This page has not been updated since {fmtDateTime(meta.snapshot_generated_at)}. Automatic updates may have stopped; check official sources for
+        the latest information.
+      </span>
+    </div>
   );
 }
 

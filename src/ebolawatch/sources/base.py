@@ -82,6 +82,9 @@ class SourceInfo:
     terms_note: str | None
     attribution: str | None
     requires_acknowledgement: bool = False
+    # Minimum hours between successful runs when only due sources run (slowly
+    # changing reference data); 0 = every run.
+    refresh_hours: float = 0
 
 
 class Connector(ABC):

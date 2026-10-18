@@ -1,4 +1,4 @@
-import type { SourceStatus } from "../api";
+import { API_DOCS_URL, downloadUrl, STATIC, type SourceStatus } from "../api";
 import { StatusPill } from "../components/Badges";
 import { DataTable } from "../components/DataTable";
 import { PageHead } from "../components/Layout";
@@ -33,6 +33,20 @@ export function SourcesPage() {
           </div>
         )}
       </Async>
+      <section className="card section" aria-labelledby="dl-h">
+        <h2 id="dl-h">Download the data</h2>
+        <p className="secondary">
+          Aggregated tables with the same publication policy as the dashboard: countries and first-level units only, with small-area suppression.
+        </p>
+        <ul>
+          <li><a href={downloadUrl("/export/summaries.csv")} download>Summaries by area (CSV)</a>: official counts, estimated totals, severity and confidence.</li>
+          <li><a href={downloadUrl("/export/subnational.csv")} download>First-level units (CSV)</a>: official counts with suppression applied.</li>
+          <li>
+            {STATIC ? "Every page's data as JSON files: " : "The full public API: "}
+            <a href={API_DOCS_URL}>{STATIC ? "how the data files are organised" : "API documentation"}</a>.
+          </li>
+        </ul>
+      </section>
     </>
   );
 }

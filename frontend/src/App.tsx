@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BASE, STATIC } from "./api";
 import { Layout } from "./components/Layout";
 import { AskPage } from "./pages/Ask";
 import { EvaluationPage } from "./pages/Evaluation";
@@ -17,7 +18,7 @@ import { TransportPage } from "./pages/Transport";
 
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASE.replace(/\/$/, "") || "/"}>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<OverviewPage />} />
@@ -30,10 +31,10 @@ export function App() {
           <Route path="reports" element={<ReportsPage />} />
           <Route path="reports/:id" element={<ReportViewPage />} />
           <Route path="sources" element={<SourcesPage />} />
-          <Route path="ask" element={<AskPage />} />
+          {!STATIC && <Route path="ask" element={<AskPage />} />}
           <Route path="methodology" element={<MethodologyPage />} />
           <Route path="report-error" element={<ReportErrorPage />} />
-          <Route path="review" element={<ReviewPage />} />
+          {!STATIC && <Route path="review" element={<ReviewPage />} />}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

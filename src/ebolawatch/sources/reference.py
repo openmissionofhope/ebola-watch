@@ -24,6 +24,7 @@ class WorldBankPopulationConnector(Connector):
         license="CC BY 4.0",
         terms_note=None,
         attribution="World Bank, World Development Indicators",
+        refresh_hours=30 * 24,
     )
 
     def __init__(self, iso3_codes: list[str] | None = None):
@@ -77,6 +78,7 @@ class OverpassTransportConnector(Connector):
         license="ODbL 1.0",
         terms_note="Attribution required: © OpenStreetMap contributors. Queries are small and rate-limited per the Overpass usage policy.",
         attribution="© OpenStreetMap contributors (ODbL)",
+        refresh_hours=7 * 24,
     )
 
     def __init__(self, checks: list[dict] | None = None):

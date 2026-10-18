@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Overview, RegionSummary } from "../api";
+import { STATIC, type Overview, type RegionSummary } from "../api";
 import { AskBox } from "../components/AskBox";
 import { ConfidenceBadge, KindTag, SeverityBadge } from "../components/Badges";
 import { DataTable } from "../components/DataTable";
@@ -96,10 +96,12 @@ export function OverviewPage() {
             </section>
           </div>
 
-          <section className="card section" aria-labelledby="ask-h">
-            <h2 id="ask-h">Ask about the data</h2>
-            <AskBox compact />
-          </section>
+          {!STATIC && (
+            <section className="card section" aria-labelledby="ask-h">
+              <h2 id="ask-h">Ask about the data</h2>
+              <AskBox compact />
+            </section>
+          )}
         </>
       )}
     </Async>

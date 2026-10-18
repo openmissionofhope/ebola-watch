@@ -57,12 +57,17 @@
 | `pipeline/` | Seeding, ingestion, signals, modelling, evaluation, orchestration, scheduler, retention |
 | `views.py` | Public read models shared by every output channel |
 | `api/` | FastAPI app, security (API keys, roles), rate limiting, constrained Q&A, reviewer views |
+| `publish/` | Static snapshot of the public API and dashboard; review, retractions and transport changes through GitHub issues (deployments without a server) |
 | `cli.py` | `ebolawatch` command |
 
 ## Processing schedule
 
-`ebolawatch scheduler` (the `worker` container) runs the full pipeline every
-`EW_INGEST_INTERVAL_S` (default 6 h) and retention daily. Each connector run is
+`ebolawatch scheduler` (the `worker` container) runs the pipeline every
+`EW_INGEST_INTERVAL_S` (default 6 h) and retention daily; without a server, a
+scheduled GitHub Actions workflow does the same and publishes a static snapshot
+(DEPLOYMENT.md). Scheduled runs skip sources that are not due: population data
+are refreshed monthly, OpenStreetMap checks weekly, and a source that failed its
+last three runs is retried once a day. Each connector run is
 recorded in `connector_runs`; failing connectors never stop the pipeline.
 
 ## Design decisions

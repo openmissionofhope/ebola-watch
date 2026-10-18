@@ -1,0 +1,31 @@
+name: Change a transport service status
+description: Record that a passenger service (ferry, rail, flights, bus corridor…) is operating, suspended or unknown, with evidence.
+title: "[Transport] "
+labels: ["ew-action", "transport-status"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Nothing happens until someone with write access adds the **apply** label. Status changes keep their history and evidence.
+        Never record schedules, routes of individual vehicles, or information that could help someone disrupt infrastructure.
+  - type: input
+    id: edge_key
+    attributes:
+      label: Edge key
+      description: The corridor key from data/transport/corridors.yaml or the site's data/transport.json (field "key").
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: New service status
+      options: [operational, intermittent, seasonal, suspended, non_operational, unknown]
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: A public source or an explanation (at least 10 characters).
+    validations:
+      required: true

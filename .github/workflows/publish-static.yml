@@ -1,0 +1,187 @@
+# Scheduled pipeline and static publication, for running Ebola Watch without a
+# server (docs/DEPLOYMENT.md, "GitHub Pages").
+#
+# This workflow is called from a private operations repository. It runs with
+# that repository's token, secrets and logs; keeps the database there as an
+# encrypted release asset; takes review decisions from its issues; and pushes
+# the public site to the gh-pages branch of `site_repo` with a deploy key.
+name: publish-static
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "full: ingest + analysis + publish. publish: apply review decisions and republish only."
+        type: string
+        default: full
+      code_repo:
+        type: string
+        default: openmissionofhope/ebola-watch
+      code_ref:
+        type: string
+        default: main
+      site_repo:
+        description: Repository whose gh-pages branch serves the site
+        type: string
+        default: openmissionofhope/ebola-watch
+      site_domain:
+        description: Custom domain (CNAME); empty to serve from <owner>.github.io/<repo>/
+        type: string
+        default: ""
+      source_acknowledgements:
+        type: string
+        default: ""
+      disabled_sources:
+        type: string
+        default: ""
+    secrets:
+      EW_SECRET_KEY: {required: true}
+      EW_PSEUDONYM_SALT: {required: true}
+      EW_STATE_KEY: {required: true}
+      PAGES_DEPLOY_KEY: {required: true}
+      EW_RELIEFWEB_APPNAME: {required: false}
+      EW_YOUTUBE_API_KEY: {required: false}
+      EW_X_BEARER_TOKEN: {required: false}
+      EW_REDDIT_CLIENT_ID: {required: false}
+      EW_REDDIT_CLIENT_SECRET: {required: false}
+      EW_PROMED_FEED_URL: {required: false}
+      EW_RSS_FEEDS: {required: false}
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      EW_ENV: production
+      EW_DEPLOYMENT: static
+      EW_SECRET_KEY: ${{ secrets.EW_SECRET_KEY }}
+      EW_PSEUDONYM_SALT: ${{ secrets.EW_PSEUDONYM_SALT }}
+      EW_STATE_KEY: ${{ secrets.EW_STATE_KEY }}
+      EW_SOURCE_ACKNOWLEDGEMENTS: ${{ inputs.source_acknowledgements }}
+      EW_DISABLED_SOURCES: ${{ inputs.disabled_sources }}
+      EW_RELIEFWEB_APPNAME: ${{ secrets.EW_RELIEFWEB_APPNAME }}
+      EW_YOUTUBE_API_KEY: ${{ secrets.EW_YOUTUBE_API_KEY }}
+      EW_X_BEARER_TOKEN: ${{ secrets.EW_X_BEARER_TOKEN }}
+      EW_REDDIT_CLIENT_ID: ${{ secrets.EW_REDDIT_CLIENT_ID }}
+      EW_REDDIT_CLIENT_SECRET: ${{ secrets.EW_REDDIT_CLIENT_SECRET }}
+      EW_PROMED_FEED_URL: ${{ secrets.EW_PROMED_FEED_URL }}
+      EW_RSS_FEEDS: ${{ secrets.EW_RSS_FEEDS }}
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+      OPS_REPO: ${{ github.repository }}
+      MODE: ${{ inputs.mode }}
+      SITE_REPO: ${{ inputs.site_repo }}
+      SITE_DOMAIN: ${{ inputs.site_domain }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.code_repo }}
+          ref: ${{ inputs.code_ref }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - uses: actions/setup-node@v4
+        with: {node-version: "22", cache: npm, cache-dependency-path: frontend/package-lock.json}
+      - name: Install
+        run: |
+          pip install -e .
+          (cd frontend && npm ci)
+          echo "STATE_DIR=$RUNNER_TEMP/state" >> "$GITHUB_ENV"
+          echo "EW_DATABASE_URL=sqlite:///$RUNNER_TEMP/state/ebolawatch.db" >> "$GITHUB_ENV"
+
+      - name: Restore state
+        run: |
+          set -euo pipefail
+          mkdir -p "$STATE_DIR" "$RUNNER_TEMP/download"
+          # Start a new database only when the state release is definitely absent (HTTP 404);
+          # any other error stops the run, so saved state is never replaced by an empty one.
+          if out=$(gh api "repos/$OPS_REPO/releases/tags/state" 2>&1); then
+            gh release download state --repo "$OPS_REPO" --pattern ebolawatch.db.gz.enc --dir "$RUNNER_TEMP/download"
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:EW_STATE_KEY \
+              -in "$RUNNER_TEMP/download/ebolawatch.db.gz.enc" | gunzip > "$STATE_DIR/ebolawatch.db"
+            echo "Restored state ($(stat -c %s "$STATE_DIR/ebolawatch.db") bytes)"
+          elif grep -q "HTTP 404" <<<"$out"; then
+            echo "::notice::No saved state found: starting a new database"
+          else
+            echo "$out" >&2
+            exit 1
+          fi
+
+      - name: Migrate and seed
+        run: ebolawatch init-db
+
+      - name: Apply review decisions from issues
+        run: ebolawatch github apply --repo "$OPS_REPO"
+
+      - name: Run pipeline
+        if: inputs.mode == 'full'
+        run: ebolawatch run --due-only | tee "$RUNNER_TEMP/run.json"
+
+      - name: Build site
+        run: |
+          set -euo pipefail
+          if [ -n "$SITE_DOMAIN" ]; then base=/; else base="/${SITE_REPO#*/}/"; fi
+          (cd frontend && VITE_STATIC=1 EW_BASE_PATH="$base" npm run build)
+          ebolawatch export-static --out "$RUNNER_TEMP/site" --frontend-dist frontend/dist ${SITE_DOMAIN:+--cname "$SITE_DOMAIN"}
+
+      - name: Save state
+        run: |
+          set -euo pipefail
+          python - "$STATE_DIR/ebolawatch.db" "$RUNNER_TEMP/save.db" <<'EOF'
+          import sqlite3, sys
+          con = sqlite3.connect(sys.argv[1])
+          assert con.execute("PRAGMA integrity_check").fetchone()[0] == "ok", "database integrity check failed"
+          con.execute("VACUUM INTO ?", (sys.argv[2],))
+          EOF
+          gzip -9 -c "$RUNNER_TEMP/save.db" | openssl enc -aes-256-cbc -salt -pbkdf2 -iter 200000 -pass env:EW_STATE_KEY \
+            -out "$RUNNER_TEMP/ebolawatch.db.gz.enc"
+          if ! gh release view state --repo "$OPS_REPO" >/dev/null 2>&1; then
+            gh release create state --repo "$OPS_REPO" --title "Pipeline state" --latest=false \
+              --notes "Encrypted Ebola Watch database, replaced by every run, with daily backups. Do not delete."
+          fi
+          gh release upload state "$RUNNER_TEMP/ebolawatch.db.gz.enc" --repo "$OPS_REPO" --clobber
+          today=$(date -u +%F)
+          assets=$(gh release view state --repo "$OPS_REPO" --json assets --jq '.assets[].name')
+          if ! grep -qx "backup-$today.db.gz.enc" <<<"$assets"; then
+            cp "$RUNNER_TEMP/ebolawatch.db.gz.enc" "$RUNNER_TEMP/backup-$today.db.gz.enc"
+            gh release upload state "$RUNNER_TEMP/backup-$today.db.gz.enc" --repo "$OPS_REPO"
+          fi
+          cutoff=$(date -u -d "14 days ago" +%F)
+          for name in $(grep -E '^backup-[0-9]{4}-[0-9]{2}-[0-9]{2}\.db\.gz\.enc$' <<<"$assets" || true); do
+            d=${name#backup-}; d=${d%.db.gz.enc}
+            if [[ "$d" < "$cutoff" ]]; then gh release delete-asset state "$name" --repo "$OPS_REPO" --yes; fi
+          done
+
+      - name: Publish site
+        env:
+          PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          install -m 600 /dev/null "$RUNNER_TEMP/deploy_key"
+          printf '%s\n' "$PAGES_DEPLOY_KEY" > "$RUNNER_TEMP/deploy_key"
+          gh api meta --jq '.ssh_keys[] | "github.com " + .' > "$RUNNER_TEMP/known_hosts"
+          cd "$RUNNER_TEMP/site"
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="Ebola Watch publisher" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Publish snapshot $(date -u +%FT%TZ) (${MODE})"
+          GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts" \
+            git push -q --force "git@github.com:${SITE_REPO}.git" gh-pages
+          rm -f "$RUNNER_TEMP/deploy_key"
+
+      - name: Update review issues
+        run: ebolawatch github sync --repo "$OPS_REPO"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Ebola Watch ($MODE)"
+            if [ -f "$RUNNER_TEMP/run.json" ]; then
+              echo '```json'; python -c "import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({'ingest': d.get('ingest'), 'analysis': d.get('analysis')}, indent=1))" "$RUNNER_TEMP/run.json" || true; echo '```'
+            fi
+            if [ -f "$RUNNER_TEMP/site/.ebolawatch-site" ]; then echo "Site snapshot: $(cat "$RUNNER_TEMP/site/.ebolawatch-site")"; fi
+          } >> "$GITHUB_STEP_SUMMARY"

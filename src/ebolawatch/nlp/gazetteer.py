@@ -123,6 +123,24 @@ def _hz_code(province_iso: str, name: str) -> str:
     return f"HZ:{province_iso}:{slug}"
 
 
+ISO_3166_2 = re.compile(r"^[A-Z]{2}-[A-Z0-9]{1,3}$")
+# geoBoundaries features carrying a wrong ISO 3166-2 code (iso3, name) -> code
+_UPSTREAM_CODE_FIXES = {("CAF", "Sangha-Mbaéré"): "CF-SE"}  # tagged CF-HS, which is Mambéré-Kadéï
+
+
+def admin1_code(props: dict) -> str | None:
+    """Region code for a first-level unit: its ISO 3166-2 code, repairing a known
+    upstream typo ("CF=OP"); units without one (e.g. the Abyei area, "N/A") get
+    an internal ``<ISO3>-<NAME>`` code. Codes are URL path segments, so they are
+    restricted to letters, digits and hyphens and must be unique."""
+    raw = _UPSTREAM_CODE_FIXES.get((props.get("iso3"), props.get("name"))) or props.get("iso_3166_2") or ""
+    raw = raw.strip().upper().replace("=", "-")
+    if ISO_3166_2.match(raw):
+        return raw
+    slug = re.sub(r"[^A-Z0-9]+", "-", (props.get("name") or "").upper()).strip("-")
+    return f"{props['iso3']}-{slug}" if slug else None
+
+
 @lru_cache
 def load_gazetteer(data_dir: str | None = None) -> Gazetteer:
     base = Path(data_dir) if data_dir else get_settings().data_dir
@@ -156,7 +174,9 @@ def load_gazetteer(data_dir: str | None = None) -> Gazetteer:
     admin1 = json.loads((base / "boundaries" / "admin1_priority.geojson").read_text())
     for f in admin1["features"]:
         p = f["properties"]
-        code = p.get("iso_3166_2") or f"{p['iso3']}-{fold(p['name'])[:3].upper()}"
+        code = admin1_code(p)
+        if not code:
+            continue
         canonical.setdefault(code, p["name"])
         parents[code] = p["iso3"]
         name_key = fold(p["name"])

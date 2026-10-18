@@ -1,4 +1,27 @@
 // Typed client for the Ebola Watch API (same origin; CSP connect-src 'self').
+//
+// A static build (VITE_STATIC=1, for hosting without a server) reads the same
+// responses from files written by `ebolawatch export-static`:
+// GET /api/v1/<path> -> <base>data/<path>.json
+
+export const STATIC = import.meta.env.VITE_STATIC === "1";
+export const BASE = import.meta.env.BASE_URL;
+export const ERROR_REPORT_URL =
+  import.meta.env.VITE_ERROR_REPORT_URL || "https://github.com/openmissionofhope/ebola-watch/issues/new?template=data-error.yml";
+
+function endpoint(path: string): string {
+  return STATIC ? `${BASE}data${path}.json` : `/api/v1${path}`;
+}
+
+/** URL of a downloadable file: report Markdown (`/reports/<id>.md`) or a CSV export (`/export/<name>.csv`). */
+export function downloadUrl(path: string): string {
+  if (STATIC) return `${BASE}data${path}`;
+  const md = /^\/reports\/(\d+)\.md$/.exec(path);
+  return md ? `/api/v1/reports/${md[1]}?format=markdown` : `/api/v1${path}`;
+}
+
+/** Interactive API documentation, or the description of the static data files. */
+export const API_DOCS_URL = STATIC ? "https://github.com/openmissionofhope/ebola-watch/blob/main/docs/API.md#static-data-files" : "/api/docs";
 
 export class ApiError extends Error {
   status: number;
@@ -9,6 +32,7 @@ export class ApiError extends Error {
 }
 
 function messageFor(status: number, detail: string | undefined): string {
+  if (STATIC && status === 404) return "This information is not part of the published snapshot.";
   if (status === 429) return "The service is limiting requests right now. Please wait a moment and try again.";
   if (status === 401) return "A valid API key is required.";
   if (status === 403) return "Your API key does not have permission for this action.";
@@ -34,11 +58,12 @@ async function parse<T>(res: Response): Promise<T> {
 export async function getJSON<T>(path: string, apiKey?: string, signal?: AbortSignal): Promise<T> {
   const headers: Record<string, string> = { Accept: "application/json" };
   if (apiKey) headers["X-API-Key"] = apiKey;
-  const res = await fetch(`/api/v1${path}`, { headers, signal, credentials: "omit" });
+  const res = await fetch(endpoint(path), { headers, signal, credentials: "omit" });
   return parse<T>(res);
 }
 
 export async function postJSON<T>(path: string, body: unknown, apiKey?: string): Promise<T> {
+  if (STATIC) throw new ApiError(405, "This is a published snapshot: it does not accept submissions.");
   const headers: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json" };
   if (apiKey) headers["X-API-Key"] = apiKey;
   const res = await fetch(`/api/v1${path}`, { method: "POST", headers, body: JSON.stringify(body), credentials: "omit" });
@@ -46,7 +71,7 @@ export async function postJSON<T>(path: string, body: unknown, apiKey?: string):
 }
 
 export async function getText(path: string): Promise<string> {
-  const res = await fetch(`/api/v1${path}`, { credentials: "omit" });
+  const res = await fetch(downloadUrl(path), { credentials: "omit" });
   if (!res.ok) throw new ApiError(res.status, messageFor(res.status, undefined));
   return res.text();
 }
@@ -252,6 +277,8 @@ export interface Meta {
   contains_synthetic_data: boolean;
   latest_model_run: string | null;
   publication_policy: { max_admin_level: number; min_cell_count: number; min_subnational_population: number };
+  static?: boolean;
+  snapshot_generated_at?: string;
 }
 
 export interface SeriesPoint { as_of: string; value: number; source: string; source_key: string; published_at: string | null; citation: string | null; validation_status: string; is_synthetic: boolean }

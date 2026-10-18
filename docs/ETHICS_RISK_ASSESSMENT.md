@@ -63,6 +63,14 @@ Decisions, retractions and transport-status changes are audit-logged
 the dashboard or `POST /api/v1/error-reports`; reports are stored without
 personal data and reviewed by people.
 
+Without a server (GitHub Pages deployment), GitHub processes some of this data:
+the database is stored encrypted in a private repository; reviewers see
+redacted source excerpts in private issue comments, which are deleted after the
+raw-content retention period; only aggregate outputs are published. Public
+error reports are GitHub issues and therefore public, so the form warns against
+including personal information. The public site has no input fields, which
+removes the query-reconstruction and question-answering attack surface.
+
 ## 5. Licence and use restrictions
 
 The software is released under the Christian Open Source License (COSL) 1.0,

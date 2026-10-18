@@ -1,0 +1,37 @@
+# Runs the Ebola Watch pipeline and publishes the public site. The steps live in
+# the public repository (publish-static.yml); this repository supplies the
+# secrets, keeps the encrypted database (release "state") and the review issues.
+name: pipeline
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "full: ingest + analysis + publish; publish: apply review decisions and republish"
+        type: choice
+        options: [full, publish]
+        default: full
+  issues:
+    types: [labeled]          # a decision label republishes within minutes
+
+concurrency:
+  group: ebola-watch-pipeline
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    if: github.event_name != 'issues' || contains(fromJSON('["approve", "reject", "apply"]'), github.event.label.name)
+    permissions:
+      contents: write   # the state release
+      issues: write     # the review queue
+    uses: __SITE_REPO__/.github/workflows/publish-static.yml@main
+    with:
+      mode: ${{ github.event_name == 'issues' && 'publish' || inputs.mode || 'full' }}
+      code_repo: __SITE_REPO__
+      site_repo: __SITE_REPO__
+      site_domain: ${{ vars.EW_SITE_DOMAIN }}
+      source_acknowledgements: ${{ vars.EW_SOURCE_ACKNOWLEDGEMENTS }}
+      disabled_sources: ${{ vars.EW_DISABLED_SOURCES }}
+    secrets: inherit

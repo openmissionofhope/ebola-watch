@@ -1,3 +1,4 @@
+import { API_DOCS_URL, STATIC } from "../api";
 import { SeverityBadge } from "../components/Badges";
 import { PageHead, useMeta } from "../components/Layout";
 import { useDocumentTitle } from "../hooks";
@@ -61,7 +62,7 @@ export function MethodologyPage() {
           <li>They do not model individuals, track people, or predict infection in households.</li>
           <li>They do not give clinical, treatment, medicine or vaccine advice.</li>
         </ul>
-        <p>Full details: <a href={`${DOCS}/METHODOLOGY.md`} rel="noopener noreferrer">scientific methodology</a> · <a href={`${DOCS}/LIMITATIONS.md`} rel="noopener noreferrer">known limitations</a> · <a href="/api/docs">API documentation</a>.</p>
+        <p>Full details: <a href={`${DOCS}/METHODOLOGY.md`} rel="noopener noreferrer">scientific methodology</a> · <a href={`${DOCS}/LIMITATIONS.md`} rel="noopener noreferrer">known limitations</a> · <a href={API_DOCS_URL}>{STATIC ? "data files" : "API documentation"}</a>.</p>
       </section>
 
       <section className="card section">

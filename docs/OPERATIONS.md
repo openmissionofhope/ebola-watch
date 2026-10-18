@@ -23,18 +23,35 @@
 | `cluster` / `alert` (possible emerging signal; official reporting may be incomplete) | seek corroboration; approve only with independent confirmation |
 | `correction` (public error report) | investigate; retract or correct; reply through your organisation's channels if contact was offered |
 
+### Reviewing on GitHub (deployments without a server)
+
+Review items that affect current outputs (alerts, signal clusters, official
+figures from the last 12 months, recent auto-registered outbreaks, error
+reports) arrive as issues labelled `ew-review` in the private operations
+repository, at most 25 new issues per run. Items about historical data are not
+sent. Source excerpts are posted as the first comment, inside code blocks, and
+that comment is deleted after the raw-content retention period. Add the label
+**approve** or **reject**: the GitHub account that adds it is recorded in the
+audit log, and the label starts a short run that applies the decision,
+republishes the site and closes the issue. Low-priority `signal` items are not
+sent individually; their text appears in the excerpts of the cluster they
+belong to.
+
 ## Corrections and retractions
 
-`POST /api/v1/admin/retractions` retracts an alert, report or observation and
-creates a public correction note (no personal data). Observations are never
+`POST /api/v1/admin/retractions` (or, without a server, a *Retract published
+output* issue in the operations repository labelled **apply**) retracts an
+alert, report or observation and creates a public correction note (no personal
+data). Observations are never
 deleted; retracted rows are excluded from public outputs and remain in the
 audit trail.
 
 ## Transport status changes
 
 When a service changes (a ferry stops, a border closes, a road reopens), call
-`POST /api/v1/admin/transport/{edge_key}/status` with the new status and the
-evidence (a source and date). The change is recorded in
+`POST /api/v1/admin/transport/{edge_key}/status` (or open a *Change a transport
+service status* issue in the operations repository and label it **apply**) with
+the new status and the evidence (a source and date). The change is recorded in
 `transport_status_changes` and the audit log, and the next analysis run uses it.
 
 ## Adding a language

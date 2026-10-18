@@ -24,3 +24,6 @@ jobs:
         with: {node-version: "22"}
       - run: npm ci
       - run: npm run build
+      - name: Static build (GitHub Pages)
+        run: npm run build
+        env: {VITE_STATIC: "1", EW_BASE_PATH: /ebola-watch/}

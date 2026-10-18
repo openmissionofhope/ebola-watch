@@ -1,0 +1,30 @@
+name: Retract published output
+description: Withdraw a published alert, situation report or official figure, with a public note.
+title: "[Retraction] "
+labels: ["ew-action", "retraction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Nothing happens until someone with write access adds the **apply** label. The pipeline then retracts the item, records who applied it, and closes this issue.
+  - type: dropdown
+    id: target_type
+    attributes:
+      label: Target type
+      options: [alert, report, observation]
+    validations:
+      required: true
+  - type: input
+    id: target_id
+    attributes:
+      label: Target ID
+      description: The record's numeric id, shown as "Record" in review issues, or the "id" field in the site's data files (data/alerts.json, data/reports.json).
+    validations:
+      required: true
+  - type: textarea
+    id: public_note
+    attributes:
+      label: Public note
+      description: Shown on the public site. 10–1000 characters. No personal information.
+    validations:
+      required: true

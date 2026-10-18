@@ -265,6 +265,7 @@ textarea { min-height: 120px; resize: vertical; }
 .btn { font: inherit; font-weight: 600; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); cursor: pointer; }
 .btn.secondary { background: var(--surface-2); color: var(--text-primary); border-color: var(--border); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+a.btn { display: inline-block; text-decoration: none; }
 .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-wrap: wrap; }
 .segmented button { font: inherit; font-size: 0.85rem; padding: 6px 10px; border: 0; background: var(--surface-1); color: var(--text-secondary); cursor: pointer; border-right: 1px solid var(--border); }

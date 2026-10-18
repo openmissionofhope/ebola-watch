@@ -11,7 +11,8 @@ and explicit "insufficient evidence" results. Clients that enumerate many
 distinct filter combinations are throttled (HTTP 429).
 
 Region codes: ISO 3166-1 alpha-3 for countries (`COD`), ISO 3166-2 for
-first-level units (`CD-IT`). Finer units return 404.
+first-level units (`CD-IT`); a unit without an ISO 3166-2 code gets
+`<ISO3>-<NAME>` (e.g. `SDN-ABYEI-PCA`). Finer units return 404.
 
 ## Public endpoints
 
@@ -73,6 +74,23 @@ Every call is audit-logged.
 | GET | `/api/v1/admin/alerts` | reviewer |
 | POST | `/api/v1/admin/pipeline/run` | admin |
 | GET | `/api/v1/admin/audit-log` | admin |
+
+## Static data files
+
+A deployment without a server (see DEPLOYMENT.md, "GitHub Pages") publishes the
+response of every public `GET` endpoint as a file, written by
+`ebolawatch export-static` through the same code and publication policy:
+
+| API | File |
+|---|---|
+| `GET /api/v1/<path>` | `data/<path>.json`, e.g. `data/overview.json`, `data/regions/COD/summary.json`, `data/map/geometry/1.json` |
+| `GET /api/v1/reports/{id}?format=markdown` | `data/reports/{id}.md` |
+| `GET /api/v1/export/{name}.csv` | `data/export/{name}.csv` |
+
+`data/index.json` lists every file; `data/meta.json` adds `static: true` and
+`snapshot_generated_at`. Query parameters are not supported (the official
+series is the default `cases`/`confirmed` series), and there are no `POST` or
+administrative endpoints.
 
 ## Errors
 

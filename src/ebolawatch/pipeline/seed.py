@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
 from ..db.models import Outbreak, Region, Source, TransportEdge, TransportNode
-from ..nlp.gazetteer import load_gazetteer
+from ..nlp.gazetteer import ISO_3166_2, admin1_code, load_gazetteer
 from ..sources.registry import all_connectors
 from ..transport.seed import load_corridors
 
@@ -73,11 +73,16 @@ def seed_regions(session: Session, settings: Settings | None = None) -> int:
     admin1 = json.loads((settings.data_dir / "boundaries" / "admin1_priority.geojson").read_text())
     for f in admin1["features"]:
         p = f["properties"]
-        code = p.get("iso_3166_2")
+        code = admin1_code(p)
         if not code:
             continue
         parent = existing.get(p["iso3"])
         r = existing.get(code)
+        raw = p.get("iso_3166_2")
+        if r is None and raw in existing and not ISO_3166_2.match(raw):  # stored under an invalid code: rename in place
+            r = existing.pop(raw)
+            r.code = code
+            existing[code] = r
         if r is None:
             r = Region(code=code, name=g.canonical.get(code, p["name"]), level=1, iso3=p["iso3"], parent_id=parent.id if parent else None)
             session.add(r)

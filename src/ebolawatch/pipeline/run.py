@@ -57,14 +57,15 @@ def apply_retention(session: Session, settings: Settings | None = None) -> dict:
     return {"texts_purged": r1.rowcount or 0, "signals_deleted": r2.rowcount or 0}
 
 
-def run_all(settings: Settings | None = None, only_sources: list[str] | None = None, skip_ingest: bool = False, n_sims: int = 2000) -> dict:
+def run_all(settings: Settings | None = None, only_sources: list[str] | None = None, skip_ingest: bool = False, n_sims: int = 2000,
+            due_only: bool = False) -> dict:
     settings = settings or get_settings()
     with session_scope() as s:
         seed_all(s, settings)
     result: dict = {}
     if not skip_ingest:
         with session_scope() as s:
-            runs = ingest_all(s, settings, only=only_sources)
+            runs = ingest_all(s, settings, only=only_sources, due_only=due_only)
             result["ingest"] = [{"source": r.source_key, "status": r.status, "message": r.message, "new": r.items_new} for r in runs]
     with session_scope() as s:
         result["analysis"] = analyze(s, n_sims=n_sims)
@@ -80,7 +81,7 @@ def scheduler(settings: Settings | None = None) -> None:  # pragma: no cover - l
         now = time.monotonic()
         try:
             if now >= next_ingest:
-                log.info("scheduled pipeline run: %s", run_all(settings))
+                log.info("scheduled pipeline run: %s", run_all(settings, due_only=True))
                 next_ingest = now + settings.ingest_interval_s
             if now >= next_retention:
                 with session_scope() as s:

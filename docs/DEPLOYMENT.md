@@ -14,6 +14,59 @@ uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e ".[de
 Run the tests with `.venv/bin/pytest` (offline) and `.venv/bin/pytest -m live`
 (contacts WHO, World Bank and OpenStreetMap).
 
+## Without a server (GitHub Pages)
+
+The public site does not need a running server: nobody changes data through
+it, and the data only change when the pipeline runs. In this mode
+
+* a **private operations repository** runs the pipeline every 6 hours with
+  GitHub Actions (`.github/workflows/publish-static.yml` in this repository,
+  called from the operations repository), keeps the SQLite database as an
+  encrypted release asset (AES-256, key in the `EW_STATE_KEY` secret; daily
+  backups kept 14 days), and holds the human-review queue as issues;
+* each run exports a **static snapshot** of every public API response
+  (`ebolawatch export-static`, same publication policy as the API) plus the
+  dashboard built with `VITE_STATIC=1`, and force-pushes it to the `gh-pages`
+  branch of the public repository, which GitHub Pages serves.
+
+Set-up (needs `gh` signed in as an owner of both repositories):
+
+```bash
+deploy/github/setup.sh init openmissionofhope/ebola-watch openmissionofhope/ebola-watch-ops
+gh workflow run pipeline.yml --repo openmissionofhope/ebola-watch-ops      # first run (~10 min)
+deploy/github/setup.sh pages openmissionofhope/ebola-watch                 # once it has succeeded
+```
+
+`init` creates the private repository from `deploy/github/ops-repo/`, generates
+the secrets (never printed; the state key is also saved to
+`~/.config/ebola-watch/state-key` — keep it in a password manager), adds a write
+deploy key for publishing, and adds a ruleset so that key cannot push to the
+default branch. The site is then at `https://<owner>.github.io/<repo>/`.
+
+**Custom domain:** add a DNS `CNAME` record from the subdomain (e.g.
+`ebolawatch.openmissionofhope.org`) to `<owner>.github.io`, set the variable
+`EW_SITE_DOMAIN` in the operations repository, run the workflow, then
+`deploy/github/setup.sh pages <site repo> <domain>`. Verifying the domain for
+the organisation (*Organisation settings → Pages*) prevents takeover of the
+subdomain by other GitHub users.
+
+What differs from the server deployment:
+
+| | Server | GitHub Pages |
+|---|---|---|
+| Free-text questions (Ask), custom queries | yes | no (all published figures are on the pages and in CSV/JSON files) |
+| Review | dashboard, API key | issues in the operations repository: label **approve** / **reject** |
+| Retractions, transport status | admin API | issue forms in the operations repository + label **apply** |
+| Public error reports | form stored in the database | public GitHub issue form (`data-error`) |
+| Update frequency | worker interval | every 6 hours, and within minutes of a review decision |
+| Cost | a server | free for a public site repository; the private operations repository uses Actions minutes (about 1,000–1,300 of the 2,000 included monthly in GitHub Free) |
+
+If a run fails, the previous site stays online and the next run starts from the
+last saved state; the dashboard shows an "out of date" warning when the
+snapshot is more than 36 hours old. If the saved database cannot be restored
+(e.g. the state key was lost), runs stop rather than starting over; delete the
+`state` release to start a new database deliberately.
+
 ## Production (Docker Compose, PostgreSQL + PostGIS)
 
 ```bash

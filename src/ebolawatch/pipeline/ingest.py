@@ -316,8 +316,30 @@ def group_by(rows, key):
     return out
 
 
+FAILING = (ConnectorStatus.UNAVAILABLE.value, ConnectorStatus.ERROR.value)
+FAILING_RETRY_HOURS = 24
+
+
+def is_due(session: Session, connector, now: datetime | None = None) -> bool:
+    """Whether a source should run in a scheduled pass: reference data at most
+    every ``refresh_hours``; a source that failed its last three runs (e.g. it
+    blocks automated clients) at most once a day instead of every pass."""
+    now = now or utcnow()
+    recent = list(session.scalars(select(ConnectorRun).where(ConnectorRun.source_key == connector.info.key)
+                                  .order_by(ConnectorRun.started_at.desc()).limit(3)))
+    if not recent:
+        return True
+    if len(recent) == 3 and all(r.status in FAILING for r in recent):
+        return now - recent[0].started_at >= timedelta(hours=FAILING_RETRY_HOURS)
+    if connector.info.refresh_hours:
+        ok = next((r for r in recent if r.status in (ConnectorStatus.OK.value, ConnectorStatus.PARTIAL.value)), None)
+        if ok is not None:
+            return now - ok.started_at >= timedelta(hours=connector.info.refresh_hours)
+    return True
+
+
 def ingest_all(session: Session, settings: Settings | None = None, only: list[str] | None = None,
-               client: HttpClient | None = None) -> list[ConnectorRun]:
+               client: HttpClient | None = None, due_only: bool = False) -> list[ConnectorRun]:
     from ..sources.registry import all_connectors
 
     settings = settings or get_settings()
@@ -325,6 +347,8 @@ def ingest_all(session: Session, settings: Settings | None = None, only: list[st
     runs = []
     for c in all_connectors(settings):
         if only and c.info.key not in only:
+            continue
+        if due_only and not is_due(session, c):
             continue
         since = None
         src = session.scalar(select(Source).where(Source.key == c.info.key))

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ApiError, postJSON } from "../api";
+import { ApiError, ERROR_REPORT_URL, postJSON, STATIC } from "../api";
 import { PageHead } from "../components/Layout";
 import { useDocumentTitle } from "../hooks";
 
@@ -7,6 +7,36 @@ const TARGETS = ["observation", "estimate", "forecast", "severity", "alert", "re
 
 export function ReportErrorPage() {
   useDocumentTitle("Report an error");
+  return STATIC ? <ReportErrorLink /> : <ReportErrorForm />;
+}
+
+/** The published snapshot has no server to receive reports: they go to a public issue form. */
+function ReportErrorLink() {
+  return (
+    <>
+      <PageHead title="Report an error or request a correction" />
+      <p className="secondary">
+        Communities, health authorities and organisations can tell us when something is wrong: a figure, a location, an alert, a translation or a transport
+        status. Reports are read by people, and corrections and retractions are published with a public note.
+      </p>
+      <div className="callout warn">
+        <strong>Reports are public.</strong> They are filed as issues on GitHub, where anyone can read them, and your GitHub username is shown. Do not
+        include names, phone numbers, addresses, or any information about patients, contacts or other individuals.
+      </div>
+      <div className="card">
+        <p>Please say what is wrong, where you saw it (page, area or report), and, if possible, the public source that shows the correct information.</p>
+        <p>
+          <a className="btn" href={ERROR_REPORT_URL} rel="noopener noreferrer">
+            Open the error report form on GitHub
+          </a>
+        </p>
+        <p className="small muted">A free GitHub account is required.</p>
+      </div>
+    </>
+  );
+}
+
+function ReportErrorForm() {
   const [target, setTarget] = useState("observation");
   const [ref, setRef] = useState("");
   const [org, setOrg] = useState("");

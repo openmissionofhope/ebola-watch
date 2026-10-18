@@ -17,7 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import __version__, views
-from ..config import get_settings
+from ..config import Settings, get_settings
 from ..db.models import Alert, AuditLog, ErrorReport, Region, ReviewItem, SituationReport
 from ..domain.enums import Role
 from ..privacy.query_guard import QueryGuard
@@ -72,8 +72,8 @@ class TransportStatusIn(BaseModel):
     evidence: str = Field(..., min_length=10, max_length=1000)
 
 
-def create_app() -> FastAPI:
-    settings = get_settings()
+def create_app(settings: Settings | None = None) -> FastAPI:
+    settings = settings or get_settings()
     settings.validate_for_production()
     limiter = TokenBucket(settings.rate_limit_per_minute)
     export_limiter = TokenBucket(settings.export_rate_limit_per_hour // 60 or 1, burst=settings.export_rate_limit_per_hour)

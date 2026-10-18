@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="EW_", env_file=".env", extra="ignore")
 
     env: str = Field("development", description="development | test | production")
+    # "server": the API serves the dashboard (PostgreSQL in production).
+    # "static": a scheduled batch job publishes a static snapshot; a single
+    # writer, so SQLite is acceptable in production.
+    deployment: str = Field("server", description="server | static")
     database_url: str = f"sqlite:///{PROJECT_ROOT / 'var' / 'ebolawatch.db'}"
     data_dir: Path = PROJECT_ROOT / "data"
     frontend_dist: Path = PROJECT_ROOT / "frontend" / "dist"
@@ -91,8 +95,8 @@ class Settings(BaseSettings):
             problems.append("EW_SECRET_KEY must be set to a random value of at least 32 characters")
         if self.pseudonym_salt == DEV_SECRET or len(self.pseudonym_salt) < 32:
             problems.append("EW_PSEUDONYM_SALT must be set to a random value of at least 32 characters")
-        if self.database_url.startswith("sqlite"):
-            problems.append("Production deployments must use PostgreSQL (EW_DATABASE_URL)")
+        if self.database_url.startswith("sqlite") and self.deployment != "static":
+            problems.append("Production server deployments must use PostgreSQL (EW_DATABASE_URL)")
         if problems:
             raise RuntimeError("Refusing to start in production: " + "; ".join(problems))
 

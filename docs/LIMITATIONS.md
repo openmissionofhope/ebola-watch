@@ -71,6 +71,11 @@ Stated plainly so that nobody mistakes the system for more than it is.
 
 ## Operations
 
+* The GitHub Pages deployment has no free-text questions or custom queries,
+  updates at most every 6 hours (plus after review decisions), and needs
+  reviewers to have GitHub accounts with access to the private operations
+  repository. Its scheduled runs use the operations repository's Actions
+  minutes.
 * Rate limiting and the query guard are in-process; multi-replica deployments
   need a shared limiter.
 * The optional Claude translator is unit-tested with a stub but was not tested
