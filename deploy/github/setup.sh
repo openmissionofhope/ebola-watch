@@ -84,10 +84,10 @@ JSON
 pages)
   domain=${3:-}
   if ! gh api "repos/$site/pages" >/dev/null 2>&1; then
-    gh api -X POST "repos/$site/pages" -f "source[branch]=gh-pages" -f "source[path]=/" >/dev/null
+    gh api --silent -X POST "repos/$site/pages" -f "source[branch]=gh-pages" -f "source[path]=/" || true
   fi
   if [[ -n "$domain" ]]; then
-    gh api -X PUT "repos/$site/pages" -f "cname=$domain" >/dev/null
+    gh api --silent -X PUT "repos/$site/pages" -f "cname=$domain" || true
   fi
   gh api "repos/$site/pages" --jq '"Pages: " + .html_url + " (status: " + (.status // "pending") + ")"'
   ;;
