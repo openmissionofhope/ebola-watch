@@ -56,7 +56,7 @@ See [docs/LIMITATIONS.md](docs/LIMITATIONS.md) for everything that does not yet 
 
 ```bash
 uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python -e ".[dev,postgres,geo]"
+uv pip install --python .venv/bin/python -e ".[dev,postgres,geo,llm]"
 .venv/bin/ebolawatch init-db
 .venv/bin/ebolawatch ingest -s who_don -s worldbank_population -s osm_overpass
 .venv/bin/ebolawatch analyze

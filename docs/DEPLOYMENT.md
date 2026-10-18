@@ -3,7 +3,7 @@
 ## Development (SQLite)
 
 ```bash
-uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e ".[dev,postgres,geo]"
+uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e ".[dev,postgres,geo,llm]"
 .venv/bin/ebolawatch init-db                 # migrations + reference data
 .venv/bin/ebolawatch ingest -s who_don -s worldbank_population -s osm_overpass
 .venv/bin/ebolawatch analyze                 # signals, models, severity, backtests, reports
