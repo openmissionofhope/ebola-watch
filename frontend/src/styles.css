@@ -45,6 +45,9 @@
   --sev-4: #8d3700;
   --sev-insufficient: #c3c2b7;
   --not-assessed: #efeee9;
+  /* map boundaries: first-level units, then national borders and coastlines (darker, wider) */
+  --map-unit-line: #a3a29b;
+  --map-country-line: #52514e;
 
   /* status (reserved meaning; always with icon + label) */
   --status-good: #0ca30c;
@@ -94,6 +97,8 @@
     --sev-4: #fc9b6f;
     --sev-insufficient: #52514e;
     --not-assessed: #161615;
+    --map-unit-line: #4f4e4a;
+    --map-country-line: #a8a79f;
     --status-good-text: #0ca30c;
     --status-critical-text: #e66767;
   }
@@ -132,6 +137,8 @@
   --sev-4: #fc9b6f;
   --sev-insufficient: #52514e;
   --not-assessed: #161615;
+  --map-unit-line: #4f4e4a;
+  --map-country-line: #a8a79f;
   --status-good-text: #0ca30c;
   --status-critical-text: #e66767;
 }
@@ -319,11 +326,10 @@ a.btn { display: inline-block; text-decoration: none; }
 /* ---------- map ---------- */
 .map-wrap { position: relative; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
 .map-wrap svg { display: block; width: 100%; height: auto; }
-.map-region { stroke: var(--surface-1); stroke-width: 0.6; vector-effect: non-scaling-stroke; cursor: pointer; }
+.map-region { stroke: var(--map-unit-line); stroke-width: 0.6; vector-effect: non-scaling-stroke; cursor: pointer; }
 .map-region:focus { outline: none; stroke: var(--text-primary); stroke-width: 2; }
-.map-region:hover { stroke: var(--text-primary); stroke-width: 1.4; }
-.map-region.admin1 { stroke: var(--surface-1); stroke-width: 0.5; }
-.map-country-outline { fill: none; stroke: var(--baseline); stroke-width: 0.8; vector-effect: non-scaling-stroke; pointer-events: none; }
+.map-country-outline { fill: none; stroke: var(--map-country-line); stroke-width: 1.2; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+.map-highlight { fill: none; stroke: var(--text-primary); stroke-width: 2.2; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
 .map-edge { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
 .map-edge.mode-road, .map-edge.mode-rail { stroke: var(--series-1); }
 .map-edge.mode-river, .map-edge.mode-lake { stroke: var(--series-3); }

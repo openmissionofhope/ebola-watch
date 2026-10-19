@@ -154,6 +154,16 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
   }, [countries, admin1, width, height, focus]);
 
   const admin1Countries = new Set(c1.map((f) => f.properties.iso3));
+  // national borders and coastlines, drawn above every fill so they read the same everywhere
+  const outlines = useMemo(
+    () =>
+      c0.map((f) => (
+        <path key={`o-${f.properties.code}`} d={path(f as unknown as GeoPermissibleObjects) ?? ""} className="map-country-outline" />
+      )),
+    [c0, path],
+  );
+  // the hovered or focused unit is outlined on top, where neighbouring fills and borders cannot cover it
+  const highlighted = hover ? [...c1, ...c0].find((f) => f.properties.code === hover.code) : undefined;
   // transport nodes sit on the (rounded) label point of their administrative unit
   const nodeNames = useMemo(() => {
     const m = new Map<string, string>();
@@ -242,10 +252,8 @@ function MapCanvas({ layer, resolution, focus = "africa", compact, countries, ad
           ))}
         {c0.map((f) => (resolution === 1 && admin1Countries.has(f.properties.iso3) ? null : shape(f, "admin0")))}
         {resolution === 1 && c1.map((f) => shape(f, "admin1"))}
-        {resolution === 1 &&
-          c0.filter((f) => admin1Countries.has(f.properties.iso3)).map((f) => (
-            <path key={`o-${f.properties.code}`} d={path(f as unknown as GeoPermissibleObjects) ?? ""} className="map-country-outline" />
-          ))}
+        <g aria-hidden="true">{outlines}</g>
+        {highlighted && <path d={path(highlighted as unknown as GeoPermissibleObjects) ?? ""} className="map-highlight" aria-hidden="true" />}
         {layer === "transport" &&
           layers.transport_edges.map((e) => {
             const a = projection(e.line[0] as [number, number]);
