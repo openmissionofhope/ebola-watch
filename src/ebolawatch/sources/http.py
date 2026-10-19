@@ -35,6 +35,7 @@ DEFAULT_HOST_POLICIES = {
     "api.gdeltproject.org": HostPolicy(6.0),  # GDELT asks for <= 1 request / 5 s
     "overpass-api.de": HostPolicy(10.0),
     "www.who.int": HostPolicy(2.0),
+    "www.ecdc.europa.eu": HostPolicy(2.0),
     "data.humdata.org": HostPolicy(2.0),
     "api.worldbank.org": HostPolicy(1.0),
 }

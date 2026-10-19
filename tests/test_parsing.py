@@ -4,6 +4,7 @@ from datetime import date
 
 from ebolawatch.domain.enums import CaseClass, Metric, TransmissionType, ValueType
 from ebolawatch.nlp.gazetteer import load_gazetteer
+from ebolawatch.parsing.ecdc import extract as extract_ecdc
 from ebolawatch.parsing.textnum import find_dates, parse_number
 from ebolawatch.parsing.who_don import extract
 
@@ -87,3 +88,62 @@ def test_health_zone_sentence_not_assigned_to_province():
             "Mandima in Ituri is the most recently affected health zone and reported four confirmed cases.")
     ex = extract("Ebola disease - Democratic Republic of the Congo", text, date(2031, 3, 5), G)
     assert not [c for c in ex.candidates if c.region_ref == "CD-IT"]
+
+
+SYNTHETIC_ECDC = (
+    "This page is updated every weekday. It was last updated on 5 March at 16:11.\n"
+    "As of 4 March 2031, the Democratic Republic of the Congo (DRC) reported a total of 1 300 confirmed cases, including "
+    "500 related deaths (from data up until 3 March). On 3 March, 40 new confirmed cases and 9 deaths were reported. "
+    "The 40 new cases have been reported from Ituri (33 cases) and North Kivu (7 cases).\n"
+    "Ituri province remains the most affected, with 1 000 cases, including 400 deaths, reported from 20 of 36 health zones. "
+    "In Nord-Kivu, 298 cases, including 99 deaths, have been reported from 9 of 34 health zones. "
+    "In Sud Ubangi, two cases and one death have been reported from one of 16 health zones. "
+    "Overall, 30 of 167 health zones are currently affected across three provinces.\n"
+    "According to media reports citing officials, two cases have been confirmed in Tshopo, making it the fourth affected province.\n"
+    "On 1 March 2031, Kenya's Ministry of Health announced the country's first confirmed imported Ebola virus disease case. "
+    "On 3 March, a second case was reported in a contact in quarantine.\n"
+    "A healthcare worker who tested positive in DRC on 2 March was medically evacuated to Germany; it is the first case "
+    "treated in Germany."
+)
+
+
+def ecdc_by(ex):
+    return {(c.region_ref, c.metric, c.transmission): c for c in ex.candidates}
+
+
+def test_ecdc_national_and_complete_provincial_breakdown():
+    ex = extract_ecdc(SYNTHETIC_ECDC, date(2031, 3, 6), G)
+    k = ecdc_by(ex)
+    assert ex.updated_on == date(2031, 3, 5) and ex.as_of == date(2031, 3, 3)  # the data date, not the page date
+    assert k[("COD", Metric.CASES, TransmissionType.ALL)].value == 1300
+    assert k[("COD", Metric.DEATHS, TransmissionType.ALL)].value == 500
+    assert k[("COD", Metric.AFFECTED_ADMIN1, TransmissionType.ALL)].value == 3
+    assert k[("COD", Metric.AFFECTED_ADMIN2, TransmissionType.ALL)].attributes["denominator"] == 167
+    provinces = {r: k[(r, Metric.CASES, TransmissionType.ALL)] for r in ("CD-IT", "CD-NK", "CD-SU")}
+    assert [p.value for p in provinces.values()] == [1000, 298, 2]
+    assert all(p.case_class == CaseClass.CONFIRMED and p.confidence == "high" for p in provinces.values())
+    assert k[("CD-SU", Metric.DEATHS, TransmissionType.ALL)].value == 1
+    # daily increments are not totals, and media reports are not official figures
+    assert all(c.value not in (33, 7, 40) for c in ex.candidates)
+    assert not [c for c in ex.candidates if c.region_ref == "CD-TO"]
+
+
+def test_ecdc_incomplete_provincial_breakdown_goes_to_review():
+    text = SYNTHETIC_ECDC.replace("In Sud Ubangi, two cases and one death have been reported from one of 16 health zones. ", "")
+    k = ecdc_by(extract_ecdc(text, date(2031, 3, 6), G))
+    assert k[("CD-IT", Metric.CASES, TransmissionType.ALL)].confidence == "low"
+    assert k[("COD", Metric.CASES, TransmissionType.ALL)].confidence == "high"
+
+
+def test_ecdc_other_countries_from_explicit_ordinals_only():
+    k = ecdc_by(extract_ecdc(SYNTHETIC_ECDC, date(2031, 3, 6), G))
+    imported = k[("KEN", Metric.CASES, TransmissionType.IMPORTED)]
+    assert imported.value == 1 and imported.as_of == date(2031, 3, 1)
+    total = k[("KEN", Metric.CASES, TransmissionType.ALL)]
+    assert total.value == 2 and total.as_of == date(2031, 3, 3) and "lower bound" in total.notes[0]
+    assert not [c for c in k.values() if c.region_ref == "DEU"]  # medical evacuation is not a case in Germany
+
+
+def test_ecdc_without_dated_national_total_extracts_nothing():
+    ex = extract_ecdc("It was last updated on 5 March at 16:11.\nIn Nord-Kivu, 298 cases have been reported.", date(2031, 3, 6), G)
+    assert ex.candidates == [] and ex.skipped

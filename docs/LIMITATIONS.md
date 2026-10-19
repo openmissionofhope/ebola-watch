@@ -5,11 +5,18 @@ Stated plainly so that nobody mistakes the system for more than it is.
 ## Data
 
 * **Narrative extraction.** By default the official series comes from WHO
-  Disease Outbreak News prose (about fortnightly). Extraction is conservative
+  Disease Outbreak News prose (about fortnightly) and the text of ECDC's
+  outbreak page (weekdays; it restates the DRC's figures). ECDC keeps no
+  archive of earlier versions, so its daily figures accumulate only from
+  2026-10-19 onwards. Extraction is conservative
   and consistency-checked, but can miss figures or mis-assign them; ambiguous
   rows go to review and are not published until verified. Province-level
-  figures from bulletins are partial (only provinces named with a cumulative
-  count).
+  figures from WHO bulletins are partial (only provinces named with a cumulative
+  count); ECDC gives every affected province. A province reported only by the
+  media (for example "according to media reports citing officials") appears
+  once an official source confirms it. Cases outside the DRC are taken from
+  explicit statements such as "a second case was reported" and are lower
+  bounds.
 * **Health-zone data** (HDX/INRB) are only used after the operator acknowledges
   the producers' pre-publication request; without them, sub-national series are
   sparse.

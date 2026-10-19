@@ -13,6 +13,7 @@ Status below was **tested on 2026-10-18** from the development environment.
 | Key | Source | Access | Licence / terms | Status (tested) |
 |---|---|---|---|---|
 | `who_don` | WHO Disease Outbreak News | public JSON API used by who.int | © WHO; short quotes with attribution and links | **Working** — 368 Ebola-related bulletins retrieved (2000s–2026); figures extracted with validation |
+| `ecdc` | ECDC page on the outbreak (updated every weekday) | public web page (HTML; robots.txt allows it) | © ECDC, CC BY 4.0 — attribution and licence link shown with each figure; figures are reformatted as data | **Working** — tested live on 2026-10-19: DRC national totals and all seven provinces as of 14 October, and Kenya's cases. Provincial figures are published automatically only when they add up to the national totals on the same page; statements the page attributes to media reports are not extracted |
 | `hdx_cod_ebola` | HDX "République démocratique du Congo : Cas et Décès d'Ebola" (OCHA DRC; INSP/COUSP situation reports transcribed by INRB-UMIE) | HDX CKAN API + CSV | CC BY 4.0 on HDX; upstream repository MIT **with a request to contact the producers before using epidemiological data ahead of their publication** | **Working** when acknowledged — 11,172 national and health-zone observations; **disabled by default** |
 | `africa_cdc` | Africa CDC news feed | RSS | publisher terms | Reachable; no matching entries at test time. Its WordPress API returns HTTP 403 to automated clients and is not bypassed |
 | `manual` | Reviewer transcription of official sitreps (e.g. PDF) | `ebolawatch import-observations` | as per the transcribed source | Working (tested with synthetic CSV) |
@@ -24,7 +25,7 @@ data before the team's publication to contact the data producers. Ebola Watch
 honours that request architecturally: the connector runs only when the operator
 adds `hdx_cod_ebola` to `EW_SOURCE_ACKNOWLEDGEMENTS`. Contact details are in the
 upstream README (github.com/INRB-UMIE/BDBV2026-Data). With it disabled, the
-system runs on WHO bulletins only (about fortnightly resolution).
+system runs on WHO bulletins (about fortnightly) and the ECDC page (weekdays).
 
 ## Unofficial and media sources
 

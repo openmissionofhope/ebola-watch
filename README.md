@@ -27,7 +27,7 @@ estimate."*
 
 | | |
 |---|---|
-| **Official data** | Ingests WHO Disease Outbreak News (and, with acknowledgement, DRC national/health-zone data via OCHA HDX), extracts figures with provenance and validation, keeps every published version, never overwrites revisions |
+| **Official data** | Ingests WHO Disease Outbreak News and ECDC's weekday outbreak updates (and, with acknowledgement, DRC national/health-zone data via OCHA HDX), extracts figures with provenance and validation, keeps every published version, never overwrites revisions |
 | **Event-based surveillance** | Multilingual (16 language lexicons, extensible by adding a YAML file), code-switching aware, contextual claim analysis; near-duplicate collapse so 100 reposts count once; independence, coordination and staleness detection; human review before any alert relying on unofficial reports is published |
 | **True burden** | Mortality-based back-calculation with species-specific priors; exportation-based inference when sourced mobility data exist; model disagreement shown, never averaged away |
 | **Forecasts** | Renewal/branching simulations at 7–84 days, three scenarios (improving / current / deteriorating), probability of continued transmission and of newly affected areas, comparison model, backtesting with coverage and WIS shown in the app |
@@ -42,6 +42,7 @@ estimate."*
 | Component | Status |
 |---|---|
 | WHO DON connector + extraction | **Operational** — tested live; extracted DRC 2026 national figures match the independent HDX dataset on 20/20 overlapping dates |
+| ECDC outbreak page | **Operational** — tested live; DRC national and provincial figures (weekdays), cases in other countries |
 | HDX DRC national + health-zone data | **Operational, off by default** — requires `EW_SOURCE_ACKNOWLEDGEMENTS=hdx_cod_ebola` after honouring the producers' request |
 | World Bank population, OpenStreetMap checks | **Operational** — tested live |
 | GDELT news (en/fr/sw/pt/ar) | **Partially operational** — works, heavily rate-limited |

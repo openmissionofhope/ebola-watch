@@ -9,6 +9,7 @@ import pytest
 
 from ebolawatch.config import get_settings
 from ebolawatch.domain.enums import ConnectorStatus, Metric
+from ebolawatch.sources.ecdc import EcdcConnector
 from ebolawatch.sources.http import HttpClient
 from ebolawatch.sources.reference import OverpassTransportConnector, WorldBankPopulationConnector
 from ebolawatch.sources.who_don import WhoDonConnector
@@ -21,6 +22,12 @@ def test_live_who_don_returns_official_figures():
     assert res.status in (ConnectorStatus.OK, ConnectorStatus.PARTIAL)
     assert res.items
     assert any(o.metric == Metric.CASES for it in res.items for o in it.observations)
+
+
+def test_live_ecdc_returns_official_figures():
+    res = EcdcConnector().fetch(HttpClient(), get_settings())
+    assert res.status == ConnectorStatus.OK, res.message
+    assert any(o.metric == Metric.CASES and o.region_ref == "COD" for o in res.items[0].observations)
 
 
 def test_live_world_bank_population():

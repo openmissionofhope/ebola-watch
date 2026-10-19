@@ -62,6 +62,16 @@ split only when the text states the component, and any derived remainder is
 routed to review. Consistency checks include deaths ≤ cases, sub-national ≤
 national, and agreement between computed and stated case-fatality ratios.
 
+The ECDC page (`parsing/ecdc.py`) states the national confirmed totals with a
+"data up until" date, then one sentence per province without repeating
+"confirmed". Provincial figures are published automatically only when they
+add up exactly to the national cases and deaths on the same page, which shows
+they are the complete confirmed breakdown; otherwise they go to review.
+Paragraphs that relay media reports are skipped, and cases in other countries
+are taken only from explicit ordinals ("the first confirmed imported case",
+"a second case") as lower bounds. When WHO and ECDC report the same date, the
+WHO figure is used and any disagreement is recorded.
+
 ### Weekly incidence
 
 Irregular cumulative reports are converted to weekly incidence by spreading

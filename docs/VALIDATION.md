@@ -6,8 +6,8 @@ computed.
 
 ## 1. Automated tests
 
-`pytest` → **79 passed** (offline; synthetic data only).
-`pytest -m live` → **3 passed** (WHO Disease Outbreak News, World Bank,
+`pytest` → **84 passed** (offline; synthetic data only).
+`pytest -m live` → **4 passed** (WHO Disease Outbreak News, ECDC, World Bank,
 OpenStreetMap Overpass, contacted live).
 
 The 20 required scenarios:

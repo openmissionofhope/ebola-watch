@@ -6,6 +6,7 @@ import pytest
 from ebolawatch.config import get_settings
 from ebolawatch.domain.enums import ConnectorStatus
 from ebolawatch.nlp.gazetteer import load_gazetteer
+from ebolawatch.sources.ecdc import EcdcConnector
 from ebolawatch.sources.hdx import parse_rows
 from ebolawatch.sources.http import HttpClient
 from ebolawatch.sources.manual import ManualImportError, parse_manual_csv
@@ -37,6 +38,32 @@ def test_who_don_connector_parses_bulletins():
     assert any(c.region_ref == "COD" and c.value == 1234 for c in item.observations)
 
 
+SYNTHETIC_ECDC_HTML = """<html><body><nav><p>Topics A-Z</p></nav><main>
+<h1>Ebola disease outbreak in the Democratic Republic of the Congo</h1>
+<p>This page is updated every weekday. It was last updated on 5 March 2031 at 16:11.</p>
+<p>As of 4 March 2031, the Democratic Republic of the Congo (DRC) reported a total of 1 234 confirmed cases, including
+456 related deaths (from data up until 3 March). Bundibugyo virus SYNTHETIC test page.</p>
+<p>Ituri province remains the most affected, with 1 234 cases, including 456 deaths, reported from 20 of 36 health zones.</p>
+<p>According to ECDC modelling, the risk for the EU/EEA remains very low.</p>
+<p>In Uganda, the first confirmed case was reported on 1 March.</p>
+</main></body></html>"""
+
+
+def test_ecdc_connector_parses_the_situation_summary_only():
+    res = EcdcConnector().fetch(client_for(lambda req: httpx.Response(200, text=SYNTHETIC_ECDC_HTML)), get_settings())
+    assert res.status == ConnectorStatus.OK and len(res.items) == 1
+    item = res.items[0]
+    assert item.is_official and item.meta["pathogen"] == "BDBV" and item.meta["data_as_of"] == "2031-03-03"
+    assert item.external_id == "update 2031-03-05T16:11" and item.published_at.hour == 16
+    assert "Topics A-Z" not in item.text and "EU/EEA" not in item.text  # navigation and risk assessment are not kept
+    assert not [c for c in item.observations if c.region_ref == "UGA"]  # after the summary ends
+    assert {(c.region_ref, c.value) for c in item.observations if c.metric.value == "cases"} == {("COD", 1234), ("CD-IT", 1234)}
+
+    changed = EcdcConnector().fetch(client_for(lambda req: httpx.Response(200, text="<main><p>Redesigned page</p></main>")),
+                                    get_settings())
+    assert changed.status == ConnectorStatus.PARTIAL and not changed.items and "not recognised" in changed.message
+
+
 def test_blocked_or_rate_limited_sources_report_unavailable_without_bypass():
     calls = []
 
@@ -57,7 +84,7 @@ def test_connectors_that_need_configuration_or_are_unsupported_say_so():
     assert status["reliefweb"][0] == ConnectorStatus.REQUIRES_CONFIGURATION
     assert status["facebook"][0] == ConnectorStatus.UNSUPPORTED and status["telegram"][0] == ConnectorStatus.UNSUPPORTED
     assert status["hdx_cod_ebola"][0] == ConnectorStatus.REQUIRES_ACKNOWLEDGEMENT
-    assert status["who_don"] is None
+    assert status["who_don"] is None and status["ecdc"] is None
     assert ReliefWebConnector().fetch is not None
 
 

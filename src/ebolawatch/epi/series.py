@@ -66,7 +66,7 @@ def build_cumulative(rows: list[dict], source_priority: list[str] | None = None)
     sources report the same date, the highest-priority source is used and the
     disagreement is recorded.
     """
-    priority = {k: i for i, k in enumerate(source_priority or ["manual", "hdx_cod_ebola", "who_don"])}
+    priority = {k: i for i, k in enumerate(source_priority or ["manual", "hdx_cod_ebola", "who_don", "ecdc"])}
     by_src_date: dict[tuple[str, date], dict] = {}
     for r in rows:
         if r.get("validation_status") not in ("auto_validated", "verified"):

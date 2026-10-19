@@ -35,6 +35,7 @@ from ..severity.surveillance import SurveillanceInputs, assess
 from ..transport.network import EdgeSpec, build_graph
 
 PUBLISHABLE = ("auto_validated", "verified")
+TEXT_EXTRACTED = ("who_don", "ecdc")  # figures read from narrative text
 
 
 def _rows(session: Session, region_ids: list[int], metric: str, case_class: str, transmission: str = "all",
@@ -171,7 +172,7 @@ def run_models(session: Session, today: date | None = None, n_sims: int = 2000) 
                            exported_cases=exported, mobility=mobility, today=today)
         out = run_region(inp, n_sims=n_sims)
         outputs[region.code] = out
-        runs.append(_persist(session, region, out, calibration, any(p.source_key == "who_don" for p in cases.points[-3:])))
+        runs.append(_persist(session, region, out, calibration, any(p.source_key in TEXT_EXTRACTED for p in cases.points[-3:])))
     session.flush()
     assess_all(session, regions, by_code, outputs, today)
     return runs
@@ -333,7 +334,7 @@ def assess_all(session: Session, regions: list[Region], by_code: dict[str, Regio
             model_disagreement=bool(out and (out.model_comparison.get("substantial_disagreement") or
                                             ((out.burden_headline.get("disagreement") or {}).get("substantial")))),
             burden_upper_90=out.burden_headline.get("upper_90") if out else None,
-            data_from_text_extraction=bool(cases.points and cases.points[-1].source_key == "who_don"),
+            data_from_text_extraction=bool(cases.points and cases.points[-1].source_key in TEXT_EXTRACTED),
             historical_last_report=cases.last_date if historical else None,
         )
         if region.level == 0:

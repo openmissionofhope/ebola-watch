@@ -234,7 +234,7 @@ def store_observations(session: Session, src: Source, doc: Document, vintage: Da
     countries = item.meta.get("countries_in_title") or []
     ctx = {"by_key": by_key, "national": national, "stated_cfr": item.meta.get("stated_cfr_percent"),
            "primary_region": countries[0] if len(countries) == 1 else None, "reviewer": item.meta.get("reviewer")}
-    pathogen = _pathogen_from_title(item.title)
+    pathogen = item.meta.get("pathogen") or _pathogen_from_title(item.title)
     region_cache: dict[str, Region | None] = {}
     n = 0
     for c in item.observations:
@@ -352,7 +352,7 @@ def ingest_all(session: Session, settings: Settings | None = None, only: list[st
             continue
         since = None
         src = session.scalar(select(Source).where(Source.key == c.info.key))
-        if src and src.last_success_at and c.info.key not in ("who_don", "hdx_cod_ebola", "worldbank_population", "osm_overpass"):
+        if src and src.last_success_at and c.info.key not in ("who_don", "ecdc", "hdx_cod_ebola", "worldbank_population", "osm_overpass"):
             since = src.last_success_at - timedelta(days=2)
         runs.append(run_connector(session, c, client, settings, since))
         session.commit()

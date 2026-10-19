@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from ..config import Settings
 from .base import Connector
+from .ecdc import EcdcConnector
 from .hdx import HdxCodEbolaConnector
 from .news import (
     AfricaCdcConnector,
@@ -21,6 +22,7 @@ from .who_don import WhoDonConnector
 def all_connectors(settings: Settings) -> list[Connector]:
     return [
         WhoDonConnector(),
+        EcdcConnector(),
         HdxCodEbolaConnector(),
         AfricaCdcConnector(),
         ReliefWebConnector(),
