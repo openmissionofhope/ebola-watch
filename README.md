@@ -3,7 +3,7 @@
 **Evidence-based, multilingual Ebola outbreak monitoring, burden estimation and
 forecasting — by [Open Mission of Hope](https://openmissionofhope.org).**
 
-**Live site: <https://openmissionofhope.github.io/ebola-watch/>** (updated every 6 hours)
+**Live site: <https://ebolawatch.openmissionofhope.org/>** (updated every 6 hours)
 
 Ebola Watch helps humanitarian organisations, researchers, journalists and the
 public understand:

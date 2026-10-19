@@ -46,7 +46,9 @@ default branch. The site is then at `https://<owner>.github.io/<repo>/`.
 **Custom domain:** add a DNS `CNAME` record from the subdomain (e.g.
 `ebolawatch.openmissionofhope.org`) to `<owner>.github.io`, set the variable
 `EW_SITE_DOMAIN` in the operations repository, run the workflow, then
-`deploy/github/setup.sh pages <site repo> <domain>`. Verifying the domain for
+`deploy/github/setup.sh pages <site repo> <domain>`, which also enforces HTTPS
+once GitHub has issued the certificate (rerun it if the certificate was still
+pending). Old `<owner>.github.io/<repo>/` links redirect to the domain. Verifying the domain for
 the organisation (*Organisation settings → Pages*) prevents takeover of the
 subdomain by other GitHub users.
 

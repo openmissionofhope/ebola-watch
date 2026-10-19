@@ -88,6 +88,9 @@ pages)
   fi
   if [[ -n "$domain" ]]; then
     gh api --silent -X PUT "repos/$site/pages" -f "cname=$domain" || true
+    # refused until GitHub has issued the certificate (usually within the hour): rerun later
+    gh api --silent -X PUT "repos/$site/pages" -F https_enforced=true 2>/dev/null \
+      || echo "HTTPS not enforced yet (certificate pending); run this step again later"
   fi
   gh api "repos/$site/pages" --jq '"Pages: " + .html_url + " (status: " + (.status // "pending") + ")"'
   ;;
