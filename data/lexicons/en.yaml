@@ -15,7 +15,7 @@ terms:
   outbreak: [outbreak, epidemic, spreading, spread, cluster, new cases, confirmed cases, suspected cases]
   lab: [laboratory, lab confirmed, tested positive, test positive, pcr, confirmed by, samples]
   surveillance: [contact tracing, screening, isolation, quarantine, surveillance, vaccination campaign, response team, treatment centre, treatment center]
-  negation: [not ebola, no ebola, isn't ebola, is not ebola, tested negative, ruled out, negative for, not linked]
+  negation: [not ebola, no ebola, isn't ebola, is not ebola, tested negative, ruled out, negative for, not linked, no active ebola, no active case, no active cases, no ebola case, no ebola cases, no case, no cases, no confirmed case, no confirmed cases, denies, denied, ebola-free, ebola free, free of ebola, free from ebola]
   hedging: [maybe, might, possibly, could be, suspected, unconfirmed, allegedly, reportedly, feared, fear of]
   firsthand: [i saw, i have seen, my neighbor, my neighbour, my brother, my sister, my father, my mother, in our village, in our area, here in, we buried, i witnessed]
   secondary: [according to, reports say, reported by, sources say, via, citing, rt, shared from, forwarded]

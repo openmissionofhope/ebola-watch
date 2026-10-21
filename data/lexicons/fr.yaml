@@ -15,7 +15,7 @@ terms:
   outbreak: [épidémie, flambée, foyer, propagation, se propage, nouveaux cas, cas confirmés, cas suspects, cas probables]
   lab: [laboratoire, confirmé par, testé positif, test positif, pcr, échantillons, inrb]
   surveillance: [recherche des contacts, suivi des contacts, dépistage, isolement, quarantaine, surveillance, riposte, centre de traitement, cte, vaccination]
-  negation: [pas ebola, pas d'ebola, n'est pas ebola, négatif, test négatif, écarté, aucun cas]
+  negation: [pas ebola, pas d'ebola, n'est pas ebola, négatif, test négatif, écarté, aucun cas, pas de cas, dément, nie]
   hedging: [peut-être, probablement, présumé, présumés, suspect, suspects, non confirmé, soupçonné, on craint, aurait, auraient]
   firsthand: [j'ai vu, mon voisin, ma voisine, mon frère, ma soeur, mon père, ma mère, dans notre village, chez nous, ici à, nous avons enterré, j'ai été témoin]
   secondary: [selon, d'après, rapporte, rapportent, source, via, relayé par, partagé par, transféré]

@@ -60,6 +60,20 @@ def test_preparedness_news_is_not_a_case_claim_where_the_country_prepares():
     assert claim("Ebola reaches a new province in DRC as two new cases are reported near the CAR border") == (ClaimType.EBOLA_CASES, "COD")
 
 
+def test_virus_name_is_not_the_district_and_denials_are_not_case_claims():
+    def claim(text):
+        a = analyze(text, PUB, SourceCategory.NEWS)
+        return a.claim_type, a.region_code
+
+    # "Bundibugyo" names the virus here, not the district in western Uganda
+    assert claim("Nigeria reports first imported Ebola Bundibugyo case in Abuja") == (ClaimType.EBOLA_CASES, "NGA")
+    assert claim("Au Nigeria, le choc après l'annonce d'un premier cas d'Ebola de souche Bundibugyo")[1] == "NGA"
+    assert claim("Ebola case confirmed in Bundibugyo district, health ministry says")[1] == "UG-W"
+    # a country saying it has no cases is not reporting cases
+    assert claim("Uganda says no active Ebola cases after Nigeria confirms infection")[0] == ClaimType.GENERAL_DISCUSSION
+    assert claim("Uganda denies Ebola outbreak after Nigeria confirms imported case")[0] == ClaimType.GENERAL_DISCUSSION
+
+
 def test_scenario_03_rumour_with_100_reposts_is_one_origin():
     base = "URGENT: Ebola outbreak in Goma, 40 people dead, hospitals hiding it, share before deleted"
     sigs = [rec(i, f"RT @acct{i}: " + base + (" #ebola" if i % 3 else ""), f"user{i}",

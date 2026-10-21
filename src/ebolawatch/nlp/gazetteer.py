@@ -33,7 +33,11 @@ def fold(s: str) -> str:
 _PATHOGEN_NAMES = re.compile(
     r"\b(bundibugyo|sudan|tai forest|ta[iï] forest|reston|zaire|bombali)\s+(virus|ebolavirus|ebola virus|virus disease|strain|species)\b"
     r"|\b(orthoebolavirus|ebolavirus)\s+(bundibugyoense|sudanense|zairense|taiense|restonense)\b"
-    r"|\b(bdbv|sudv|bvd|svd)\b",
+    r"|\b(bdbv|sudv|bvd|svd)\b"
+    # "Ebola Bundibugyo", "souche Bundibugyo", "Bundibugyo strain/outbreak" name the virus, not the district
+    r"|[eé]bola[\s-]+bundibugyo\b"
+    r"|\b(strain|souche|cepa|variant|esp[eè]ce|esp[eé]cie)\s+(de\s+|du\s+|d')?(bundibugyo|soudan|sudan|za[iï]re)\b"
+    r"|\bbundibugyo\s+([eé]bola|outbreak|epidemic|disease|maladie|fever|fi[eè]vre)\b",
     re.I,
 )
 # Generic admin-1 names (common in boundary datasets) that are ordinary words in text.

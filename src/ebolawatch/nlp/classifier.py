@@ -33,7 +33,7 @@ from .langid import LanguageGuess, identify
 from .lexicon import Language, fold_text, load_languages
 
 # Raising it makes the pipeline re-analyse the documents of the last 60 days.
-CLASSIFIER_VERSION = "2"
+CLASSIFIER_VERSION = "3"
 YEAR_RE = re.compile(r"\b(19[89]\d|20[0-4]\d)\b")
 NEG_WINDOW = 40
 
