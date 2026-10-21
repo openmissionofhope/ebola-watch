@@ -3,7 +3,7 @@
 **Evidence-based, multilingual Ebola outbreak monitoring, burden estimation and
 forecasting — by [Open Mission of Hope](https://openmissionofhope.org).**
 
-**Live site: <https://ebolawatch.openmissionofhope.org/>** (updated every 6 hours)
+**Live site: <https://ebolawatch.openmissionofhope.org/>** (updated within the hour of new official data, at least every 6 hours)
 
 Ebola Watch helps humanitarian organisations, researchers, journalists and the
 public understand:
@@ -37,12 +37,13 @@ estimate."*
 | **Languages** | Dashboard, generated explanations, alerts and reports in English, French, Swahili, Lingala, Portuguese and Arabic (right-to-left); browser translation for other languages without breaking the page ([translation guide](docs/TRANSLATION.md)) |
 | **Ethics by architecture** | No patient or personal data model; PII redaction; pseudonymous authors; first-level resolution cap with small-area and complementary suppression; query-reconstruction guard; scope guard against clinical, identity, tracking and targeting requests; prompt-injection handling; retention limits; audit log |
 
-## Current status (2026-10-18)
+## Current status (2026-10-21)
 
 | Component | Status |
 |---|---|
 | WHO DON connector + extraction | **Operational** — tested live; extracted DRC 2026 national figures match the independent HDX dataset on 20/20 overlapping dates |
-| ECDC outbreak page | **Operational** — tested live; DRC national and provincial figures (weekdays), cases in other countries |
+| ECDC outbreak page | **Operational** — tested live; DRC national and provincial figures (weekdays), totals and travel routes of cases in other countries |
+| Official statements (ministries, WHO offices) | **Operational** — transcribed with citation and quote into `data/official/statements.yaml`; published within the hour of a push |
 | HDX DRC national + health-zone data | **Operational, off by default** — requires `EW_SOURCE_ACKNOWLEDGEMENTS=hdx_cod_ebola` after honouring the producers' request |
 | World Bank population, OpenStreetMap checks | **Operational** — tested live |
 | GDELT news (en/fr/sw/pt/ar) | **Partially operational** — works, heavily rate-limited |

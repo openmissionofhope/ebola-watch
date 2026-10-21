@@ -40,6 +40,7 @@ from .db.models import (
 )
 from .domain.enums import OFFICIAL_CATEGORIES, SourceCategory
 from .epi.parameters import MODEL_VERSION
+from .epi.series import source_rank
 from .privacy.policy import Policy, PublicCell, apply_suppression
 from .safety.scope import DISCLAIMER
 from .severity.classify import LEVEL_DESCRIPTIONS, LEVEL_NAMES
@@ -89,10 +90,12 @@ def latest_official(session: Session, region: Region, metric: str, case_class: s
         q = q.where(Observation.outbreak_id == outbreak_id)
     else:
         q = q.where(Observation.as_of >= date.today() - timedelta(days=365))
-    row = session.execute(q).first()
-    if not row:
+    rows = session.execute(q.limit(20)).all()
+    if not rows:
         return None
-    o, s = row
+    # for the latest date, the source the series uses (see epi.series.SOURCE_PRIORITY)
+    o, s = min((r for r in rows if r[0].as_of == rows[0][0].as_of),
+               key=lambda r: (r[0].validation_status != "verified", source_rank(r[1].key)))
     return {"value": o.value, "as_of": _iso(o.as_of), "source": s.name, "source_key": s.key, "citation": o.citation,
             "published_at": _iso(o.published_at), "validation_status": o.validation_status,
             "extraction_method": o.extraction_method, "is_synthetic": o.is_synthetic}

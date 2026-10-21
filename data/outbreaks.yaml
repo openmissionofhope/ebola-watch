@@ -1,7 +1,9 @@
 # Outbreak registry. Each entry cites the official source of its declaration
 # (and end, where declared). The pipeline links observations to an outbreak by
 # country, pathogen and date. Add new outbreaks here as they are declared, or
-# let the WHO DON connector propose them for review.
+# let the WHO DON connector propose them for review. `replaces` adopts a record
+# the pipeline auto-registered (keeping its linked figures) and settles its
+# pending review.
 outbreaks:
   - key: COD-BDBV-2026
     name: "Bundibugyo virus disease, Democratic Republic of the Congo, 2026"
@@ -17,6 +19,21 @@ outbreaks:
     declared_on: 2026-05-15
     ended_on: 2026-07-28
     citation: "WHO DON 2026-DON602 (declaration); WHO DON 2026-DON614 (end declared 28 July 2026)"
+  - key: KEN-BDBV-2026
+    name: "Bundibugyo virus disease, Kenya, 2026"
+    pathogen: BDBV
+    iso3: KEN
+    declared_on: 2026-10-06
+    ended_on: null
+    replaces: AUTO-KEN-BDBV-20261014
+    citation: "WHO DON 2026-DON619: first laboratory-confirmed imported case reported by the Ministry of Health of Kenya on 6 October 2026; ECDC: cases among quarantined contacts from 14 October 2026"
+  - key: NGA-BDBV-2026
+    name: "Bundibugyo virus disease, Nigeria, 2026 (imported case)"
+    pathogen: BDBV
+    iso3: NGA
+    declared_on: 2026-10-20
+    ended_on: null
+    citation: "WHO Regional Office for Africa news release, 20 October 2026: the Federal Ministry of Health and Social Welfare confirmed one imported case in the Federal Capital Territory"
   - key: COD-EBOV-2025
     name: "Ebola virus disease, Democratic Republic of the Congo (Kasaï), 2025"
     pathogen: EBOV

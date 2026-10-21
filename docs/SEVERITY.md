@@ -25,7 +25,7 @@ reporting quality.
 |---|---|---|
 | 4 | CRITICAL | ≥ 300 confirmed cases in 21 days (≈ 100/week sustained for three weeks) · ≥ 50 cases in 21 days with P(R_t > 1) ≥ 0.9 · ≥ 2 newly affected first-level areas in 42 days with ≥ 100 cases in 21 days |
 | 3 | HIGH | ≥ 20 confirmed cases in 21 days · laboratory-confirmed cases in a newly affected first-level area in 21 days · P(R_t > 1) ≥ 0.75 with ≥ 5 cases in 21 days |
-| 2 | ELEVATED | ≥ 1 confirmed local case in 21 days · laboratory-confirmed imported case within 21 days without local transmission · confirmed case detected elsewhere after travel from this area while local reports show no recent cases |
+| 2 | ELEVATED | ≥ 1 confirmed local case in 21 days · laboratory-confirmed imported case within 21 days without local transmission · confirmed case detected elsewhere after travel from this area while local reports show no recent cases · confirmed case diagnosed elsewhere that travelled through the country (e.g. an airport transit) within 42 days |
 | 1 | WATCH | cases within 42 days but none in 21 (end-of-outbreak countdown) · imported case within 42 days · ≥ 2 independent unofficial reports of a possible outbreak (pending or after review) · direct corridor connectivity (weight ≥ 0.25 in the partial scenario) to an area with ≥ 20 cases in 21 days |
 | 0 | NO CURRENT EVIDENCE | none of the above. *This does not necessarily establish zero cases.* |
 | — | INSUFFICIENT INFORMATION | a previously affected area (last report within a year, no end declaration) without official data for more than 28 days |
@@ -43,6 +43,14 @@ reporting quality.
   outbreaks; 0.75 and 0.9 are conventional "likely" and "very likely" cut-offs.
 * **Imported cases** are ELEVATED for one incubation period (contacts under
   follow-up; secondary cases possible), then WATCH until 42 days.
+* **Transit of a confirmed case** is ELEVATED for two incubation periods
+  after the date of travel. Contacts on flights and at transit points are
+  traced for 21 days, and a case leaving the outbreak area along a route shows
+  that others may follow it; the trigger text says that this is not evidence
+  of local transmission. Routes come from official statements, as
+  `transit_iso3` and `travel_date` on the imported case (ECDC's "travelled
+  from X to Y, via Z" is read automatically; other statements are transcribed
+  in `data/official/statements.yaml`).
 * **Unofficial signals** can raise an area to WATCH at most. They never
   produce ELEVATED or higher on their own.
 * **Connectivity** WATCH describes vulnerability, and says so in its text.

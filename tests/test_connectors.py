@@ -12,6 +12,7 @@ from ebolawatch.sources.http import HttpClient
 from ebolawatch.sources.manual import ManualImportError, parse_manual_csv
 from ebolawatch.sources.news import GdeltConnector, ReliefWebConnector, parse_feed
 from ebolawatch.sources.registry import all_connectors
+from ebolawatch.sources.statements import OfficialStatementsConnector, StatementError, parse_statement
 from ebolawatch.sources.who_don import WhoDonConnector
 
 
@@ -62,6 +63,34 @@ def test_ecdc_connector_parses_the_situation_summary_only():
     changed = EcdcConnector().fetch(client_for(lambda req: httpx.Response(200, text="<main><p>Redesigned page</p></main>")),
                                     get_settings())
     assert changed.status == ConnectorStatus.PARTIAL and not changed.items and "not recognised" in changed.message
+
+
+def test_official_statements_file_is_valid_and_every_figure_is_cited():
+    countries = {code for code, level in load_gazetteer().names.values() if level == 0}
+    res = OfficialStatementsConnector().fetch(None, get_settings())
+    assert res.status == ConnectorStatus.OK and res.items, res.message
+    assert len({i.external_id for i in res.items}) == len(res.items)
+    for item in res.items:
+        assert item.is_official and item.url.startswith("https://") and item.meta["citation"] and item.meta["authority"]
+        for c in item.observations:
+            assert c.quote and c.extraction_method == "transcribed" and c.region_ref in countries
+            for code in [c.attributes.get("origin_iso3"), *c.attributes.get("transit_iso3", [])]:
+                assert code is None or code in countries
+
+
+def test_official_statement_entries_are_checked():
+    entry = {"id": "x", "published_on": "2031-03-05", "authority": "SYNTHETIC ministry", "title": "SYNTHETIC statement",
+             "url": "https://example.invalid/s", "citation": "SYNTHETIC", "quote": "SYNTHETIC quote",
+             "observations": [{"region": "KEN", "metric": "cases", "transmission": "imported", "as_of": "2031-03-05", "value": 1,
+                               "attributes": {"transit_iso3": ["uga"], "travel_date": "2031-03-01"}}]}
+    item = parse_statement(entry)
+    (c,) = item.observations
+    assert c.attributes == {"transit_iso3": ["UGA"], "travel_date": "2031-03-01"} and c.quote == "SYNTHETIC quote"
+    for broken in ({"url": None}, {"observations": [{"region": "KEN", "metric": "cases", "as_of": "2031-03-05", "value": -1}]},
+                   {"observations": [{"region": "KEN", "metric": "cases", "as_of": "2031-03-05", "value": 1,
+                                      "attributes": {"route": "x"}}]}):
+        with pytest.raises(StatementError):
+            parse_statement(entry | broken)
 
 
 def test_blocked_or_rate_limited_sources_report_unavailable_without_bypass():

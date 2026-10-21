@@ -5,13 +5,18 @@
 # that repository's token, secrets and logs; keeps the database there as an
 # encrypted release asset; takes review decisions from its issues; and pushes
 # the public site to the gh-pages branch of `site_repo` with a deploy key.
+#
+# Mode "check" (hourly) costs one short job: it runs the pipeline in full only
+# when ECDC, WHO Disease Outbreak News or the code (including
+# data/official/statements.yaml) has changed since the last published run
+# (deploy/github/source-fingerprint.sh).
 name: publish-static
 
 on:
   workflow_call:
     inputs:
       mode:
-        description: "full: ingest + analysis + publish. publish: apply review decisions and republish only."
+        description: "full: ingest + analysis + publish. publish: apply review decisions and republish only. check: full if a source changed."
         type: string
         default: full
       code_repo:
@@ -48,7 +53,41 @@ on:
       EW_RSS_FEEDS: {required: false}
 
 jobs:
+  check:
+    if: inputs.mode == 'check'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.fp.outputs.key != '' && steps.seen.outputs.cache-hit != 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.code_repo }}
+          ref: ${{ inputs.code_ref }}
+          persist-credentials: false
+          sparse-checkout: deploy/github
+      - name: Fingerprint official sources
+        id: fp
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if key=$(deploy/github/source-fingerprint.sh "${{ inputs.code_repo }}" "${{ inputs.code_ref }}"); then
+            echo "key=ew-sources-$key" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::A source could not be read; the next check or scheduled run will try again"
+          fi
+      - name: Compare with the last published run
+        id: seen
+        if: steps.fp.outputs.key != ''
+        uses: actions/cache/restore@v4
+        with:
+          path: .ew-sources
+          key: ${{ steps.fp.outputs.key }}
+          lookup-only: true
+
   publish:
+    needs: check
+    if: ${{ !cancelled() && (inputs.mode != 'check' || needs.check.outputs.changed == 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -69,7 +108,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
       OPS_REPO: ${{ github.repository }}
-      MODE: ${{ inputs.mode }}
+      MODE: ${{ inputs.mode == 'check' && 'full' || inputs.mode }}
       SITE_REPO: ${{ inputs.site_repo }}
       SITE_DOMAIN: ${{ inputs.site_domain }}
     defaults:
@@ -81,6 +120,14 @@ jobs:
           repository: ${{ inputs.code_repo }}
           ref: ${{ inputs.code_ref }}
           persist-credentials: false
+      - name: Fingerprint official sources
+        id: fp
+        if: env.MODE == 'full'
+        run: |
+          # taken before ingestion, so an update published during the run is not marked as seen
+          if key=$(deploy/github/source-fingerprint.sh "${{ inputs.code_repo }}" "${{ inputs.code_ref }}"); then
+            echo "key=ew-sources-$key" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-python@v5
         with: {python-version: "3.12", cache: pip}
       - uses: actions/setup-node@v4
@@ -117,15 +164,8 @@ jobs:
         run: ebolawatch github apply --repo "$OPS_REPO"
 
       - name: Run pipeline
-        if: inputs.mode == 'full'
+        if: env.MODE == 'full'
         run: ebolawatch run --due-only | tee "$RUNNER_TEMP/run.json"
-
-      - name: Build site
-        run: |
-          set -euo pipefail
-          if [ -n "$SITE_DOMAIN" ]; then base=/; else base="/${SITE_REPO#*/}/"; fi
-          (cd frontend && VITE_STATIC=1 EW_BASE_PATH="$base" npm run build)
-          ebolawatch export-static --out "$RUNNER_TEMP/site" --frontend-dist frontend/dist ${SITE_DOMAIN:+--cname "$SITE_DOMAIN"}
 
       - name: Save state
         run: |
@@ -155,6 +195,14 @@ jobs:
             if [[ "$d" < "$cutoff" ]]; then gh release delete-asset state "$name" --repo "$OPS_REPO" --yes; fi
           done
 
+      # after the state is saved, so a failed build never discards a run's data
+      - name: Build site
+        run: |
+          set -euo pipefail
+          if [ -n "$SITE_DOMAIN" ]; then base=/; else base="/${SITE_REPO#*/}/"; fi
+          (cd frontend && VITE_STATIC=1 EW_BASE_PATH="$base" npm run build)
+          ebolawatch export-static --out "$RUNNER_TEMP/site" --frontend-dist frontend/dist ${SITE_DOMAIN:+--cname "$SITE_DOMAIN"}
+
       - name: Publish site
         env:
           PAGES_DEPLOY_KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
@@ -175,6 +223,15 @@ jobs:
           GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts" \
             git push -q --force "git@github.com:${SITE_REPO}.git" gh-pages
           rm -f "$RUNNER_TEMP/deploy_key"
+
+      - name: Remember the published sources
+        if: steps.fp.outputs.key != ''
+        run: mkdir -p .ew-sources && date -u +%FT%TZ > .ew-sources/published
+      - uses: actions/cache/save@v4
+        if: steps.fp.outputs.key != ''
+        with:
+          path: .ew-sources
+          key: ${{ steps.fp.outputs.key }}
 
       - name: Update review issues
         run: ebolawatch github sync --repo "$OPS_REPO"

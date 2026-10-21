@@ -77,7 +77,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     settings.validate_for_production()
     limiter = TokenBucket(settings.rate_limit_per_minute)
     export_limiter = TokenBucket(settings.export_rate_limit_per_hour // 60 or 1, burst=settings.export_rate_limit_per_hour)
-    guard = QueryGuard()
+    guard = QueryGuard(settings.query_guard_window_s, settings.query_guard_max_distinct_filters)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):

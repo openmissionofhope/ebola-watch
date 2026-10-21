@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 from sqlalchemy import func, select
 
 from ebolawatch.db.models import Alert, Document, Observation, ReviewItem, SeverityAssessment, Signal
-from ebolawatch.domain.enums import CaseClass, Metric, SourceCategory, ValueType
+from ebolawatch.domain.enums import CaseClass, Metric, SourceCategory, TransmissionType, ValueType
 from ebolawatch.pipeline.ingest import store_item
 from ebolawatch.pipeline.modeling import run_models
 from ebolawatch.pipeline.signals import assess_clusters, cluster_alerts, extract_signals
@@ -70,6 +70,53 @@ def test_scenario_08_imported_case_without_local_transmission(session):
     sa = _latest_sa(session, "KEN")
     assert sa.level == 2
     assert "without evidence of sustained local transmission" in sa.explanation
+
+
+def test_transit_country_of_a_confirmed_case_is_elevated_for_two_incubation_periods(session):
+    src = source(session)
+    travelled = TODAY - timedelta(days=16)
+    session.add(Observation(region_id=region(session, "NGA").id, metric="cases", case_class="confirmed", value_type="cumulative",
+                            transmission="imported", as_of=TODAY - timedelta(days=1), value=1, source_id=src.id,
+                            extraction_method="transcribed", validation_status="auto_validated",
+                            attributes={"transit_iso3": ["UGA", "ETH"], "travel_date": travelled.isoformat()}, is_synthetic=True))
+    session.flush()
+    run_models(session, TODAY, n_sims=200)
+    for code in ("UGA", "ETH"):
+        sa = _latest_sa(session, code)
+        assert sa.level == 2, code
+        (t,) = [t for t in sa.triggers if t["code"] == "confirmed_case_transit"]
+        assert travelled.isoformat() in t["text"] and "Nigeria" in t["text"] and "not evidence of local transmission" in t["text"]
+    assert _latest_sa(session, "NGA").level == 2
+    # after 42 days the route no longer raises the level
+    x = SeverityInputs(region_code="ETH", today=travelled + timedelta(days=43), data_as_of=None, ever_confirmed=False,
+                       local_cases_21d=None, local_cases_42d=None, days_since_last_increase=None,
+                       transit_cases=[(travelled, "Nigeria")])
+    assert classify(x).level == 0
+
+
+def test_rising_lower_bound_and_new_travel_details_are_stored_without_review(session):
+    src = source(session)
+    day = TODAY - timedelta(days=3)
+
+    def bulletin(n, value, attributes=None, transmission="all"):
+        return _official_item(f"b{n}", [ObservationCandidate(
+            "KEN", Metric.CASES, CaseClass.CONFIRMED, ValueType.CUMULATIVE, day, value, transmission=TransmissionType(transmission),
+            quote="SYNTHETIC", extraction_method="text_pattern", confidence="medium", attributes=attributes or {},
+            notes=["narrative statement; value is a lower bound (at least this many cases)"])],
+            datetime.combine(TODAY, datetime.min.time(), tzinfo=UTC) + timedelta(hours=n))
+
+    store_item(session, src, bulletin(1, 1), _settings())
+    store_item(session, src, bulletin(2, 3), _settings())  # "a third case was reported" after "the first case"
+    rows = session.scalars(select(Observation).where(Observation.source_id == src.id).order_by(Observation.id)).all()
+    assert [(r.value, r.validation_status) for r in rows] == [(1, "auto_validated"), (3, "auto_validated")]
+
+    store_item(session, src, bulletin(3, 1, transmission="imported"), _settings())
+    store_item(session, src, bulletin(4, 1, {"origin_iso3": "COD", "transit_iso3": ["UGA"]}, "imported"), _settings())
+    store_item(session, src, bulletin(5, 1, {"origin_iso3": "COD", "transit_iso3": ["UGA"]}, "imported"), _settings())
+    imported = session.scalars(select(Observation).where(Observation.source_id == src.id, Observation.transmission == "imported")
+                               .order_by(Observation.id)).all()
+    assert [r.attributes for r in imported] == [{}, {"origin_iso3": "COD", "transit_iso3": ["UGA"]}]
+    assert imported[1].validation_status == "auto_validated" and imported[1].supersedes_id == imported[0].id
 
 
 def test_scenario_12_region_without_recent_surveillance_is_insufficient_information(session):

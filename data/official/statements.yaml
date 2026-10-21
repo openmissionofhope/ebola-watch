@@ -1,0 +1,86 @@
+# Official statements transcribed between bulletins (connector `official_statements`).
+#
+# Use this file for figures that a ministry of health, a national public-health
+# institute or a WHO office has announced but that WHO Disease Outbreak News and
+# ECDC have not yet restated. Every pipeline run reads it; changes reach the site
+# within the hour (see docs/OPERATIONS.md, "Official statements").
+#
+# Rules:
+# * one entry per statement; `url` links to the statement itself or, when the
+#   authority spoke at a briefing or on air, to the most direct report of it
+#   (name the speaker in `authority`) and list other reports in `references`;
+# * `quote` is copied verbatim from `url`; figures are only those the
+#   authority gave (cumulative totals, not increments) - never estimates or
+#   unattributed media figures;
+# * never edit or delete a published figure: add a new entry with the corrected
+#   value and a later `published_on`, and say why in `notes`;
+# * no personal details beyond what the case count needs (no names, ages,
+#   nationalities, employers or facilities).
+#
+# Observation fields: region (ISO3 or admin-1 code), metric (cases | deaths),
+# case_class (confirmed | probable | suspected; default confirmed), value_type
+# (default cumulative), transmission (all | imported | local; default all),
+# as_of, value, optional quote and notes. An imported case may carry
+# attributes: origin_iso3 (where infection most likely occurred, if
+# established), transit_iso3 (countries the case travelled through, in order)
+# and travel_date (date of travel through them). Countries listed in
+# transit_iso3 are assessed at least ELEVATED for 42 days after travel_date
+# (docs/SEVERITY.md).
+statements:
+  - id: nga-2026-10-20-imported-case
+    published_on: 2026-10-20
+    authority: Federal Ministry of Health and Social Welfare, Nigeria (news release of the WHO Regional Office for Africa)
+    title: "Nigeria confirms an imported case of Bundibugyo virus disease in the Federal Capital Territory"
+    url: https://afro.who.int/countries/nigeria/news/nigeria-confirms-imported-case-ebola-bundibugyo-virus-disease
+    citation: "WHO Regional Office for Africa, news release 'Nigeria confirms imported case of Ebola Bundibugyo virus disease', Abuja, 20 October 2026"
+    pathogen: BDBV
+    quote: >-
+      Abuja—Nigeria has confirmed one imported case of Ebola Bundibugyo virus disease in the Federal Capital
+      Territory (FCT), becoming the fifth country to detect the virus since an outbreak of the disease was declared
+      in the Democratic Republic of the Congo on 15 May 2026.
+    context:
+      - "Laboratory test confirmed Bundibugyo virus on 20 October."
+      - "So far, the ministry reports that 44 contacts have been identified and are being monitored"
+    observations:
+      - {region: NGA, metric: cases, transmission: all, as_of: 2026-10-20, value: 1}
+      - region: NGA
+        metric: cases
+        transmission: imported
+        as_of: 2026-10-20
+        value: 1
+        attributes:
+          transit_iso3: [UGA, ETH]
+          travel_date: 2026-10-05
+        notes:
+          - >-
+            Travel route from the Nigeria Centre for Disease Control and Prevention (O. Ehiakhamen, Arise TV,
+            20 October 2026, reported by Reuters): arrived in Abuja via Addis Ababa on 5 October on Ethiopian
+            Airlines flights from Uganda; fellow passengers are being traced.
+          - >-
+            Where infection occurred is under investigation: the Ministry of Health of Uganda says the case had
+            travelled to the Democratic Republic of the Congo and only transited through Uganda. The WHO release
+            implies arrival on 3 October (symptom onset 7 October, 'four days after her arrival').
+    references:
+      - https://theprint.in/world/nigeria-reports-ebola-case-fourth-african-country-affected-by-outbreak/3077793/
+      - https://theprint.in/world/nigeria-reports-first-ebola-case-in-a-decade-in-woman-who-arrived-from-uganda/3077609/
+
+  - id: ken-2026-10-20-nine-cases
+    published_on: 2026-10-20
+    authority: Ministry of Health, Kenya (as reported in the news release of the WHO Regional Office for Africa)
+    title: "Kenya: nine confirmed cases of Bundibugyo virus disease, all linked to one imported case"
+    url: https://afro.who.int/countries/nigeria/news/nigeria-confirms-imported-case-ebola-bundibugyo-virus-disease
+    citation: "WHO Regional Office for Africa, news release 'Nigeria confirms imported case of Ebola Bundibugyo virus disease', Abuja, 20 October 2026"
+    pathogen: BDBV
+    quote: "Kenya has reported nine cases linked to an imported case in recent weeks."
+    observations:
+      - region: KEN
+        metric: cases
+        transmission: all
+        as_of: 2026-10-20
+        value: 9
+        notes:
+          - >-
+            The Director-General for Health of Kenya said on 20 October that all nine cases belong to one cluster
+            (AP, Al Jazeera); ECDC reported eight cases as of 20 October.
+    references:
+      - https://www.aljazeera.com/news/2026/10/20/kenya-confirms-ninth-ebola-case

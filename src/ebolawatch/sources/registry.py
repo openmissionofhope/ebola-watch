@@ -16,6 +16,7 @@ from .news import (
 )
 from .reference import OverpassTransportConnector, WorldBankPopulationConnector
 from .social import FacebookConnector, RedditConnector, TelegramConnector, XConnector, YouTubeConnector
+from .statements import OfficialStatementsConnector
 from .who_don import WhoDonConnector
 
 
@@ -23,6 +24,7 @@ def all_connectors(settings: Settings) -> list[Connector]:
     return [
         WhoDonConnector(),
         EcdcConnector(),
+        OfficialStatementsConnector(),
         HdxCodEbolaConnector(),
         AfricaCdcConnector(),
         ReliefWebConnector(),

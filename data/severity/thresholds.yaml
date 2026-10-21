@@ -3,7 +3,7 @@
 # Windows are tied to Ebola natural history: 21 days is the maximum incubation
 # period (WHO); 42 days (two incubation periods) is the WHO criterion for
 # declaring the end of an outbreak.
-version: "2026.10.1"
+version: "2026.10.2"
 windows:
   recent_days: 21
   end_of_outbreak_days: 42
@@ -22,6 +22,7 @@ high:
 elevated:
   min_local_cases_21d: 1
   imported_case_days: 21
+  transit_case_days: 42             # a confirmed case travelled through the country (two incubation periods)
 watch:
   min_independent_signal_origins: 2
   imported_case_days: 42

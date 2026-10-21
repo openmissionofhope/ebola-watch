@@ -10,8 +10,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from ..config import Settings, get_settings
-from ..db.models import Outbreak, Region, Source, TransportEdge, TransportNode
+from ..db.models import Outbreak, Region, ReviewItem, Source, TransportEdge, TransportNode
+from ..domain.enums import ReviewStatus
 from ..nlp.gazetteer import ISO_3166_2, admin1_code, load_gazetteer
+from ..review.queue import decide
 from ..sources.registry import all_connectors
 from ..transport.seed import load_corridors
 
@@ -121,6 +123,13 @@ def seed_outbreaks(session: Session, settings: Settings | None = None) -> int:
     n = 0
     for o in data["outbreaks"]:
         ob = session.scalar(select(Outbreak).where(Outbreak.key == o["key"]))
+        if ob is None and o.get("replaces"):
+            ob = session.scalar(select(Outbreak).where(Outbreak.key == o["replaces"]))
+            if ob is not None:
+                ob.key = o["key"]
+                for item in session.scalars(select(ReviewItem).where(ReviewItem.item_type == "outbreak", ReviewItem.item_id == ob.id,
+                                                                     ReviewItem.status == ReviewStatus.PENDING.value)):
+                    decide(session, item.id, ReviewStatus.APPROVED.value, "registry", f"adopted by registry entry {o['key']}")
         if ob is None:
             ob = Outbreak(key=o["key"])
             session.add(ob)

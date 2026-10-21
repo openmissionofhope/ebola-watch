@@ -25,6 +25,9 @@ MAIN_RE = re.compile(r"(?is)<main\b.*?</main>")
 TIME_RE = re.compile(r"\bat (\d{1,2})[:.](\d{2})\b")
 END_RE = re.compile(r"EU/EEA|\bmodelling\b", re.I)  # the European risk assessment follows the situation summary
 MAX_PARAGRAPHS = 20
+# Part of each stored version: raising it makes the next run re-read the current
+# update with an improved parser.
+PARSER_VERSION = 2
 
 
 class EcdcConnector(Connector):
@@ -88,5 +91,5 @@ class EcdcConnector(Connector):
                   "safety_flags": list(st.flags)},
             observations=ex.candidates,
             is_official=True,
-            content_version=stamp,
+            content_version=f"{stamp} parser {PARSER_VERSION}",
         )

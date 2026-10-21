@@ -13,8 +13,12 @@ Rules, deliberately conservative:
   automatically only when they add up exactly to the national totals on the
   same page, which shows they are the complete confirmed breakdown; otherwise
   they are held for review;
-* cases in other countries are taken only from explicit ordinals ("a second
-  case was reported") in a paragraph about that country, as lower bounds;
+* cases in other countries are taken from a stated total ("a total of eight
+  confirmed cases") or, as lower bounds, from explicit ordinals ("a second case
+  was reported") in the paragraphs about that country; an ordinal that refers
+  back to a known case ("contacts of the first case") is not a count;
+* for an imported case, "imported from X" gives where infection occurred and
+  "via Y" the countries it travelled through, with the date of travel;
 * nothing is extracted from a paragraph that relays media reports, and counts
   introduced as "new" or "additional" are increments, not totals.
 """
@@ -29,7 +33,7 @@ from ..domain.enums import CaseClass, Metric, TransmissionType, ValueType
 from ..nlp.gazetteer import Gazetteer
 from ..sources.base import ObservationCandidate
 from .textnum import NUM_PATTERN, ORDINAL_WORDS, find_dates, parse_number, sentences
-from .who_don import CASES_CUMUL_RE, INCREMENT_CUES, MEDEVAC_RE
+from .who_don import CASES_CUMUL_RE, IMPORTED_RE, INCREMENT_CUES, MEDEVAC_RE
 
 N = NUM_PATTERN
 COUNTRY = "COD"
@@ -44,6 +48,10 @@ MEDIA_RE = re.compile(r"\b(?:media|press)\s+reports?\b|\baccording to (?:the )?(
 _ORDINAL_ALT = "|".join(w for w in ORDINAL_WORDS if w.isascii())
 ORDINAL_CASE_RE = re.compile(rf"\b(?P<ord>{_ORDINAL_ALT})\s+(?:laboratory[- ])?(?:confirmed\s+)?(?P<imported>imported\s+)?"
                              rf"(?:(?:Ebola|Bundibugyo|virus|disease|BVD|EVD)\s+){{0,4}}case\b", re.I)
+BACK_REFERENCE_RE = re.compile(r"\b(?:with|to|of|from|by|for|as|and|like|than)\s+the\s+$", re.I)
+WAS_IMPORTED_RE = re.compile(r"^\s*(?:was|were)\s+(?:an?\s+)?imported\b", re.I)
+IMPORTED_FROM_RE = re.compile(r"\bimported\s+from\s+(?P<place>[^.;:]+)", re.I)
+VIA_RE = re.compile(r"\bvia\s+(?P<place>[^.;:]+?)(?=,|\s+on\b|\s+and\b|\.|$)", re.I)
 
 
 @dataclass
@@ -92,6 +100,7 @@ def extract(text: str, reference: date, g: Gazetteer) -> EcdcExtraction:
     overall: tuple[int, int, int, str] | None = None
     events: list[ObservationCandidate] = []
 
+    section: str | None = None  # the other country whose paragraphs are being read
     for p in paras:
         if MEDIA_RE.search(p):
             out.skipped.append(_quote(p, 160))
@@ -99,8 +108,14 @@ def extract(text: str, reference: date, g: Gazetteer) -> EcdcExtraction:
         countries = [m.code for m in g.find(p) if m.level == 0]
         foreign = next((c for c in countries if c != COUNTRY), None)
         if foreign and countries[0] != COUNTRY:
-            events.extend(_country_events(p, foreign, reference))
+            section = foreign
+            events.extend(_country_events(p, foreign, reference, g))
             continue
+        if section in countries and not CASES_CUMUL_RE.search(p):
+            # continues the section ("The first case was imported from the DRC ...")
+            events.extend(_country_events(p, section, reference, g, totals=False))
+            continue
+        section = None
         for _, sent in sentences(p):
             if out.as_of is None and AS_OF_RE.search(sent):
                 out.as_of = _date_after(DATA_UNTIL_RE, sent, reference) or _date_after(AS_OF_RE, sent, reference)
@@ -163,21 +178,68 @@ def extract(text: str, reference: date, g: Gazetteer) -> EcdcExtraction:
     return out
 
 
-def _country_events(paragraph: str, country: str, reference: date) -> list[ObservationCandidate]:
-    """Explicit ordinal case statements ("a second case was reported") in a paragraph about one country."""
+def _countries_in(text: str, g: Gazetteer) -> list[str]:
+    out: list[str] = []
+    for m in g.find(text):
+        code = m.code if m.level == 0 else g.country_of(m.code)
+        if code and code not in out:
+            out.append(code)
+    return out
+
+
+def _country_events(paragraph: str, country: str, reference: date, g: Gazetteer, totals: bool = True) -> list[ObservationCandidate]:
+    """Cases in a paragraph about one other country: a stated total, explicit
+    ordinals ("a second case was reported") and the route of an imported case."""
     if MEDEVAC_RE.search(paragraph):
         return []
     found: list[ObservationCandidate] = []
+    origin: str | None = None
+    transit: list[str] = []
+    travel_date: date | None = None
+
+    def add(metric: Metric, when: date, n: int, sent: str, transmission=TransmissionType.ALL, confidence="medium",
+            note="narrative statement; value is a lower bound (at least this many cases)") -> None:
+        found.append(ObservationCandidate(country, metric, CaseClass.CONFIRMED, ValueType.CUMULATIVE, when, n,
+                                          transmission=transmission, quote=_quote(sent), extraction_method="text_pattern",
+                                          confidence=confidence, notes=[note]))
+
     for _, sent in sentences(paragraph):
+        dates = find_dates(sent, reference)
+        m = CASES_CUMUL_RE.search(sent) if totals else None
+        if m and m.group("cls").lower() == "confirmed" and not INCREMENT_CUES.search(sent[max(0, m.start() - 40): m.start()]):
+            when = _date_after(AS_OF_RE, sent, reference) or (dates[0][2] if dates else reference)
+            add(Metric.CASES, when, parse_number(m.group("n")), sent, confidence="high", note="total stated for the country")
+            deaths = _first(DEATHS_RE, sent[m.end():])
+            if deaths is not None:
+                add(Metric.DEATHS, when, deaths, sent, confidence="high", note="total stated for the country")
+        ordinal = False
         for m in ORDINAL_CASE_RE.finditer(sent):
-            n = ORDINAL_WORDS[m.group("ord").lower()]
-            dates = find_dates(sent, reference)
-            if not dates:
+            if not dates or BACK_REFERENCE_RE.search(sent[: m.start()]):
                 continue
-            when = dates[0][2]
-            transmission = TransmissionType.IMPORTED if m.group("imported") else TransmissionType.ALL
-            found.append(ObservationCandidate(
-                country, Metric.CASES, CaseClass.CONFIRMED, ValueType.CUMULATIVE, when, n, transmission=transmission,
-                quote=_quote(sent), extraction_method="text_pattern", confidence="medium",
-                notes=["narrative statement; value is a lower bound (at least this many cases)"]))
+            ordinal = True
+            imported = m.group("imported") or WAS_IMPORTED_RE.match(sent[m.end():])
+            add(Metric.CASES, dates[0][2], ORDINAL_WORDS[m.group("ord").lower()], sent,
+                TransmissionType.IMPORTED if imported else TransmissionType.ALL)
+        m = IMPORTED_RE.search(sent)
+        if m and not ordinal and dates and not re.search(r"\bno\s+(?:new\s+)?imported\b", sent, re.I):
+            q = m.group("q").lower()
+            n = ORDINAL_WORDS.get(q.replace("the ", "").strip()) or parse_number(q) or 1
+            add(Metric.CASES, dates[0][2], n, sent, TransmissionType.IMPORTED,
+                note="narrative statement; value is a lower bound (at least this many imported cases)")
+        if f := IMPORTED_FROM_RE.search(sent):
+            origin = next((c for c in _countries_in(f.group("place"), g) if c != country), origin)
+        if v := VIA_RE.search(sent):
+            transit = [c for c in _countries_in(v.group("place"), g) if c != country]
+            after = [d for start, _, d, _ in dates if start >= v.start()]
+            travel_date = after[0] if after else (dates[0][2] if dates else None)
+
+    imported = [c for c in found if c.transmission == TransmissionType.IMPORTED]
+    if len(imported) == 1:  # the route can only be attributed when the paragraph describes one imported case
+        if origin:
+            imported[0].attributes["origin_iso3"] = origin
+        transit = [c for c in transit if c != origin]
+        if transit:
+            imported[0].attributes["transit_iso3"] = transit
+            if travel_date:
+                imported[0].attributes["travel_date"] = travel_date.isoformat()
     return found

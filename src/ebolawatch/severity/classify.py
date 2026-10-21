@@ -30,7 +30,7 @@ LEVEL_DESCRIPTIONS = {
     3: "Established outbreak with substantial transmission, credible geographic expansion, or clearly worsening indicators.",
     4: "Severe, sustained or rapidly expanding outbreak with high burden or substantial risk of further growth.",
 }
-SEVERITY_VERSION = "ew-severity-1.0.0"
+SEVERITY_VERSION = "ew-severity-1.1.0"
 
 
 @lru_cache
@@ -63,6 +63,7 @@ class SeverityInputs:
     data_from_text_extraction: bool = False
     historical_last_report: date | None = None  # last report of an outbreak that ended long ago
     exported_case_dates: list[date] = field(default_factory=list)  # confirmed elsewhere after travel from here
+    transit_cases: list[tuple[date, str]] = field(default_factory=list)  # (travel date, country of diagnosis) of cases that travelled through here
 
 
 @dataclass
@@ -135,6 +136,17 @@ def classify(x: SeverityInputs, thresholds: dict | None = None) -> SeverityResul
                 trig("exported_case_without_local_report",
                      "Laboratory-confirmed case(s) detected elsewhere after travel from this area while official local reports show "
                      "no recent cases: transmission may be going undetected.", {"exported_case_dates": [d.isoformat() for d in exported]}, 2)
+            transits = sorted((d, where) for d, where in x.transit_cases if 0 <= (x.today - d).days <= el["transit_case_days"])
+            if transits:
+                level = 2
+                latest = transits[-1][0].isoformat()
+                places = ", ".join(sorted({where for _, where in transits}))
+                lead = (f"A laboratory-confirmed case travelled through this country on {latest}" if len(transits) == 1 else
+                        f"{len(transits)} laboratory-confirmed cases travelled through this country in the last "
+                        f"{el['transit_case_days']} days (latest on {latest})")
+                trig("confirmed_case_transit", f"{lead} before diagnosis in {places}. This shows a route by which cases leave "
+                     "the outbreak area; it is not evidence of local transmission.",
+                     {"transits": [{"travel_date": d.isoformat(), "diagnosed_in": w} for d, w in transits]}, 2)
         # WATCH
         if level < 1:
             if x.ever_confirmed and not ended and (x.local_cases_42d or 0) > 0:

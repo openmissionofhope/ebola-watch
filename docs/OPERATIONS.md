@@ -37,6 +37,19 @@ republishes the site and closes the issue. Low-priority `signal` items are not
 sent individually; their text appears in the excerpts of the cluster they
 belong to.
 
+## Official statements (between bulletins)
+
+Ministries announce confirmed cases a day or more before ECDC or WHO restates
+them. To publish such a figure, add an entry to `data/official/statements.yaml`
+(the file explains the fields and rules) and push it to `main`: the hourly check
+sees the new commit and the site is updated within the hour. Each entry needs
+the authority, a link, a verbatim quote and only the figures the authority gave.
+For an imported case, record the route (`transit_iso3`, `travel_date`) when the
+authority gives it: countries a confirmed case travelled through are assessed
+ELEVATED for 42 days. Never edit a published figure; add a corrected entry.
+When ECDC or WHO later reports the same date, their figure is kept alongside and
+any disagreement is shown.
+
 ## Corrections and retractions
 
 `POST /api/v1/admin/retractions` (or, without a server, a *Retract published

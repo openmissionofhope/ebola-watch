@@ -71,7 +71,8 @@ def export_static(out: Path, frontend_dist: Path | None = None, cname: str | Non
     from ..api.app import create_app
 
     # the snapshot is one client making many requests: lift the per-client limits
-    app_settings = settings.model_copy(update={"rate_limit_per_minute": 10**9, "export_rate_limit_per_hour": 10**9})
+    app_settings = settings.model_copy(update={"rate_limit_per_minute": 10**9, "export_rate_limit_per_hour": 10**9,
+                                               "query_guard_max_distinct_filters": 10**9})
     client = TestClient(create_app(app_settings), base_url="http://snapshot.local")
     data = out / "data"
     written: list[str] = []

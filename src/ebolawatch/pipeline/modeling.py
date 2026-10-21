@@ -339,6 +339,7 @@ def assess_all(session: Session, regions: list[Region], by_code: dict[str, Regio
         )
         if region.level == 0:
             x.exported_case_dates = _exported_case_dates(session, region)
+            x.transit_cases = _transit_cases(session, region)
         res = classify(x, th)
         sa = SeverityAssessment(region_id=region.id, data_as_of=data_as_of, status=res.status.value, level=res.level,
                                 confidence=res.confidence.value, underestimation_risk=res.underestimation_risk,
@@ -357,6 +358,27 @@ def _exported_case_dates(session: Session, origin: Region) -> list[date]:
     q = (select(Observation).where(Observation.transmission == "imported", Observation.metric == "cases",
                                    Observation.validation_status.in_(PUBLISHABLE)))
     return sorted({o.as_of for o in session.scalars(q) if (o.attributes or {}).get("origin_iso3") == origin.iso3})
+
+
+def _transit_cases(session: Session, through: Region) -> list[tuple[date, str]]:
+    """(travel date, country of diagnosis) of confirmed cases reported elsewhere that travelled through ``through``.
+
+    Several sources may describe the same case: reports from one country of
+    diagnosis with travel dates within a week of each other count once.
+    """
+    q = (select(Observation, Region).join(Region, Observation.region_id == Region.id)
+         .where(Observation.transmission == "imported", Observation.metric == "cases",
+                Observation.validation_status.in_(PUBLISHABLE), Region.iso3 != through.iso3))
+    found: dict[str, list[date]] = {}
+    for o, r in session.execute(q):
+        a = o.attributes or {}
+        if through.iso3 not in (a.get("transit_iso3") or []):
+            continue
+        when = date.fromisoformat(a["travel_date"]) if a.get("travel_date") else o.as_of
+        dates = found.setdefault(r.name, [])
+        if all(abs((when - d).days) > 7 for d in dates):
+            dates.append(when)
+    return sorted((d, name) for name, dates in found.items() for d in dates)
 
 
 def _connected_sources(region: Region, graph, active_units: dict, by_code: dict, th: dict, g) -> list[str]:

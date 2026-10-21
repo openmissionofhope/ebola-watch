@@ -246,10 +246,14 @@ def store_observations(session: Session, src: Source, doc: Document, vintage: Da
         status, notes = validate(c, ctx)
         prev = _existing_latest(session, src.id, region.id, c)
         if prev is not None and abs(prev.value - c.value) < 1e-9:
-            continue
-        if prev is not None:
+            if (prev.attributes or {}) == (c.attributes or {}):
+                continue
+            notes.append("same value as an earlier vintage, with new details (e.g. travel route)")
+        elif prev is not None:
             notes.append(f"revises an earlier vintage value {prev.value:g} -> {c.value:g}")
-            if prev.value and abs(c.value - prev.value) / prev.value > 0.05:
+            # a narrative lower bound ("a third case was reported") that rises is not a correction
+            raised_bound = c.value > prev.value and any("lower bound" in n for n in prev.validation_notes or [])
+            if prev.value and abs(c.value - prev.value) / prev.value > 0.05 and not raised_bound:
                 status = ValidationStatus.PENDING_REVIEW
                 notes.append("revision larger than 5%: significant source correction, review required")
         obs = Observation(
@@ -273,6 +277,8 @@ def store_observations(session: Session, src: Source, doc: Document, vintage: Da
 
 
 def _citation(src: Source, item: FetchedItem) -> str:
+    if item.meta.get("citation"):  # transcribed statements carry their own citation
+        return f"{item.meta['citation']}{' ' + item.url if item.url else ''}"
     when = item.published_at.date().isoformat() if item.published_at else "undated"
     ident = item.meta.get("don_id") or item.external_id
     return f"{src.attribution or src.name}, {ident} ({when}){' ' + item.url if item.url else ''}"

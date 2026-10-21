@@ -84,6 +84,20 @@ def test_static_export_matches_public_api_and_publishes_nothing_else(db, client,
     assert not (out / "CNAME").exists()
 
 
+def test_static_export_is_not_throttled_by_the_query_guard(db, dist, tmp_path, few_regions, monkeypatch):
+    from ebolawatch.config import get_settings, reset_settings_cache
+    from ebolawatch.reports.generate import generate
+
+    with session_scope() as s:
+        for days in range(4):  # each report is fetched with ?format=markdown: one distinct filter combination per report
+            generate(s, "daily", today=TODAY - timedelta(days=days))
+    monkeypatch.setenv("EW_QUERY_GUARD_MAX_DISTINCT_FILTERS", "2")
+    reset_settings_cache()
+    assert get_settings().query_guard_max_distinct_filters == 2
+    result = export_static(tmp_path / "site", dist)
+    assert result["reports"] >= 4
+
+
 def test_static_export_refuses_unsafe_inputs(db, dist, tmp_path):
     server_build = tmp_path / "server-dist"
     server_build.mkdir()
@@ -285,6 +299,29 @@ def test_due_only_skips_reference_data_and_backs_off_failing_sources(db):
         s.flush()
         assert not is_due(s, wb, now) and is_due(s, wb, now + timedelta(days=31))
         assert not is_due(s, don, now) and is_due(s, don, now + timedelta(hours=24))
+
+
+def test_registry_entry_adopts_an_auto_registered_outbreak(db, tmp_path):
+    from ebolawatch.config import get_settings
+    from ebolawatch.db.models import Outbreak
+    from ebolawatch.pipeline.seed import seed_outbreaks
+
+    with session_scope() as s:
+        auto = Outbreak(key="AUTO-TZA-BDBV-20310301", name="auto", pathogen="BDBV", primary_iso3="TZA", declared_on=date(2031, 3, 1))
+        s.add(auto)
+        s.flush()
+        review = enqueue(s, "outbreak", auto.id, "outbreak auto-registered from official bulletin; verify dates and pathogen")
+        auto_id, review_id = auto.id, review.id
+    (tmp_path / "outbreaks.yaml").write_text(
+        "outbreaks:\n  - {key: TZA-BDBV-2031, name: SYNTHETIC, pathogen: BDBV, iso3: TZA, declared_on: 2031-02-27,"
+        " replaces: AUTO-TZA-BDBV-20310301, citation: SYNTHETIC declaration}\n")
+    with session_scope() as s:
+        seed_outbreaks(s, get_settings().model_copy(update={"data_dir": tmp_path}))
+    with session_scope() as s:
+        ob = s.get(Outbreak, auto_id)
+        assert ob.key == "TZA-BDBV-2031" and ob.declared_on == date(2031, 2, 27) and ob.notes == "SYNTHETIC declaration"
+        item = s.get(ReviewItem, review_id)
+        assert item.status == "approved" and item.resolved_by == "registry"
 
 
 def test_static_deployment_may_use_sqlite_in_production():

@@ -144,6 +144,28 @@ def test_ecdc_other_countries_from_explicit_ordinals_only():
     assert not [c for c in k.values() if c.region_ref == "DEU"]  # medical evacuation is not a case in Germany
 
 
+def test_ecdc_country_section_total_route_and_back_references():
+    text = SYNTHETIC_ECDC.replace(
+        "On 1 March 2031, Kenya's Ministry of Health announced the country's first confirmed imported Ebola virus disease case. "
+        "On 3 March, a second case was reported in a contact in quarantine.\n",
+        "In Kenya, as of 5 March, a total of six confirmed cases, including one death, have been reported.\n"
+        "The first case was imported from the Democratic Republic of the Congo (DRC) and was reported on 1 March. The patient "
+        "reportedly travelled from DRC to Kenya, via Uganda, on 27 February. On 3 March, a second case was reported in one of "
+        "the close contacts of the first case. Since 3 March, four additional cases have been linked with the first case.\n")
+    ex = extract_ecdc(text, date(2031, 3, 6), G)
+    ken = [c for c in ex.candidates if c.region_ref == "KEN"]
+    total = next(c for c in ken if c.metric == Metric.CASES and c.confidence == "high")
+    assert (total.value, total.as_of) == (6, date(2031, 3, 5))
+    assert next(c for c in ken if c.metric == Metric.DEATHS).value == 1
+    (imported,) = [c for c in ken if c.transmission == TransmissionType.IMPORTED]
+    assert imported.as_of == date(2031, 3, 1) and imported.attributes == {
+        "origin_iso3": "COD", "transit_iso3": ["UGA"], "travel_date": "2031-02-27"}
+    # "contacts of the first case" and "linked with the first case" refer back; they are not counts
+    assert sorted((c.value, c.as_of.day) for c in ken if c.confidence == "medium" and c.transmission == TransmissionType.ALL) == [(2, 3)]
+    # the continuation paragraph is not read as national figures for the DRC
+    assert ecdc_by(ex)[("COD", Metric.CASES, TransmissionType.ALL)].value == 1300
+
+
 def test_ecdc_without_dated_national_total_extracts_nothing():
     ex = extract_ecdc("It was last updated on 5 March at 16:11.\nIn Nord-Kivu, 298 cases have been reported.", date(2031, 3, 6), G)
     assert ex.candidates == [] and ex.skipped

@@ -20,7 +20,9 @@ The public site does not need a running server: nobody changes data through
 it, and the data only change when the pipeline runs. In this mode
 
 * a **private operations repository** runs the pipeline every 6 hours with
-  GitHub Actions (`.github/workflows/publish-static.yml` in this repository,
+  GitHub Actions, and checks every hour between 05:00 and 21:00 UTC whether
+  ECDC, WHO Disease Outbreak News or this repository (including
+  `data/official/statements.yaml`) has changed, running in full when one has (`.github/workflows/publish-static.yml` in this repository,
   called from the operations repository), keeps the SQLite database as an
   encrypted release asset (AES-256, key in the `EW_STATE_KEY` secret; daily
   backups kept 14 days), and holds the human-review queue as issues;
@@ -60,8 +62,8 @@ What differs from the server deployment:
 | Review | dashboard, API key | issues in the operations repository: label **approve** / **reject** |
 | Retractions, transport status | admin API | issue forms in the operations repository + label **apply** |
 | Public error reports | form stored in the database | public GitHub issue form (`data-error`) |
-| Update frequency | worker interval | every 6 hours, and within minutes of a review decision |
-| Cost | a server | free for a public site repository; the private operations repository uses Actions minutes (about 1,000–1,300 of the 2,000 included monthly in GitHub Free) |
+| Update frequency | worker interval | within the hour of a new ECDC or WHO update or a push to `main` (05:00–21:00 UTC), at least every 6 hours, and within minutes of a review decision |
+| Cost | a server | free for a public site repository; the private operations repository uses Actions minutes (about 1,500 of the 2,000 included monthly in GitHub Free: each hourly check is billed as one minute, each full run about six) |
 
 If a run fails, the previous site stays online and the next run starts from the
 last saved state; the dashboard shows an "out of date" warning when the

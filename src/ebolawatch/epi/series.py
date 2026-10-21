@@ -59,6 +59,15 @@ class CumulativeSeries:
         return CumulativeSeries([p for p in self.points if p.as_of <= until], self.revisions, self.discrepancies)
 
 
+# When several sources give a value for the same date, the first listed is used.
+SOURCE_PRIORITY = ["manual", "official_statements", "hdx_cod_ebola", "who_don", "ecdc"]
+
+
+def source_rank(source_key: str, source_priority: list[str] | None = None) -> int:
+    order = source_priority or SOURCE_PRIORITY
+    return order.index(source_key) if source_key in order else len(order)
+
+
 def build_cumulative(rows: list[dict], source_priority: list[str] | None = None) -> CumulativeSeries:
     """rows: dicts with as_of, value, source_key, published_at, id, validation_status, supersedes_id.
 
@@ -66,7 +75,6 @@ def build_cumulative(rows: list[dict], source_priority: list[str] | None = None)
     sources report the same date, the highest-priority source is used and the
     disagreement is recorded.
     """
-    priority = {k: i for i, k in enumerate(source_priority or ["manual", "hdx_cod_ebola", "who_don", "ecdc"])}
     by_src_date: dict[tuple[str, date], dict] = {}
     for r in rows:
         if r.get("validation_status") not in ("auto_validated", "verified"):
@@ -82,7 +90,7 @@ def build_cumulative(rows: list[dict], source_priority: list[str] | None = None)
     points: list[Point] = []
     discrepancies = []
     for d in sorted(by_date):
-        cands = sorted(by_date[d], key=lambda r: (0 if r.get("validation_status") == "verified" else 1, priority.get(r["source_key"], 99)))
+        cands = sorted(by_date[d], key=lambda r: (0 if r.get("validation_status") == "verified" else 1, source_rank(r["source_key"], source_priority)))
         best = cands[0]
         others = [c for c in cands[1:] if abs(c["value"] - best["value"]) > max(2, 0.03 * best["value"])]
         if others:
