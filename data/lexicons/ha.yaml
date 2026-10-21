@@ -1,0 +1,23 @@
+code: ha
+name: Hausa
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Draft for northern Nigeria and Niger (boko spelling). Social-media posts often drop the hooked letters (ƙ ɗ ɓ), so key terms are listed with and without them. Native-speaker review welcome.
+identifiers: [cikin, wannan, kuma, akwai, daga, suna, yana, mutane, amma, saboda, domin, yanzu]
+terms:
+  ebola: [ebola, cutar ebola, kwayar cutar ebola, ƙwayar cutar ebola, bundibugyo]
+  vhf: [zazzabi mai zubar da jini, zazzaɓi mai zubar da jini]
+  bleeding: [zubar da jini, zubar jini, amai da jini, jini]
+  illness: [rashin lafiya, mara lafiya, marasa lafiya, cuta, cutar, zazzabi, zazzaɓi, amai, gudawa, ya kamu, ta kamu, sun kamu]
+  death: [mutuwa, ya mutu, ta mutu, sun mutu, an mutu, mace-mace, ya rasu, ta rasu, sun rasu, rasuwa, gawa, gawarwaki, "jana'iza"]
+  unexplained: [cuta mai ban mamaki, cutar da ba a sani ba, ba a san dalili ba, ba a san musabbabi ba]
+  outbreak: [barkewar cuta, ɓarkewar cuta, barkewar cutar, ɓarkewar cutar, annoba, yaduwar cuta, yaɗuwar cuta]
+  lab: [dakin gwaje-gwaje, ɗakin gwaje-gwaje, gwaji, gwaje-gwaje, an tabbatar]
+  surveillance: [sa ido, killace, an killace, kebe, keɓe, allurar rigakafi, rigakafi, cibiyar jinya]
+  negation: [ba ebola ba, ba cutar ebola ba, babu ebola, babu cutar ebola]
+  hedging: [watakila, wataƙila, mai yiwuwa, ana zargin, ana kyautata zaton, ba a tabbatar ba]
+  rumor: [jita-jita, rade-radi, raɗe-raɗi, ana cewa, an ce]
+  official_body: ["ma'aikatar lafiya", hukumar lafiya ta duniya, hukumar dakile yaduwar cututtuka, hukumar daƙile yaɗuwar cututtuka, gwamnati, hukumomin lafiya]
+  preparedness: [shirin ko-ta-kwana, matakan kariya, matakan riga-kafi, tsaurara matakai]
+  temporal_recent: [yau, jiya, a yanzu, wannan makon, jiya da dare]

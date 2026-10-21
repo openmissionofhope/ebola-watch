@@ -28,13 +28,13 @@ estimate."*
 | | |
 |---|---|
 | **Official data** | Ingests WHO Disease Outbreak News and ECDC's weekday outbreak updates (and, with acknowledgement, DRC national/health-zone data via OCHA HDX), extracts figures with provenance and validation, keeps every published version, never overwrites revisions |
-| **Event-based surveillance** | Multilingual (16 language lexicons, extensible by adding a YAML file), code-switching aware, contextual claim analysis; near-duplicate collapse so 100 reposts count once; independence, coordination and staleness detection; human review before any alert relying on unofficial reports is published |
+| **Event-based surveillance** | Multilingual (21 language lexicons, extensible by adding a YAML file), code-switching aware, contextual claim analysis; near-duplicate collapse so 100 reposts count once; independence, coordination and staleness detection; human review before any alert relying on unofficial reports is published |
 | **True burden** | Mortality-based back-calculation with species-specific priors; exportation-based inference when sourced mobility data exist; model disagreement shown, never averaged away |
 | **Forecasts** | Renewal/branching simulations at 7–84 days, three scenarios (improving / current / deteriorating), probability of continued transmission and of newly affected areas, comparison model, backtesting with coverage and WIS shown in the app |
 | **Transport** | Multimodal corridor graph (road, rail, river, lake, air, informal) between administrative units with verified/unknown service status and scenario analysis — connectivity is not transmission |
 | **Severity** | Levels 0–4 plus *insufficient information*, with confidence as a separate dimension and an underestimation-risk flag; every level explains its triggers |
 | **Reports** | Daily, weekly, major-change, country and multi-country situation reports |
-| **Languages** | Dashboard, generated explanations, alerts and reports in English, French, Swahili, Lingala, Portuguese and Arabic (right-to-left); browser translation for other languages without breaking the page ([translation guide](docs/TRANSLATION.md)) |
+| **Languages** | Dashboard, generated explanations, alerts and reports in English, French, Swahili, Lingala, Portuguese, Arabic (right-to-left), Hausa, Yoruba, Igbo, Amharic, Afaan Oromoo, Luganda and Kinyarwanda; browser translation for other languages without breaking the page ([translation guide](docs/TRANSLATION.md)) |
 | **Ethics by architecture** | No patient or personal data model; PII redaction; pseudonymous authors; first-level resolution cap with small-area and complementary suppression; query-reconstruction guard; scope guard against clinical, identity, tracking and targeting requests; prompt-injection handling; retention limits; audit log |
 
 ## Current status (2026-10-21)
@@ -55,7 +55,7 @@ estimate."*
 | Hosting without a server (GitHub Pages) | **Operational** — scheduled pipeline in a private operations repository, static snapshot on GitHub Pages, review through issues ([DEPLOYMENT.md](docs/DEPLOYMENT.md#without-a-server-github-pages)) |
 | Optional reviewer translation (Claude) | Implemented; requires `EW_ENABLE_LLM_TRANSLATION` + credentials; not tested live |
 | Lexicons beyond en/fr/pt | Drafts awaiting native-speaker review (content routed to people) |
-| Interface translations (fr, sw, ln, pt, ar) | **Operational, machine-assisted** — awaiting native-speaker review; every page says so until a language is marked reviewed |
+| Interface translations (fr, sw, ln, pt, ar, ha, yo, ig, am, om, lg, rw) | **Operational, machine-assisted** — awaiting native-speaker review; every page says so until a language is marked reviewed |
 
 See [docs/LIMITATIONS.md](docs/LIMITATIONS.md) for everything that does not yet work as well as it should.
 

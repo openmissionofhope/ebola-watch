@@ -59,18 +59,19 @@ Stated plainly so that nobody mistakes the system for more than it is.
 
 * English, French and Portuguese lexicons are usable; Swahili, Lingala and
   Arabic are drafts needing native review; Sango, Kikongo/Kituba, Tshiluba,
-  Kinyarwanda, Kirundi, Luganda, Acholi, Amharic, Tigrinya and Juba Arabic are
-  minimal placeholders that route content to people.
+  Kinyarwanda, Kirundi, Luganda, Acholi, Amharic, Tigrinya, Juba Arabic, Hausa,
+  Yoruba, Igbo, Nigerian Pidgin and Afaan Oromoo are minimal placeholders that
+  route content to people.
 * Language identification is lexicon-based and weak on very short texts.
 * Name redaction is heuristic.
 * Multi-claim documents (e.g. a headline about two countries) yield one signal
   attributed to the place nearest the first claim; counts stated for other
   places are dropped rather than misattributed.
 
-* The dashboard's French, Swahili, Lingala, Portuguese and Arabic versions
-  were produced with machine assistance and have not been reviewed by native
-  speakers; Lingala and Swahili technical terminology in particular needs
-  review. Sentences the backend generates in new forms fall back to English
+* The dashboard's French, Swahili, Lingala, Portuguese, Arabic, Hausa, Yoruba,
+  Igbo, Amharic, Afaan Oromoo, Luganda and Kinyarwanda versions were produced
+  with machine assistance and have not been reviewed by native speakers;
+  technical terminology in the African languages in particular needs review. Sentences the backend generates in new forms fall back to English
   until a template is added. Downloaded files (CSV, JSON, report Markdown)
   are in English.
 

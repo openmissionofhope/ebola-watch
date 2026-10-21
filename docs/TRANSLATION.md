@@ -1,7 +1,9 @@
 # Translation guide
 
 The dashboard is available in English (the source), French, Swahili, Lingala,
-Portuguese and Arabic. Readers choose a language at the top of every page; the
+Portuguese and Arabic, and since October 2026 in Hausa, Yoruba and Igbo
+(Nigeria), Amharic and Afaan Oromoo (Ethiopia), Luganda (Uganda) and
+Kinyarwanda (Rwanda). Readers choose a language at the top of every page; the
 choice is remembered in their browser, and a link can select one with
 `?lang=fr`. Browsers can translate the site into other languages (see the
 *Languages* page); the dashboard is built to survive that without breaking and

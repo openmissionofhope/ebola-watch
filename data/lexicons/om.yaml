@@ -1,0 +1,22 @@
+code: om
+name: Afaan Oromoo
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Draft for Ethiopia and northern Kenya (Qubee spelling). The glottal stop (hudhaa) is written with an apostrophe; posts may use ’ (folded automatically) or drop it. Terms are deliberately few; vhf and other concepts are omitted until a native speaker with public-health background reviews them.
+identifiers: [fi, kan, keessatti, irratti, akka, kana, kun, garuu, jira, namoota, isaan, waliin]
+terms:
+  ebola: [ebola, ebolaa, dhukkuba ebola, dhukkuba ebolaa, vaayirasii ebola, vaayirasii ebolaa, bundibugyo]
+  bleeding: [dhiiga, dhiigni, dhiiga dhangalaasuu, "dhiiga ba'uu", dhiiga haqqisuu]
+  illness: [dhukkuba, dhibee, dhukkubsataa, dhukkubsattoota, dhukkubsate, dhukkubsatan, "ho'a qaamaa", haqqisuu, garaa kaasaa]
+  death: ["du'e", "du'an", "du'eera", "du'aniiru", "du'a", "du'uu", awwaalame, awwaalaman, reeffa, lubbuun isaa darbe, lubbuun isaanii darbe]
+  unexplained: [dhukkuba hin beekamne, dhibee hin beekamne, sababni isaa hin beekamne]
+  outbreak: [weerara dhukkubaa, weerara dhibee, weerara ebola, "faca'iinsa dhukkubaa"]
+  lab: [laaboratoorii, qorannoo laaboratoorii, "mirkanaa'e", "mirkanaa'eera", "mirkanaa'aniiru"]
+  surveillance: [hordoffii dhukkubaa, "sakatta'iinsa", talaallii]
+  negation: [ebola miti, ebolaa miti, ebola hin qabu, ebolaa hin qabu]
+  hedging: [tarii, "ta'uu danda'a", "ta'uu mala", shakkame, shakkaman, hin mirkanoofne]
+  rumor: [jedhama, jedhamaa jira, akka jedhamutti, "dhaga'eera"]
+  official_body: [ministeera fayyaa, biiroo fayyaa, biiroo fayyaa oromiyaa, dhaabbata fayyaa addunyaa, mootummaa, africa cdc, ephi]
+  preparedness: ["qophaa'ina", of eeggannoo, ittisa dhukkubaa, "sakatta'iinsa daangaa"]
+  temporal_recent: ["har'a", kaleessa, edana, torban kana, ganama kana]

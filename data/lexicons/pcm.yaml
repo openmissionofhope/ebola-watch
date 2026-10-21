@@ -1,0 +1,17 @@
+code: pcm
+name: Nigerian Pidgin
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+identifiers: [dey, wey, una, abeg, wetin, sabi, pikin, wahala, comot, oya]
+terms:
+  ebola: [ebola]
+  illness: [dey sick, don sick, body dey hot, sickness]
+  death: [don die, dem die, e die, wey die, burial]
+  outbreak: [don spread, dey spread, don enter]
+  negation: [no be ebola, e no be ebola, no get ebola]
+  hedging: [e be like say, dem dey suspect]
+  rumor: [dem say, i hear say, na rumour]
+  official_body: [ncdc, ministry of health, government]
+  temporal_recent: [today, yesterday, this week, now now]
+relative_dates: {today: 0, yesterday: 1, "this week": 3}

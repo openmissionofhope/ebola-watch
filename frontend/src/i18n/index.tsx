@@ -9,7 +9,7 @@ import { Fragment, createContext, useContext, useEffect, useState, type ReactNod
 import countries from "./countries.json";
 import { Translator, parseNumber, type Catalog } from "./engine";
 
-export type Lang = "en" | "fr" | "sw" | "ln" | "pt" | "ar";
+export type Lang = "en" | "fr" | "sw" | "ln" | "pt" | "ar" | "ha" | "yo" | "ig" | "am" | "om" | "lg" | "rw";
 
 export interface LanguageInfo {
   code: Lang;
@@ -27,6 +27,14 @@ export const LANGUAGES: LanguageInfo[] = [
   { code: "ln", name: "Lingála", english: "Lingala", dir: "ltr", locale: "ln", reviewed: false },
   { code: "pt", name: "Português", english: "Portuguese", dir: "ltr", locale: "pt", reviewed: false },
   { code: "ar", name: "العربية", english: "Arabic", dir: "rtl", locale: "ar-u-nu-latn", reviewed: false },
+  // Nigeria, Ethiopia, Uganda and Rwanda (added October 2026)
+  { code: "ha", name: "Hausa", english: "Hausa", dir: "ltr", locale: "ha-NG", reviewed: false },
+  { code: "yo", name: "Yorùbá", english: "Yoruba", dir: "ltr", locale: "yo-NG", reviewed: false },
+  { code: "ig", name: "Igbo", english: "Igbo", dir: "ltr", locale: "ig-NG", reviewed: false },
+  { code: "am", name: "አማርኛ", english: "Amharic", dir: "ltr", locale: "am-ET", reviewed: false },
+  { code: "om", name: "Afaan Oromoo", english: "Oromo", dir: "ltr", locale: "om-ET", reviewed: false },
+  { code: "lg", name: "Luganda", english: "Luganda", dir: "ltr", locale: "lg-UG", reviewed: false },
+  { code: "rw", name: "Ikinyarwanda", english: "Kinyarwanda", dir: "ltr", locale: "rw-RW", reviewed: false },
 ];
 
 const STORAGE_KEY = "ew-lang";

@@ -1,0 +1,22 @@
+code: yo
+name: Yoruba
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Draft for south-western Nigeria (standard Yoruba). Online text often omits tone marks and subdots; matching is accent-folded, so à/ẹ/ọ/ṣ also match a/e/o/s. Folding merges some tonal homographs (àrùn 'disease' / àrún 'five', ẹ̀jẹ̀ 'blood' / èje 'seven', ibà 'fever' / ìbá 'would'), so single-word terms can over-match; bare kú 'die' is left out because it occurs in greetings (ẹ kú àárọ̀). Native-speaker review welcome.
+identifiers: [àwọn, àti, láti, náà, yìí, ṣùgbọ́n, nínú, èyí, nígbà, gbogbo, ènìyàn, báyìí]
+terms:
+  ebola: [ebola, àrùn ebola, àìsàn ebola, kòkòrò àìfojúrí ebola, bundibugyo]
+  bleeding: [ẹ̀jẹ̀, ẹ̀jẹ̀ ń jáde, ẹ̀jẹ̀ jáde, èébì ẹ̀jẹ̀, bì ẹ̀jẹ̀]
+  illness: [àìsàn, àrùn, aláìsàn, àwọn aláìsàn, ṣàìsàn, ń ṣàìsàn, kó àrùn, ibà, èébì, ìgbẹ́ gbuuru]
+  death: [ikú, ti kú, òkú, olóògbé, ìsìnkú, jáde láyé, pàpòdà, kú lójijì]
+  unexplained: [àrùn àjèjì, àìsàn àjèjì, ikú àjèjì, àrùn tí a kò mọ̀, àìsàn tí a kò mọ̀]
+  outbreak: [ìbẹ́sílẹ̀ àrùn, bẹ́ sílẹ̀, àjàkálẹ̀ àrùn, àjàkálẹ̀-àrùn, ń tàn kálẹ̀, ìtànkálẹ̀]
+  lab: [àyẹ̀wò, èsì àyẹ̀wò, ilé ìwádìí, ilé-ìwádìí, fìdí rẹ̀ múlẹ̀, fìdí ẹ̀ múlẹ̀, fìdí múlẹ̀]
+  surveillance: [ìyàsọ́tọ̀, ìmójútó, ìtọpinpin, àjẹsára, abẹ́rẹ́ àjẹsára, ibùdó ìtọ́jú]
+  negation: [kì í ṣe ebola, kìí ṣe ebola, kì í ṣe àrùn ebola, kò sí ebola]
+  hedging: [bóyá, ó ṣeé ṣe, ó lè jẹ́, a fura, wọ́n fura, ìfura, a kò tíì fìdí rẹ̀ múlẹ̀]
+  rumor: [àhesọ, àhesọ ọ̀rọ̀, wọ́n sọ pé, mo gbọ́ pé, a gbọ́ pé]
+  official_body: [ìjọba, àjọ ètò ìlera àgbáyé, ilé iṣẹ́ ètò ìlera, mínísítà ètò ìlera, ncdc, who, africa cdc]
+  preparedness: [ìmúrasílẹ̀, ìgbáradì, ìdènà, ìṣọ́ra]
+  temporal_recent: [lónìí, lóni, lánàá, lána, ọ̀sẹ̀ yìí, láàárọ̀ yìí, lálẹ́ àná, nísinsìnyí, báyìí]

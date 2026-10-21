@@ -1,0 +1,22 @@
+code: ig
+name: Igbo
+scripts: [Latn]
+support_level: low
+review_status: draft_requires_native_review
+notes: Standard Igbo (Igbo Izugbe). Matching is accent-folded, so ị/ọ/ụ/ṅ also match i/o/u/n. Dialect variants welcome.
+identifiers: ["nke", "onye", "ahụ", "nwere", "anyị", "mmadụ", "ọtụtụ", "niile", "maka", "nakwa", "ugbu"]
+terms:
+  ebola: [ebola, ọrịa ebola, nje ebola, bundibugyo]
+  bleeding: [ọbara, ọgbụgba ọbara, ọbara ọgbụgba, ọbara na-agba]
+  illness: [ọrịa, onye ọrịa, ndị ọrịa, na-arịa ọrịa, ahụ ọkụ, ọgbụgbọ, afọ ọsịsa]
+  death: [ọnwụ, nwụrụ, nwụrụ anwụ, anwụọla, ozu, olili ozu]
+  unexplained: [ọrịa a na-amaghị, ọrịa amaghị ama]
+  outbreak: [ọrịa na-efe efe, na-agbasa, gbasaala]
+  lab: [ụlọ nyocha, nnwale, nyocha ọbara]
+  surveillance: [nleba anya, ọgwụ mgbochi]
+  negation: [ọ bụghị ebola, abụghị ebola, enweghị ebola]
+  hedging: [ikekwe, eleghị anya, a na-enyo enyo, enyo enyo]
+  rumor: [asịrị, a na-ekwu na, anụrụ m]
+  official_body: [ministrị ahụike, ụlọ ọrụ ahụike, gọọmentị, ncdc, who, africa cdc]
+  preparedness: [njikere, mgbochi, kpachara anya]
+  temporal_recent: [taa, ụnyahụ, ugbu a, n'izu a, ụtụtụ a]
