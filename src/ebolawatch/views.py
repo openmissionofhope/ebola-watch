@@ -357,8 +357,8 @@ def signals_public(session: Session, region: Region | None = None, limit: int = 
     q = select(SignalCluster, Region).outerjoin(Region, SignalCluster.region_id == Region.id).order_by(SignalCluster.last_seen.desc()).limit(500)
     out = []
     for cl, r in session.execute(q):
-        if cl.status == "reviewed_not_credible":
-            continue
+        if cl.status == "reviewed_not_credible" or (cl.evidence or {}).get("superseded_on"):
+            continue  # rejected, or no longer reproduced by the current reports
         unit = None
         if r is not None:
             code = r.code if r.level <= 1 else g.parents.get(r.code, r.iso3)

@@ -348,6 +348,7 @@
  "Taï Forest virus disease, {s1}, {s2}": "Outbreak name; {s1} = country, {s2} = year (keep as written)",
  "This area has not been assessed.": "Severity explanation for an area without an assessment",
  "Transport connectivity (broad, aggregated)": "Situation report heading",
+ "Two laboratory-confirmed cases travelled through this country in the last {n1} days before diagnosis elsewhere: one on {d1} (diagnosed in {s1}) and one on {d2} (diagnosed in {s2}). This shows a route by which cases leave the outbreak area; it is not evidence of local transmission.": "Severity trigger (Elevated), two cases: {n1} = days, {d1}/{d2} = dates of travel, {s1}/{s2} = country where each case was diagnosed",
  "UNVERIFIED": "Verification of a signal cluster",
  "Ubangi navigability is seasonal; crossing services not verified": "Transport corridor note (from data/transport/corridors.yaml)",
  "Unavailable": "Controlled value (Connector status), shown capitalised",

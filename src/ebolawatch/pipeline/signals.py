@@ -17,7 +17,7 @@ from ..domain.enums import (
 )
 from ..evidence.assess import OfficialContext, SignalRecord, cluster
 from ..evidence.fingerprint import minhash
-from ..nlp.classifier import analyze
+from ..nlp.classifier import CLASSIFIER_VERSION, analyze
 from ..nlp.gazetteer import load_gazetteer
 from ..review.queue import enqueue
 
@@ -25,14 +25,17 @@ LOOKBACK_DAYS = 60
 
 
 def extract_signals(session: Session, today: date | None = None) -> int:
-    """Create a Signal for each document with text that has none yet."""
+    """Create a Signal for each document with text that has none yet, and re-analyse
+    recent documents whose signal came from an earlier version of the classifier."""
     today = today or date.today()
     g = load_gazetteer()
-    done = set(session.scalars(select(Signal.document_id)))
+    existing = {s.document_id: s for s in session.scalars(select(Signal))}
+    recent = set(session.scalars(select(Document.id).where(Document.published_at >= datetime.now(UTC) - timedelta(days=LOOKBACK_DAYS))))
     q = select(Document, Source).join(Source, Document.source_id == Source.id).where(Document.text_minimized.is_not(None))
     n = 0
     for doc, src in session.execute(q):
-        if doc.id in done:
+        sig = existing.get(doc.id)
+        if sig is not None and ((sig.features or {}).get("classifier_version") == CLASSIFIER_VERSION or doc.id not in recent):
             continue
         cat = SourceCategory(src.category)
         official = cat in OFFICIAL_CATEGORIES
@@ -45,21 +48,27 @@ def extract_signals(session: Session, today: date | None = None) -> int:
             region = session.scalar(select(Region).where(Region.code == a.region_code))
         is_repost = bool(doc.meta.get("is_crosspost")) or "retweeted" in (doc.meta.get("referenced") or [])
         reasons = list(a.review_reasons)
-        sig = Signal(
-            document_id=doc.id, origin_group=f"o{doc.id}", languages=[x.code for x in a.languages],
-            claim_type=a.claim_type.value, report_kind=(ReportKind.REPOST if is_repost else a.report_kind).value,
-            relevance=a.relevance, event_date=a.event_date, event_date_basis=a.event_date_basis, published_at=doc.published_at,
-            region_id=region.id if region else None, location_precision={0: "country", 1: "admin1", 2: "admin2"}.get(a.region_level),
-            counts_claimed=a.counts, features=_jsonable(a.features) | {"stale_indicators": a.stale_indicators,
-                                                                        "injection_suspected": any(f.startswith("injection:") for f in doc.safety_flags or [])},
-            concept_signature=a.concepts, fingerprint=minhash((doc.title or "") + " " + (doc.text_minimized or "")),
-            translation_quality=a.translation_quality, stale=bool(a.stale_indicators), needs_review=a.needs_review,
-            review_reasons=reasons, is_synthetic=doc.is_synthetic,
-        )
-        session.add(sig)
+        new = sig is None
+        if new:
+            sig = Signal(document_id=doc.id, origin_group=f"o{doc.id}")
+            session.add(sig)
+        sig.languages = [x.code for x in a.languages]
+        sig.claim_type = a.claim_type.value
+        sig.report_kind = (ReportKind.REPOST if is_repost else a.report_kind).value
+        sig.relevance, sig.event_date, sig.event_date_basis, sig.published_at = a.relevance, a.event_date, a.event_date_basis, doc.published_at
+        sig.region_id = region.id if region else None
+        sig.location_precision = {0: "country", 1: "admin1", 2: "admin2"}.get(a.region_level)
+        sig.counts_claimed = a.counts
+        sig.features = _jsonable(a.features) | {"stale_indicators": a.stale_indicators, "classifier_version": CLASSIFIER_VERSION,
+                                                 "injection_suspected": any(f.startswith("injection:") for f in doc.safety_flags or [])}
+        sig.concept_signature = a.concepts
+        sig.fingerprint = minhash((doc.title or "") + " " + (doc.text_minimized or ""))
+        sig.translation_quality, sig.stale, sig.needs_review = a.translation_quality, bool(a.stale_indicators), a.needs_review
+        sig.review_reasons = reasons
+        sig.is_synthetic = doc.is_synthetic
         session.flush()
         n += 1
-        if a.needs_review and a.claim_type.value not in ("not_relevant", "general_discussion"):
+        if new and a.needs_review and a.claim_type.value not in ("not_relevant", "general_discussion"):
             enqueue(session, "signal", sig.id, "; ".join(reasons) or "signal requires review", priority=3)
     return n
 
@@ -158,6 +167,14 @@ def assess_clusters(session: Session, today: date | None = None) -> list[SignalC
             enqueue(session, "cluster", cl.id, res.assessment.value, priority=1 if res.assessment in (
                 SignalAssessment.POSSIBLE_EMERGING, SignalAssessment.OFFICIAL_MAY_BE_INCOMPLETE) else 2)
         out.append(cl)
+    # A cluster this run did not reproduce (its reports aged out of the window, were re-analysed,
+    # or now belong to another cluster) no longer supports a current signal.
+    current = {cl.id for cl in out}
+    for old in session.scalars(select(SignalCluster).where(
+            SignalCluster.id.not_in(current or {-1}),
+            SignalCluster.assessment.in_([SignalAssessment.POSSIBLE_EMERGING.value, SignalAssessment.OFFICIAL_MAY_BE_INCOMPLETE.value]))):
+        old.evidence = (old.evidence or {}) | {"superseded_on": today.isoformat(), "previous_assessment": old.assessment}
+        old.assessment = SignalAssessment.INSUFFICIENT_EVIDENCE.value
     return out
 
 

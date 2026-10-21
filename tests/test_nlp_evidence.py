@@ -43,6 +43,23 @@ def test_keyword_alone_is_not_an_outbreak_and_negation_is_respected():
     assert d.report_kind == ReportKind.SATIRE and d.relevance == "unlikely"
 
 
+def test_preparedness_news_is_not_a_case_claim_where_the_country_prepares():
+    def claim(text):
+        a = analyze(text, PUB, SourceCategory.NEWS)
+        return a.claim_type, a.region_code
+
+    # reacting to cases in another country, or preventing a possible outbreak: surveillance activity
+    assert claim("Sierra Leone heightens Ebola surveillance after Kenya confirmed cases")[0] == ClaimType.SURVEILLANCE_ACTIVITY
+    assert claim("Ghana on high alert after traveller tested positive for Ebola in Kenya")[0] == ClaimType.SURVEILLANCE_ACTIVITY
+    assert claim("Ethiopia intensifies coordinated measures to prevent potential Ebola outbreak")[0] == ClaimType.SURVEILLANCE_ACTIVITY
+    # cases in the preparing country itself are still case claims
+    assert claim("Tanzania steps up response after suspected Ebola cases in Kagera") == (ClaimType.EBOLA_CASES, "TZ-05")
+    assert claim("Rwanda heightens vigilance as two suspected Ebola cases are isolated in Kigali")[0] == ClaimType.EBOLA_CASES
+    # a country named only as a border or as where a case travelled from is not where the cases are
+    assert claim("Nigeria confirms first Ebola case in woman traveling from Uganda") == (ClaimType.EBOLA_CASES, "NGA")
+    assert claim("Ebola reaches a new province in DRC as two new cases are reported near the CAR border") == (ClaimType.EBOLA_CASES, "COD")
+
+
 def test_scenario_03_rumour_with_100_reposts_is_one_origin():
     base = "URGENT: Ebola outbreak in Goma, 40 people dead, hospitals hiding it, share before deleted"
     sigs = [rec(i, f"RT @acct{i}: " + base + (" #ebola" if i % 3 else ""), f"user{i}",

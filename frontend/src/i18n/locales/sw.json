@@ -971,6 +971,7 @@
   "Taï Forest virus disease, {s1}, {s2}": "Ugonjwa wa virusi vya Taï Forest, {s1}, {s2}",
   "This area has not been assessed.": "Eneo hili halijatathminiwa.",
   "Transport connectivity (broad, aggregated)": "Muunganiko wa usafiri (wa jumla, uliojumlishwa)",
+  "Two laboratory-confirmed cases travelled through this country in the last {n1} days before diagnosis elsewhere: one on {d1} (diagnosed in {s1}) and one on {d2} (diagnosed in {s2}). This shows a route by which cases leave the outbreak area; it is not evidence of local transmission.": "Visa viwili vilivyothibitishwa na maabara vilipitia nchi hii katika siku {n1} zilizopita kabla ya kugunduliwa kwingine: kimoja tarehe {d1} (kiligunduliwa nchini {s1}) na kingine tarehe {d2} (kiligunduliwa nchini {s2}). Hii inaonyesha njia ambayo visa vinatoka katika eneo la mlipuko; si ushahidi wa maambukizi ya ndani.",
   "UNVERIFIED": "HAIJAHAKIKIWA",
   "Ubangi navigability is seasonal; crossing services not verified": "Upitikaji wa mto Ubangi kwa vyombo vya majini ni wa kimsimu; huduma za kivuko hazijahakikiwa",
   "Unavailable": "Haipatikani",
@@ -1117,6 +1118,8 @@
   "AGO": "Angola",
   "CMR": "Kamerun",
   "GAB": "Gabon",
-  "GNQ": "Guinea ya Ikweta"
+  "GNQ": "Guinea ya Ikweta",
+  "NGA": "Nigeria",
+  "ETH": "Ethiopia"
  }
 }

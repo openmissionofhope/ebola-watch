@@ -971,6 +971,7 @@
   "Taï Forest virus disease, {s1}, {s2}": "Doença por vírus Taï Forest, {s1}, {s2}",
   "This area has not been assessed.": "Esta área não foi avaliada.",
   "Transport connectivity (broad, aggregated)": "Conectividade por transportes (geral, agregada)",
+  "Two laboratory-confirmed cases travelled through this country in the last {n1} days before diagnosis elsewhere: one on {d1} (diagnosed in {s1}) and one on {d2} (diagnosed in {s2}). This shows a route by which cases leave the outbreak area; it is not evidence of local transmission.": "Dois casos confirmados laboratorialmente passaram por este país nos últimos {n1} dias antes do diagnóstico noutro local: um em {d1} (diagnosticado em {s1}) e outro em {d2} (diagnosticado em {s2}). Isto mostra uma rota pela qual casos saem da área do surto; não é evidência de transmissão local.",
   "UNVERIFIED": "NÃO VERIFICADO",
   "Ubangi navigability is seasonal; crossing services not verified": "A navegabilidade do Ubangui é sazonal; serviços de travessia não verificados",
   "Unavailable": "Indisponível",
@@ -1117,6 +1118,8 @@
   "AGO": "Angola",
   "CMR": "Camarões",
   "GAB": "Gabão",
-  "GNQ": "Guiné Equatorial"
+  "GNQ": "Guiné Equatorial",
+  "NGA": "Nigéria",
+  "ETH": "Etiópia"
  }
 }

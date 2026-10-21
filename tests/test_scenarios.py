@@ -87,6 +87,18 @@ def test_transit_country_of_a_confirmed_case_is_elevated_for_two_incubation_peri
         (t,) = [t for t in sa.triggers if t["code"] == "confirmed_case_transit"]
         assert travelled.isoformat() in t["text"] and "Nigeria" in t["text"] and "not evidence of local transmission" in t["text"]
     assert _latest_sa(session, "NGA").level == 2
+    # a second case through Uganda: both instances are named
+    session.add(Observation(region_id=region(session, "KEN").id, metric="cases", case_class="confirmed", value_type="cumulative",
+                            transmission="imported", as_of=TODAY - timedelta(days=15), value=1, source_id=src.id,
+                            extraction_method="text_pattern", validation_status="auto_validated",
+                            attributes={"origin_iso3": "COD", "transit_iso3": ["UGA"],
+                                        "travel_date": (TODAY - timedelta(days=18)).isoformat()}, is_synthetic=True))
+    session.flush()
+    run_models(session, TODAY, n_sims=200)
+    (t,) = [t for t in _latest_sa(session, "UGA").triggers if t["code"] == "confirmed_case_transit"]
+    assert t["text"].startswith("Two laboratory-confirmed cases travelled through this country in the last 42 days before diagnosis "
+                                f"elsewhere: one on {(TODAY - timedelta(days=18)).isoformat()} (diagnosed in Kenya) and one on "
+                                f"{travelled.isoformat()} (diagnosed in Nigeria).")
     # after 42 days the route no longer raises the level
     x = SeverityInputs(region_code="ETH", today=travelled + timedelta(days=43), data_as_of=None, ever_confirmed=False,
                        local_cases_21d=None, local_cases_42d=None, days_since_last_increase=None,
@@ -138,6 +150,39 @@ def test_outbreaks_before_the_epidemic_are_neither_assessed_nor_published(sessio
     assert summary["outbreak"] is None and not any(summary["official"].values())
     assert "LBR" not in {r["region"]["code"] for r in views.overview(session)["regions"]}
     assert views.map_layers(session)["units"].get("LBR", {}).get("official_confirmed") is None
+
+
+def test_preparedness_news_is_reanalysed_and_stale_clusters_stop_raising_watch(session):
+    from ebolawatch.db.models import SignalCluster
+    from ebolawatch.domain.enums import SignalAssessment
+
+    src = source(session, "test_news", SourceCategory.NEWS)
+    text = "SYNTHETIC: Sierra Leone heightens Ebola surveillance after Kenya confirmed cases"
+    doc = Document(source_id=src.id, external_id="prep1", title=text, content_hash="p1", text_minimized=text,
+                   published_at=datetime.combine(TODAY, datetime.min.time(), tzinfo=UTC), is_synthetic=True)
+    session.add(doc)
+    session.flush()
+    # a signal from the previous classifier, and the cluster it produced
+    old = SignalCluster(cluster_key="c-old", region_id=region(session, "SLE").id, claim_type="ebola_cases", summary="SYNTHETIC",
+                        n_documents=3, n_origins=3, n_independent_origins=3, languages=["en"], corroboration="professional_corroborated",
+                        assessment=SignalAssessment.POSSIBLE_EMERGING.value, evidence={}, is_synthetic=True)
+    session.add(old)
+    session.flush()
+    session.add(Signal(document_id=doc.id, origin_group="o1", languages=["en"], claim_type="ebola_cases", report_kind="professional_reporting",
+                       relevance="likely", region_id=region(session, "SLE").id, counts_claimed={}, features={}, concept_signature=[],
+                       fingerprint=[], translation_quality="not_needed", stale=False, needs_review=False, review_reasons=[],
+                       cluster_id=old.id, is_synthetic=True))
+    session.flush()
+    assert extract_signals(session, TODAY) >= 1
+    sig = session.scalars(select(Signal).where(Signal.document_id == doc.id)).one()
+    assert sig.claim_type == "surveillance_activity" and sig.features["classifier_version"]
+    assess_clusters(session, TODAY)
+    assert old.assessment == SignalAssessment.INSUFFICIENT_EVIDENCE.value and old.evidence["previous_assessment"]
+    from ebolawatch import views
+
+    assert old.id not in {c["id"] for c in views.signals_public(session)}
+    run_models(session, TODAY, n_sims=200)
+    assert not [t for t in _latest_sa(session, "SLE").triggers if t["code"] == "unverified_signals"]
 
 
 def test_scenario_12_region_without_recent_surveillance_is_insufficient_information(session):

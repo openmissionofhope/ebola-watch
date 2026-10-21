@@ -971,6 +971,7 @@
   "Taï Forest virus disease, {s1}, {s2}": "Bokono ya virus Taï Forest, {s1}, {s2}",
   "This area has not been assessed.": "Etuka oyo naino ezwi évaluation te.",
   "Transport connectivity (broad, aggregated)": "Connectivité ya transport (na ndenge ya monene, esangisami)",
+  "Two laboratory-confirmed cases travelled through this country in the last {n1} days before diagnosis elsewhere: one on {d1} (diagnosed in {s1}) and one on {d2} (diagnosed in {s2}). This shows a route by which cases leave the outbreak area; it is not evidence of local transmission.": "Ba cas mibale oyo confirmé na laboratoire elekaki na mboka oyo na mikolo {n1} oyo eleki liboso ya komonana na esika mosusu: moko na {d1} (emonanaki na {s1}) mpe mosusu na {d2} (emonanaki na {s2}). Yango elakisi nzela moko oyo ba cas ezali kobima na etuka ya bokono; ezali elembeteli ya transmission ya esika yango te.",
   "UNVERIFIED": "NON VÉRIFIÉ",
   "Ubangi navigability is seasonal; crossing services not verified": "Kotambola na masuwa na Ubangi etali saison; ba service ya kokatisa ebale ezali vérifié te",
   "Unavailable": "Ezali te",
@@ -1117,6 +1118,8 @@
   "AGO": "Angola",
   "CMR": "Kamerun",
   "GAB": "Gabon",
-  "GNQ": "Gine Ekwatorial"
+  "GNQ": "Gine Ekwatorial",
+  "NGA": "Nizeria",
+  "ETH": "Etiopi"
  }
 }

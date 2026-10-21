@@ -9,6 +9,11 @@ For each document this produces an *interpretable* assessment:
   mention, alternative explanations such as cholera or malaria, staleness cues);
 * whether human review is required.
 
+Preparedness news ("Sierra Leone heightens Ebola surveillance after Kenya
+cases") is surveillance activity in the country that prepares, not a case
+claim there; and a place named only as a border ("near the CAR border") is not
+where the cases are, nor is a country a case travelled from or through.
+
 Outputs are categorical with reasons, not pseudo-probabilities. Keyword hits
 alone never produce an Ebola claim: "several people are ill" without Ebola or
 haemorrhagic-fever context is classified as an illness cluster with
@@ -27,6 +32,8 @@ from .gazetteer import Gazetteer, load_gazetteer
 from .langid import LanguageGuess, identify
 from .lexicon import Language, fold_text, load_languages
 
+# Raising it makes the pipeline re-analyse the documents of the last 60 days.
+CLASSIFIER_VERSION = "2"
 YEAR_RE = re.compile(r"\b(19[89]\d|20[0-4]\d)\b")
 NEG_WINDOW = 40
 
@@ -79,6 +86,38 @@ _ORDINALS = {"first": 1, "premier": 1, "premiere": 1, "première": 1, "second": 
              "troisieme": 3, "troisième": 3, "fourth": 4, "quatrieme": 4, "quatrième": 4, "fifth": 5,
              "ثاني": 2, "الثانية": 2, "الثاني": 2, "ثالث": 3, "الثالثة": 3}
 _COUNT_ILL = re.compile(rf"(?P<n>{NUM_PATTERN})\s+(?:\w+\s+){{0,2}}(?:sick|ill|cases|malades|cas|wagonjwa|visa|doentes|casos|patients)", re.I)
+# A case or test result being mentioned (on folded text), to tell where the cases are in preparedness news
+_CASE_MENTION = re.compile(r"\b(?:cases?|patients?|infections?|infected|tested positive|tests? positive|cas|casos?|kisa|visa|"
+                           r"wagonjwa|doentes)\b|حالات|حالة|إصابات|إصابة")
+# A country named as a border or as a travel origin or transit point, not as the place of the event
+_BORDER_AFTER = re.compile(r"^\s*(?:'s\s+)?(?:border|borders|frontier|frontiere|fronteira|mpakani|mpaka)\b")
+_BORDER_BEFORE = re.compile(r"(?:border with|borders with|bordering|frontiere avec|frontiere de|fronteira com|mpaka wa|mpakani mwa"
+                            # a place the case travelled from or through, not where it was confirmed
+                            r"|(?:travell?(?:ing|ed)|arriv(?:ed|ing)|return(?:ed|ing)|coming|flew|flights?) from|via|"
+                            r"transit(?:ed|ing)?(?: through| via| in)?|travel history (?:to|from|in)|had been in|"
+                            r"en provenance de|de retour de|en transit par|proveniente de|vind[oa] de)"
+                            r"\s+(?:the\s+|l'|la\s+|le\s+|du\s+|o\s+|a\s+)?$")
+
+
+def _not_border(places: list, folded: str) -> list:
+    return [p for p in places if not (_BORDER_AFTER.search(folded[p.end:p.end + 16])
+                                      or _BORDER_BEFORE.search(folded[max(0, p.start - 24):p.start]))]
+
+
+def _case_country(text: str, g: Gazetteer) -> str | None:
+    """Country of the place named closest to the first mention of cases, within that sentence."""
+    for sent in re.split(r"(?<=[.!?])\s+|\n+", text):
+        folded = fold_text(sent)
+        m = _CASE_MENTION.search(folded)
+        if not m:
+            continue
+        found = g.find(sent)
+        places = _not_border(found, folded) or found
+        if not places:
+            return None
+        p = min(places, key=lambda p: min(abs(p.start - m.start()), abs(p.end - m.end())))
+        return g.country_of(p.code) if p.level else p.code
+    return None
 
 
 def analyze(text: str, published: date, source_category: SourceCategory, *, g: Gazetteer | None = None,
@@ -147,7 +186,12 @@ def analyze(text: str, published: date, source_category: SourceCategory, *, g: G
 
     # Place: most specific admin unit mentioned (resolution reduced later for publication)
     places = g.find(text)
+    kept = _not_border(places, folded)
+    if kept and len(kept) < len(places):
+        f["border_mentions"] = sorted({p.surface for p in places if p not in kept})
+        places = kept
     region_code, region_level = None, None
+    elsewhere = False  # the cases mentioned are nearest another country than the one the text is about
     if places:
         # When several countries are named, attribute the claim to the place nearest the
         # first case/death statement, and keep only the counts stated near that place
@@ -173,14 +217,19 @@ def analyze(text: str, published: date, source_category: SourceCategory, *, g: G
         else:
             best = sorted(places, key=lambda m: (-m.level, m.start))[0]
         region_code, region_level = best.code, best.level
+        if len(countries) > 1:
+            where = _case_country(text, g)
+            elsewhere = where is not None and where != (g.country_of(best.code) if best.level else best.code)
 
     # Claim type
     has_ebola = bool(f["ebola"]) and not negated
     has_vhf = bool(f["vhf"]) or (bool(f["bleeding"]) and bool(f["illness"]))
     has_death = bool(f["death"]) or "deaths" in counts
     has_ill = bool(f["illness"]) or "ill" in counts
-    if has_ebola and f["preparedness"] and not (has_death or counts or f["lab"]):
-        claim = ClaimType.SURVEILLANCE_ACTIVITY  # preparedness or screening news, not a case report
+    if has_ebola and f["preparedness"] and not (has_death or counts) and (elsewhere or not _CASE_MENTION.search(folded)):
+        # preparedness or screening news, not a case report (cases, if any, are in another country)
+        claim = ClaimType.SURVEILLANCE_ACTIVITY
+        f["preparedness_for_cases_elsewhere"] = elsewhere
     elif has_ebola and (has_death or has_ill or f["outbreak"] or f["lab"]):
         claim = ClaimType.EBOLA_CASES
     elif has_ebola and f["surveillance"]:

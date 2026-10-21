@@ -23,7 +23,7 @@ terms:
   satire: [satire, parodie, blague, humour, "😂", "🤣", mdr, lol]
   debunk: [fausse information, fake news, intox, infox, faux, démenti, dément, rumeur infondée, montage]
   official_body: [ministère de la santé, ministre de la santé, oms, organisation mondiale de la santé, africa cdc, inrb, insp, gouvernement, autorités sanitaires, division provinciale de la santé, dps, zone de santé]
-  preparedness: [prévention, vigilance, renforce sa vigilance, préparation, mesures préventives, riposte préventive, interceptée, intercepté, dépistage aux frontières, en alerte]
+  preparedness: [prévention, prévenir, vigilance, renforce sa vigilance, renforce la surveillance, renforcement de la surveillance, surveillance renforcée, intensifie la surveillance, préparation, se prépare, mesures préventives, mesures de prévention, riposte préventive, interceptée, intercepté, dépistage aux frontières, points d'entrée, en alerte, alerte maximale, état d'alerte, risque d'importation]
   urgency: [urgent, alerte, dernière minute, partagez, partagez massivement, faites circuler]
   temporal_recent: [aujourd'hui, hier, ce matin, cette nuit, hier soir, cette semaine, actuellement, en cours]
   temporal_past: [il y a des années, l'année dernière, l'an dernier, en 2014, en 2018, en 2019, en 2007, en 2012, en 2022, en 2025, précédente épidémie]

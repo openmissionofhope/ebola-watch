@@ -141,10 +141,17 @@ def classify(x: SeverityInputs, thresholds: dict | None = None) -> SeverityResul
                 level = 2
                 latest = transits[-1][0].isoformat()
                 places = ", ".join(sorted({where for _, where in transits}))
-                lead = (f"A laboratory-confirmed case travelled through this country on {latest}" if len(transits) == 1 else
-                        f"{len(transits)} laboratory-confirmed cases travelled through this country in the last "
-                        f"{el['transit_case_days']} days (latest on {latest})")
-                trig("confirmed_case_transit", f"{lead} before diagnosis in {places}. This shows a route by which cases leave "
+                if len(transits) == 1:
+                    lead = f"A laboratory-confirmed case travelled through this country on {latest} before diagnosis in {places}"
+                elif len(transits) == 2:  # each instance named
+                    (d1, w1), (d2, w2) = transits
+                    lead = (f"Two laboratory-confirmed cases travelled through this country in the last {el['transit_case_days']} days "
+                            f"before diagnosis elsewhere: one on {d1.isoformat()} (diagnosed in {w1}) and one on {d2.isoformat()} "
+                            f"(diagnosed in {w2})")
+                else:
+                    lead = (f"{len(transits)} laboratory-confirmed cases travelled through this country in the last "
+                            f"{el['transit_case_days']} days (latest on {latest}) before diagnosis in {places}")
+                trig("confirmed_case_transit", f"{lead}. This shows a route by which cases leave "
                      "the outbreak area; it is not evidence of local transmission.",
                      {"transits": [{"travel_date": d.isoformat(), "diagnosed_in": w} for d, w in transits]}, 2)
         # WATCH
