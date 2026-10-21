@@ -11,6 +11,7 @@ import numpy as np
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..config import get_settings
 from ..db.models import (
     Alert,
     Estimate,
@@ -89,7 +90,7 @@ def active_outbreak(session: Session, iso3: str, today: date) -> Outbreak | None
     """The current outbreak in a country: declared, and either ended within the
     last 42 days or not ended with official reports in the last 120 days."""
     best = None
-    for o in session.scalars(select(Outbreak).where(Outbreak.primary_iso3 == iso3)):
+    for o in session.scalars(_in_scope(select(Outbreak).where(Outbreak.primary_iso3 == iso3))):
         if o.declared_on is None or o.declared_on > today:
             continue
         if o.ended_on is not None:
@@ -104,7 +105,12 @@ def active_outbreak(session: Session, iso3: str, today: date) -> Outbreak | None
 
 
 def latest_outbreak(session: Session, iso3: str) -> Outbreak | None:
-    return session.scalars(select(Outbreak).where(Outbreak.primary_iso3 == iso3).order_by(Outbreak.declared_on.desc())).first()
+    return session.scalars(_in_scope(select(Outbreak).where(Outbreak.primary_iso3 == iso3)).order_by(Outbreak.declared_on.desc())).first()
+
+
+def _in_scope(q):
+    """Only outbreaks of the current epidemic (declared on or after ``epidemic_start``)."""
+    return q.where(Outbreak.declared_on >= get_settings().epidemic_start)
 
 
 def pathogen_for(session: Session, iso3: str, today: date) -> tuple[str, Outbreak | None]:
@@ -276,6 +282,7 @@ def _np_default(o):
 def assess_all(session: Session, regions: list[Region], by_code: dict[str, Region], outputs: dict[str, RegionModelOutput], today: date) -> list[SeverityAssessment]:
     th = load_thresholds()
     g = load_gazetteer()
+    start = get_settings().epidemic_start
     # Activity map for connectivity-based WATCH (current outbreaks only)
     active_units = {code: (_cases_in_window(series_for(session, by_code[code]), 21) or 0) for code in outputs}
     graph = _transport_graph(session)
@@ -291,13 +298,18 @@ def assess_all(session: Session, regions: list[Region], by_code: dict[str, Regio
         last_ob = current or latest_outbreak(session, region.iso3)
         cases = series_for(session, region, outbreak_id=last_ob.id) if last_ob else CumulativeSeries([])
         imported = [o.as_of for o in session.scalars(select(Observation).where(
-            Observation.region_id == region.id, Observation.transmission == "imported", Observation.validation_status.in_(PUBLISHABLE)))]
+            Observation.region_id == region.id, Observation.transmission == "imported", Observation.as_of >= start,
+            Observation.validation_status.in_(PUBLISHABLE)))]
         q_latest = select(Observation).where(Observation.region_id == region.id, Observation.validation_status.in_(PUBLISHABLE))
         if last_ob:
-            q_latest = q_latest.where((Observation.outbreak_id == last_ob.id) | (Observation.transmission == "imported"))
+            q_latest = q_latest.where((Observation.outbreak_id == last_ob.id) |
+                                      ((Observation.transmission == "imported") & (Observation.as_of >= start)))
+        else:
+            q_latest = q_latest.where(Observation.as_of >= start)
         latest_any = session.scalars(q_latest.order_by(Observation.as_of.desc())).first()
         end_obs = session.scalars(select(Observation).where(Observation.region_id == region.id, Observation.metric == "outbreak_end_declared",
-                                                           Observation.validation_status.in_(PUBLISHABLE)).order_by(Observation.as_of.desc())).first()
+                                                           Observation.as_of >= start, Observation.validation_status.in_(PUBLISHABLE))
+                                  .order_by(Observation.as_of.desc())).first()
         end_date = (last_ob.ended_on if last_ob and last_ob.ended_on else None) or (end_obs.as_of if end_obs else None)
         if end_date and cases.last_date and end_date < cases.last_date:
             end_date = None  # cases reported after the declaration: a new chain, not ended
@@ -312,7 +324,7 @@ def assess_all(session: Session, regions: list[Region], by_code: dict[str, Regio
         if ever and imported and not _has_local(session, region):
             local21 = local42 = 0.0  # only imported cases are known: they are not local transmission
         zero = session.scalars(select(Observation).where(Observation.region_id == region.id, Observation.metric == "cases",
-                                                        Observation.value_type == "incident", Observation.value == 0,
+                                                        Observation.value_type == "incident", Observation.value == 0, Observation.as_of >= start,
                                                         Observation.validation_status.in_(PUBLISHABLE)).order_by(Observation.as_of.desc())).first()
         days_since = _days_since_increase(cases, today) if ever else None
         if zero and zero.period_start and days_since is not None:

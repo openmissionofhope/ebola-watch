@@ -16,11 +16,12 @@ everywhere:
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from .config import get_settings
 from .db.models import (
     Alert,
     Correction,
@@ -89,7 +90,7 @@ def latest_official(session: Session, region: Region, metric: str, case_class: s
             outbreak_id = ob.id if ob else -1
         q = q.where(Observation.outbreak_id == outbreak_id)
     else:
-        q = q.where(Observation.as_of >= date.today() - timedelta(days=365))
+        q = q.where(Observation.as_of >= max(date.today() - timedelta(days=365), get_settings().epidemic_start))
     rows = session.execute(q.limit(20)).all()
     if not rows:
         return None
@@ -285,7 +286,9 @@ def overview(session: Session) -> dict:
 
 def latest_developments(session: Session, limit: int = 10) -> list[dict]:
     q = (select(Document, Source).join(Source, Document.source_id == Source.id)
-         .where(Source.category.in_([c.value for c in OFFICIAL_CATEGORIES])).order_by(Document.published_at.desc()).limit(limit))
+         .where(Source.category.in_([c.value for c in OFFICIAL_CATEGORIES]),
+                Document.published_at >= datetime.combine(get_settings().epidemic_start, time.min))
+         .order_by(Document.published_at.desc()).limit(limit))
     return [{"title": d.title, "published_at": _iso(d.published_at), "source": s.name, "url": d.url, "official": True,
              "is_synthetic": d.is_synthetic} for d, s in session.execute(q) if d.title]
 
@@ -406,8 +409,10 @@ def evidence(session: Session, region: Region) -> dict:
     docs = session.execute(
         select(Document, Source).join(Source, Document.source_id == Source.id)
         .join(Observation, Observation.document_id == Document.id)
-        .where(Observation.region_id == region.id).distinct().order_by(Document.published_at.desc()).limit(50)).all()
-    status_counts = dict(session.execute(select(Observation.validation_status, func.count()).where(Observation.region_id == region.id)
+        .where(Observation.region_id == region.id, Observation.as_of >= get_settings().epidemic_start)
+        .distinct().order_by(Document.published_at.desc()).limit(50)).all()
+    status_counts = dict(session.execute(select(Observation.validation_status, func.count())
+                                         .where(Observation.region_id == region.id, Observation.as_of >= get_settings().epidemic_start)
                                          .group_by(Observation.validation_status)).all())
     lit = [{"statement": e.statement, "citation": e.citation, "url": e.url, "as_of": _iso(e.as_of), "lower": e.lower, "upper": e.upper,
             "validation_status": e.validation_status} for e in session.scalars(select(LiteratureEstimate).where(LiteratureEstimate.region_code == region.code))]

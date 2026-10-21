@@ -7,6 +7,7 @@ development defaults (see :func:`Settings.validate_for_production`).
 
 from __future__ import annotations
 
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
@@ -55,6 +56,11 @@ class Settings(BaseSettings):
     # Optional machine translation for reviewers (sends PII-redacted text to Anthropic).
     enable_llm_translation: bool = False
     llm_model: str = "claude-opus-5-5"
+
+    # Scope: the epidemic declared in the Democratic Republic of the Congo on
+    # 15 May 2026. Outbreaks declared earlier (WHO's bulletin archive goes back
+    # to 2001) stay in the database but are neither assessed nor published.
+    epidemic_start: date = date(2026, 5, 15)
 
     # Privacy / publication controls
     min_public_cell_count: int = 5

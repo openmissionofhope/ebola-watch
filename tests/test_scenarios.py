@@ -119,6 +119,27 @@ def test_rising_lower_bound_and_new_travel_details_are_stored_without_review(ses
     assert imported[1].validation_status == "auto_validated" and imported[1].supersedes_id == imported[0].id
 
 
+def test_outbreaks_before_the_epidemic_are_neither_assessed_nor_published(session):
+    from datetime import date
+
+    from ebolawatch import views
+
+    old = outbreak(session, "LBR", date(2014, 4, 7), pathogen="EBOV")
+    add_series(session, "LBR", date(2014, 4, 10), [5, 12, 30], outbreak_id=old.id)
+    add_series(session, "LBR", date(2014, 4, 12), [1], transmission="imported")
+    session.add(Observation(region_id=region(session, "LBR").id, metric="outbreak_end_declared", case_class="na",
+                            value_type="cumulative", transmission="all", as_of=date(2015, 5, 9), value=1, source_id=source(session).id,
+                            extraction_method="structured", validation_status="verified", is_synthetic=True))
+    session.flush()
+    run_models(session, TODAY, n_sims=200)
+    sa = _latest_sa(session, "LBR")
+    assert sa.level == 0 and "201" not in sa.explanation and not [t for t in sa.triggers if t["code"] != "connectivity"]
+    summary = views.region_summary(session, region(session, "LBR"))
+    assert summary["outbreak"] is None and not any(summary["official"].values())
+    assert "LBR" not in {r["region"]["code"] for r in views.overview(session)["regions"]}
+    assert views.map_layers(session)["units"].get("LBR", {}).get("official_confirmed") is None
+
+
 def test_scenario_12_region_without_recent_surveillance_is_insufficient_information(session):
     ob = outbreak(session, "SSD", TODAY - timedelta(days=150))
     add_series(session, "SSD", TODAY - timedelta(days=140), [5, 12, 30, 44, 60], outbreak_id=ob.id, step_days=20)

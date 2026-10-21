@@ -6,6 +6,12 @@ honest status (`ok`, `partial`, `unavailable`, `requires_configuration`,
 `/api/v1/sources` and in the dashboard. When a source is unavailable the system
 records that fact; it never substitutes invented data.
 
+**Scope.** The site covers the epidemic declared in the Democratic Republic of
+the Congo on 15 May 2026 (`EW_EPIDEMIC_START`). WHO's bulletin archive goes back
+to 2001; figures from earlier outbreaks (West Africa 2014–2016, DRC 2018–2020,
+Uganda 2022 and 2025, Kasaï 2025, …) are stored, but they are not shown, mapped
+or used in severity assessments.
+
 Status below was **tested on 2026-10-18** from the development environment.
 
 ## Official epidemiological sources
