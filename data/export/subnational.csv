@@ -1,0 +1,9 @@
+country,region_code,region_name,value,display,suppressed
+COD,CD-HU,Haut-Uélé,415.0,415,False
+COD,CD-IT,Ituri,7040.0,"7,040",False
+COD,CD-TO,Tshopo,73.0,73,False
+COD,CD-BU,Bas-Uélé,13.0,13,False
+COD,CD-NU,Nord-Ubangi,,<5,True
+COD,CD-SU,Sud-Ubangi,,<5,True
+COD,CD-NK,Nord-Kivu,2146.0,"2,146",False
+COD,CD-SK,Sud-Kivu,,<5,True

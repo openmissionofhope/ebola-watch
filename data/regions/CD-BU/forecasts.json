@@ -1,0 +1,1 @@
+{"region":{"code":"CD-BU","name":"Bas-Uélé","level":1,"iso3":"COD"},"model_version":"ew-epi-1.0.0","forecasts":{"insufficient":true,"message":"Available observations are insufficient for numerical forecasting.","reason":"fewer than 4 weeks of reported data; R_t: no incidence data"},"expansion":null}

@@ -1,0 +1,7 @@
+region_code,region_name,level,data_as_of,official_confirmed_cases,official_confirmed_deaths,estimated_total_lower_90,estimated_total_median,estimated_total_upper_90,estimate_confidence,severity,severity_confidence,model_version,synthetic
+COD,Democratic Republic of the Congo,0,2026-10-20,9704.0,4687.0,12040,19428,35437,moderate,CRITICAL,moderate,ew-epi-1.0.0,False
+ETH,Ethiopia,0,,,,,,,insufficient,ELEVATED,low,ew-epi-1.0.0,False
+KEN,Kenya,0,2026-10-22,9.0,1.0,,,,insufficient,ELEVATED,moderate,ew-epi-1.0.0,False
+NGA,Nigeria,0,2026-10-20,1.0,,,,,insufficient,ELEVATED,high,ew-epi-1.0.0,False
+UGA,Uganda,0,2026-07-28,20.0,,,,,insufficient,ELEVATED,low,ew-epi-1.0.0,False
+RWA,Rwanda,0,,,,,,,insufficient,WATCH,low,ew-epi-1.0.0,False

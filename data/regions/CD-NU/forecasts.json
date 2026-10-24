@@ -1,0 +1,1 @@
+{"region":{"code":"CD-NU","name":"Nord-Ubangi","level":1,"iso3":"COD"},"model_version":"ew-epi-1.0.0","forecasts":{"insufficient":true,"message":"Available observations are insufficient for numerical forecasting.","reason":"fewer than 4 weeks of reported data; fewer than 10 cumulative reported cases; R_t: no incidence data"},"expansion":null}
