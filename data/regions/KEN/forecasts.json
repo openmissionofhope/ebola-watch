@@ -1,0 +1,1 @@
+{"region":{"code":"KEN","name":"Kenya","level":0,"iso3":"KEN"},"model_version":"ew-epi-1.0.0","forecasts":{"insufficient":true,"message":"Available observations are insufficient for numerical forecasting.","reason":"fewer than 10 cumulative reported cases; R_t: fewer than 10 reported cases in the last 6 weeks; R_t not identifiable"},"expansion":null}
